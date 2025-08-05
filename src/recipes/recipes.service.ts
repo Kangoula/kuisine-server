@@ -12,7 +12,10 @@ export class RecipesService {
   ) {}
 
   create(createRecipeDto: CreateRecipeDto) {
-    return 'This action adds a new recipe';
+    const recipe = new Recipe();
+    recipe.name = createRecipeDto.name;
+
+    return this.recipeRepository.save(recipe);
   }
 
   findAll() {
