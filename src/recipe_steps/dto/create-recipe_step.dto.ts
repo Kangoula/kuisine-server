@@ -9,4 +9,9 @@ export class CreateRecipeStepDto {
   @IsString()
   @IsNotEmpty()
   description: string;
+
+  // TODO decorator to check if exists in DB
+  @IsInt()
+  @IsNotEmpty()
+  recipe_id: number;
 }

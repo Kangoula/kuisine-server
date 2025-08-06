@@ -4,17 +4,23 @@ import { UpdateRecipeStepDto } from './dto/update-recipe_step.dto';
 import { RecipeStep } from './entities/recipe_step.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RecipesService } from 'src/recipes/recipes.service';
 
 @Injectable()
 export class RecipeStepsService {
   constructor(
     @InjectRepository(RecipeStep)
     private recipeStepRepository: Repository<RecipeStep>,
+    private recipeService: RecipesService,
   ) {}
 
-  create(createRecipeStepDto: CreateRecipeStepDto) {
+  async create(createRecipeStepDto: CreateRecipeStepDto) {
     const step = new RecipeStep();
     step.order = createRecipeStepDto.order;
+    step.description = createRecipeStepDto.description;
+    step.recipe = await this.recipeService.findOne(
+      createRecipeStepDto.recipe_id,
+    );
 
     return this.recipeStepRepository.save(step);
   }
