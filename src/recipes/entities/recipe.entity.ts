@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   Column,
   DeleteDateColumn,
   Entity,
@@ -7,7 +6,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Recipe extends BaseEntity {
+export class Recipe {
   @PrimaryGeneratedColumn()
   id: number;
 
