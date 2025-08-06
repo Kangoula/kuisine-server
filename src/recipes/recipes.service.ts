@@ -14,6 +14,7 @@ export class RecipesService {
   create(createRecipeDto: CreateRecipeDto) {
     const recipe = new Recipe();
     recipe.name = createRecipeDto.name;
+    recipe.servings = createRecipeDto.servings;
 
     return this.recipeRepository.save(recipe);
   }
@@ -23,14 +24,18 @@ export class RecipesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} recipe`;
+    return this.recipeRepository.findOneByOrFail({ id });
   }
 
-  update(id: number, updateRecipeDto: UpdateRecipeDto) {
-    return `This action updates a #${id} recipe`;
+  async update(id: number, updateRecipeDto: UpdateRecipeDto) {
+    await this.recipeRepository.findOneByOrFail({ id });
+
+    return this.recipeRepository.update(id, updateRecipeDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} recipe`;
+  async remove(id: number) {
+    await this.recipeRepository.findOneByOrFail({ id });
+
+    return this.recipeRepository.softDelete(id);
   }
 }
