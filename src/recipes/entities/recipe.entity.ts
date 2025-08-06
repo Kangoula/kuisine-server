@@ -1,7 +1,9 @@
+import { RecipeStep } from 'src/recipe_steps/entities/recipe_step.entity';
 import {
   Column,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -18,4 +20,9 @@ export class Recipe {
 
   @DeleteDateColumn({ nullable: true })
   deletedAt?: Date;
+
+  @OneToMany(() => RecipeStep, (recipeStep) => recipeStep.recipe, {
+    cascade: true,
+  })
+  steps: RecipeStep[];
 }
