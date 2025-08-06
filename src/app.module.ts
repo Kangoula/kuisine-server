@@ -4,6 +4,7 @@ import { RecipesModule } from './recipes/recipes.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/typeorm';
+import { IngredientsModule } from './ingredients/ingredients.module';
 import { RecipeStepsModule } from './recipe_steps/recipe_steps.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { RecipeStepsModule } from './recipe_steps/recipe_steps.module';
     }),
     TypeOrmModule.forRoot(config),
     RecipesModule,
+    IngredientsModule,
     RecipeStepsModule,
   ],
   controllers: [AppController],

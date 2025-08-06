@@ -39,6 +39,31 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
 
     await queryRunner.createTable(
       new Table({
+        name: 'ingredient',
+        columns: [
+          {
+            name: 'id',
+            type: 'int',
+            isGenerated: true,
+            isPrimary: true,
+            generationStrategy: 'increment',
+          },
+          {
+            name: 'name',
+            type: 'varchar',
+            precision: 255,
+          },
+          {
+            name: 'deleted_at',
+            type: 'date',
+            isNullable: true,
+          },
+        ],
+      }),
+    );
+
+    await queryRunner.createTable(
+      new Table({
         name: 'recipe_step',
         columns: [
           {
