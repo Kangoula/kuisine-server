@@ -24,7 +24,7 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
             unsigned: true,
           },
           {
-            name: 'deletedAt',
+            name: 'deleted_at',
             type: 'date',
             isNullable: true,
           },

@@ -16,6 +16,6 @@ export class Recipe {
   @Column()
   servings: number;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ nullable: true })
   deletedAt?: Date;
 }

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { RecipesModule } from './recipes/recipes.module';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/typeorm';
 
 @Module({
@@ -10,7 +10,7 @@ import { config } from './config/typeorm';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot(config as TypeOrmModuleOptions),
+    TypeOrmModule.forRoot(config),
     RecipesModule,
   ],
   controllers: [AppController],
