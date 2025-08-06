@@ -34,13 +34,13 @@ export class RecipeStepsService {
   }
 
   async update(id: number, updateRecipeStepDto: UpdateRecipeStepDto) {
-    await this.recipeStepRepository.findOneByOrFail({ id });
+    await this.findOne(id);
 
     return this.recipeStepRepository.update(id, updateRecipeStepDto);
   }
 
   async remove(id: number) {
-    await this.recipeStepRepository.findOneByOrFail({ id });
+    await this.findOne(id);
 
     return this.recipeStepRepository.softDelete(id);
   }
