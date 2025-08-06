@@ -9,7 +9,9 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
           {
             name: 'id',
             type: 'int',
+            isGenerated: true,
             isPrimary: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'name',
@@ -20,6 +22,11 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
             name: 'servings',
             type: 'smallint',
             unsigned: true,
+          },
+          {
+            name: 'deletedAt',
+            type: 'date',
+            isNullable: true,
           },
         ],
       }),
