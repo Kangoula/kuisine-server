@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
 import { UpdateIngredientDto } from './dto/update-ingredient.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Ingredient } from './entities/ingredient.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class IngredientsService {
+  constructor(
+    @InjectRepository(Ingredient)
+    private ingredientRepository: Repository<Ingredient>,
+  ) {}
+
   create(createIngredientDto: CreateIngredientDto) {
-    return 'This action adds a new ingredient';
+    const ingredient = new Ingredient();
+    ingredient.name = createIngredientDto.name;
+
+    return this.ingredientRepository.save(ingredient);
   }
 
   findAll() {
-    return `This action returns all ingredients`;
+    return this.ingredientRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} ingredient`;
+    return this.ingredientRepository.findOneByOrFail({ id });
   }
 
-  update(id: number, updateIngredientDto: UpdateIngredientDto) {
-    return `This action updates a #${id} ingredient`;
+  async update(id: number, updateIngredientDto: UpdateIngredientDto) {
+    await this.findOne(id);
+
+    return this.ingredientRepository.update(id, updateIngredientDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ingredient`;
+  async remove(id: number) {
+    await this.findOne(id);
+
+    return this.ingredientRepository.softDelete(id);
   }
 }
