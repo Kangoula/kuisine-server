@@ -16,6 +16,11 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
             type: 'varchar',
             precision: 255,
           },
+          {
+            name: 'servings',
+            type: 'smallint',
+            unsigned: true,
+          },
         ],
       }),
     );

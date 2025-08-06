@@ -7,4 +7,7 @@ export class Recipe extends BaseEntity {
 
   @Column()
   name: string;
+
+  @Column()
+  servings: number;
 }
