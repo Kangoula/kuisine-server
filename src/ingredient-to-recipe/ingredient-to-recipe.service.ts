@@ -39,6 +39,24 @@ export class IngredientToRecipeService {
     return this.ingredientToRecipeRepository.findOneByOrFail({ id });
   }
 
+  findByRecipeId(recipeId: number) {
+    return this.ingredientToRecipeRepository
+      .createQueryBuilder('ingredientToRecipe')
+      .leftJoinAndSelect('ingredientToRecipe.ingredient', 'ingredient')
+      .select([
+        'ingredientToRecipe.id',
+        'ingredientToRecipe.order',
+        'ingredientToRecipe.quantity',
+        'ingredientToRecipe.quantityUnit',
+        'ingredient.id',
+        'ingredient.name',
+      ])
+
+      .where('ingredientToRecipe.recipeId = :id', { id: recipeId })
+      .orderBy('ingredientToRecipe.order')
+      .getMany();
+  }
+
   async update(
     id: number,
     updateIngredientToRecipeDto: UpdateIngredientToRecipeDto,
