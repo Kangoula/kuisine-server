@@ -57,4 +57,9 @@ export class RecipesController {
   ) {
     return this.ingredientToRecipeService.create(createIngredientToRecipeDto);
   }
+
+  @Get(':id/ingredients')
+  getIngredients(@Param('id', ParseIntPipe) id: number) {
+    return this.ingredientToRecipeService.findByRecipeId(id);
+  }
 }
