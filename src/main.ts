@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.set('query parser', 'extended');
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({transform: true, transformOptions: {enableImplicitConversion: true}}));
   app.useGlobalFilters(new EntityNotFoundErrorFilter());
   await app.listen(process.env.PORT ?? 3000);
 }
