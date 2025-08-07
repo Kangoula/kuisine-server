@@ -4,6 +4,7 @@ import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Recipe } from './entities/recipe.entity';
 import { Repository } from 'typeorm';
+import { Pagination } from 'src/common/types/pagination.type';
 
 @Injectable()
 export class RecipesService {
@@ -19,7 +20,7 @@ export class RecipesService {
     return this.recipeRepository.save(recipe);
   }
 
-  findAll() {
+  findAll(pagination?: Pagination) {
     return this.recipeRepository.find();
   }
 

@@ -8,12 +8,15 @@ import {
   Delete,
   ParseIntPipe,
   Put,
+  Query,
 } from '@nestjs/common';
 import { RecipesService } from './recipes.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { IngredientToRecipeService } from 'src/ingredient-to-recipe/ingredient-to-recipe.service';
 import { CreateIngredientToRecipeDto } from 'src/ingredient-to-recipe/dto/create-ingredient-to-recipe.dto';
+import { Paginate } from 'src/common/decorators/paginate.decorator';
+import { Pagination } from 'src/common/types/pagination.type';
 
 @Controller('recipes')
 export class RecipesController {
@@ -28,7 +31,7 @@ export class RecipesController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Paginate() pagination: Pagination) {
     return this.recipesService.findAll();
   }
 
