@@ -13,16 +13,12 @@ import {
 import { RecipesService } from './recipes.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
-import { IngredientToRecipeService } from 'src/ingredient-to-recipe/ingredient-to-recipe.service';
-import { CreateIngredientToRecipeDto } from 'src/ingredient-to-recipe/dto/create-ingredient-to-recipe.dto';
-import { Paginate } from 'src/common/decorators/paginate.decorator';
-import { Pagination } from 'src/common/types/pagination.type';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('recipes')
 export class RecipesController {
   constructor(
     private readonly recipesService: RecipesService,
-    private readonly ingredientToRecipeService: IngredientToRecipeService,
   ) {}
 
   @Post()
@@ -31,7 +27,7 @@ export class RecipesController {
   }
 
   @Get()
-  findAll(@Paginate() pagination: Pagination) {
+  findAll(@Query() paginationDto: PaginationDto) {
     return this.recipesService.findAll();
   }
 
@@ -51,18 +47,5 @@ export class RecipesController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.recipesService.remove(id);
-  }
-
-  @Put(':id/ingredients')
-  addIngredients(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() createIngredientToRecipeDto: CreateIngredientToRecipeDto,
-  ) {
-    return this.ingredientToRecipeService.create(createIngredientToRecipeDto);
-  }
-
-  @Get(':id/ingredients')
-  getIngredients(@Param('id', ParseIntPipe) id: number) {
-    return this.ingredientToRecipeService.findByRecipeId(id);
   }
 }
