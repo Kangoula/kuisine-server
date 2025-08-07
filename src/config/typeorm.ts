@@ -1,11 +1,8 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { config as dotenvConfig } from 'dotenv';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
-dotenvConfig();
-
-export const config: DataSourceOptions & TypeOrmModuleOptions = {
+export const config: TypeOrmModuleOptions = {
   type: 'postgres',
   host: process.env.DB_HOST,
   port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
@@ -20,7 +17,7 @@ export const config: DataSourceOptions & TypeOrmModuleOptions = {
   namingStrategy: new SnakeNamingStrategy(),
 };
 
-const dataSource = new DataSource(config);
+const dataSource = new DataSource(config as DataSourceOptions);
 
 export default dataSource;
 
