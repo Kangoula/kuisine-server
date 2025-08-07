@@ -12,10 +12,15 @@ import {
 import { RecipesService } from './recipes.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
+import { IngredientToRecipeService } from 'src/ingredient-to-recipe/ingredient-to-recipe.service';
+import { CreateIngredientToRecipeDto } from 'src/ingredient-to-recipe/dto/create-ingredient-to-recipe.dto';
 
 @Controller('recipes')
 export class RecipesController {
-  constructor(private readonly recipesService: RecipesService) {}
+  constructor(
+    private readonly recipesService: RecipesService,
+    private readonly ingredientToRecipeService: IngredientToRecipeService,
+  ) {}
 
   @Post()
   create(@Body() createRecipeDto: CreateRecipeDto) {
@@ -45,8 +50,11 @@ export class RecipesController {
     return this.recipesService.remove(id);
   }
 
-  // @Put(':id/ingredients')
-  // addIngredients(@Body() addIngredientToRecipeDto: AddIngredientToRecipeDto) {
-
-  // }
+  @Put(':id/ingredients')
+  addIngredients(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createIngredientToRecipeDto: CreateIngredientToRecipeDto,
+  ) {
+    return this.ingredientToRecipeService.create(createIngredientToRecipeDto);
+  }
 }
