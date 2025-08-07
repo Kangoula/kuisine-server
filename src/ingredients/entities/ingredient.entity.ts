@@ -8,7 +8,7 @@ import { SoftDeletableEntity } from 'src/common/entities/soft-deletable.entity';
 
 @Entity()
 export class Ingredient extends SoftDeletableEntity {
-  @Column({ type: 'varchar', precision: 255 })
+  @Column({ type: 'varchar', precision: 255, unique: true })
   name: string;
 
   @OneToMany(
