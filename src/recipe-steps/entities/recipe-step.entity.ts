@@ -12,7 +12,7 @@ export class RecipeStep {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'smallint', unsigned: true })
   order: number;
 
   @Column('text')

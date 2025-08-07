@@ -98,15 +98,91 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'recipe_step',
       new TableForeignKey({
+        name: 'recipe_step_recipe_foreign',
         columnNames: ['recipe_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'recipe',
         onDelete: 'CASCADE',
       }),
     );
+
+    await queryRunner.createTable(
+      new Table({
+        name: 'ingredient_to_recipe',
+        columns: [
+          {
+            name: 'id',
+            type: 'int',
+            isGenerated: true,
+            isPrimary: true,
+            generationStrategy: 'increment',
+          },
+          {
+            name: 'ingredient_id',
+            type: 'int',
+          },
+          {
+            name: 'recipe_id',
+            type: 'int',
+          },
+          {
+            name: 'order',
+            type: 'smallint',
+            unsigned: true,
+          },
+          {
+            name: 'quantity',
+            type: 'smallint',
+            unsigned: true,
+          },
+          {
+            name: 'quantity_unit',
+            type: 'varchar',
+            isNullable: true,
+            precision: 255,
+          },
+          {
+            name: 'deleted_at',
+            type: 'date',
+            isNullable: true,
+          },
+        ],
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'ingredient_to_recipe',
+      new TableForeignKey({
+        name: 'ingredient_to_recipe_recipe_foreign',
+        columnNames: ['recipe_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'recipe',
+        onDelete: 'CASCADE',
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'ingredient_to_recipe',
+      new TableForeignKey({
+        name: 'ingredient_to_recipe_ingredient_foreign',
+        columnNames: ['ingredient_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'ingredient',
+        onDelete: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropForeignKey(
+      'ingredient_to_recipe',
+      'ingredient_to_recipe_ingredient_foreign',
+    );
+    await queryRunner.dropForeignKey(
+      'ingredient_to_recipe',
+      'ingredient_to_recipe_recipe_foreign',
+    );
+    await queryRunner.dropTable('ingredient_to_recipe');
     await queryRunner.dropTable('recipe_step');
     await queryRunner.dropTable('ingredient');
     await queryRunner.dropTable('recipe');

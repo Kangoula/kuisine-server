@@ -5,7 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/typeorm';
 import { IngredientsModule } from './ingredients/ingredients.module';
-import { RecipeStepsModule } from './recipe_steps/recipe_steps.module';
+import { RecipeStepsModule } from './recipe-steps/recipe-steps.module';
+import { IngredientToRecipeModule } from './ingredient-to-recipe/ingredient-to-recipe.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { RecipeStepsModule } from './recipe_steps/recipe_steps.module';
     RecipesModule,
     IngredientsModule,
     RecipeStepsModule,
+    IngredientToRecipeModule,
   ],
   controllers: [AppController],
 })

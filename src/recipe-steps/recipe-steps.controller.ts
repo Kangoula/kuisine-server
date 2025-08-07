@@ -8,7 +8,7 @@ import {
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
-import { RecipeStepsService } from './recipe_steps.service';
+import { RecipeStepsService } from './recipe-steps.service';
 import { CreateRecipeStepDto } from './dto/create-recipe_step.dto';
 import { UpdateRecipeStepDto } from './dto/update-recipe_step.dto';
 

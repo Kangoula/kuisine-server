@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { RecipesService } from './recipes.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
@@ -43,4 +44,9 @@ export class RecipesController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.recipesService.remove(id);
   }
+
+  // @Put(':id/ingredients')
+  // addIngredients(@Body() addIngredientToRecipeDto: AddIngredientToRecipeDto) {
+
+  // }
 }

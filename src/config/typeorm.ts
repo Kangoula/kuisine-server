@@ -12,9 +12,7 @@ export const config: DataSourceOptions & TypeOrmModuleOptions = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  // /!\
-  synchronize: process.env.NODE_ENV === 'development',
-  // /!\
+  synchronize: false,
   autoLoadEntities: true,
   // ajouter ici ce qu'on ne charge pas avec .forFeature
   entities: [],

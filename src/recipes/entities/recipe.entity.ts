@@ -1,4 +1,5 @@
-import { RecipeStep } from 'src/recipe_steps/entities/recipe_step.entity';
+import { IngredientToRecipe } from 'src/ingredient-to-recipe/entities/ingredient-to-recipe.entity';
+import { RecipeStep } from 'src/recipe-steps/entities/recipe-step.entity';
 import {
   Column,
   DeleteDateColumn,
@@ -12,10 +13,10 @@ export class Recipe {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar', precision: 255 })
   name: string;
 
-  @Column()
+  @Column({ type: 'smallint', unsigned: true })
   servings: number;
 
   @DeleteDateColumn({ nullable: true })
@@ -25,4 +26,10 @@ export class Recipe {
     cascade: true,
   })
   steps: RecipeStep[];
+
+  @OneToMany(
+    () => IngredientToRecipe,
+    (ingredientToRecipe) => ingredientToRecipe.recipe,
+  )
+  ingredientToRecipe: IngredientToRecipe[];
 }

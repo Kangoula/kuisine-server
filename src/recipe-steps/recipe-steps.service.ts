@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateRecipeStepDto } from './dto/create-recipe_step.dto';
 import { UpdateRecipeStepDto } from './dto/update-recipe_step.dto';
-import { RecipeStep } from './entities/recipe_step.entity';
+import { RecipeStep } from './entities/recipe-step.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RecipesService } from 'src/recipes/recipes.service';
@@ -11,6 +11,7 @@ export class RecipeStepsService {
   constructor(
     @InjectRepository(RecipeStep)
     private recipeStepRepository: Repository<RecipeStep>,
+    @Inject(forwardRef(() => RecipesService))
     private recipeService: RecipesService,
   ) {}
 
@@ -19,7 +20,7 @@ export class RecipeStepsService {
     step.order = createRecipeStepDto.order;
     step.description = createRecipeStepDto.description;
     step.recipe = await this.recipeService.findOne(
-      createRecipeStepDto.recipe_id,
+      createRecipeStepDto.recipeId,
     );
 
     return this.recipeStepRepository.save(step);

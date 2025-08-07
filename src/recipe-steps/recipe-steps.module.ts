@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { RecipeStepsService } from './recipe_steps.service';
-import { RecipeStepsController } from './recipe_steps.controller';
-import { RecipeStep } from './entities/recipe_step.entity';
+import { RecipeStepsService } from './recipe-steps.service';
+import { RecipeStepsController } from './recipe-steps.controller';
+import { RecipeStep } from './entities/recipe-step.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecipesModule } from 'src/recipes/recipes.module';
 
