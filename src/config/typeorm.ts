@@ -1,9 +1,11 @@
-// import { config as dotenvConfig } from 'dotenv';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import { config as dotenvConfig } from 'dotenv';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
-// const dotenv = dotenvConfig();
+dotenvConfig();
 
-export const config = {
+export const config: DataSourceOptions & TypeOrmModuleOptions = {
   type: 'postgres',
   host: process.env.DB_HOST,
   port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
@@ -15,6 +17,11 @@ export const config = {
   // ajouter ici ce qu'on ne charge pas avec .forFeature
   entities: [],
   migrations: ['dist/migrations/*{.ts,.js}'],
+  namingStrategy: new SnakeNamingStrategy(),
 };
 
-export default new DataSource(config as DataSourceOptions);
+const dataSource = new DataSource(config);
+
+export default dataSource;
+
+dataSource.initialize();
