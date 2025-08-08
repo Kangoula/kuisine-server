@@ -27,7 +27,7 @@ export class IngredientToRecipeService extends BaseEntityService(
       createIngredientToRecipeDto.recipeId,
     );
 
-    ingredientToRecipe.ingredient = await this.ingredientsService.findOne(
+    ingredientToRecipe.ingredient = await this.ingredientsService.findOneOrFail(
       createIngredientToRecipeDto.ingredientId,
     );
 
