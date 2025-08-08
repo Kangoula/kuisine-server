@@ -5,44 +5,25 @@ import { RecipeStep } from './entities/recipe-step.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RecipesService } from 'src/recipes/recipes.service';
+import { BaseEntityService } from 'src/common/base-entity.service';
 
 @Injectable()
-export class RecipeStepsService {
+export class RecipeStepsService extends BaseEntityService(RecipeStep) {
   constructor(
-    @InjectRepository(RecipeStep)
-    private recipeStepRepository: Repository<RecipeStep>,
     @Inject(forwardRef(() => RecipesService))
     private recipeService: RecipesService,
-  ) {}
+  ) {
+    super();
+  }
 
   async create(createRecipeStepDto: CreateRecipeStepDto) {
     const step = new RecipeStep();
     step.order = createRecipeStepDto.order;
     step.description = createRecipeStepDto.description;
-    step.recipe = await this.recipeService.findOne(
+    step.recipe = await this.recipeService.findOneOrFail(
       createRecipeStepDto.recipeId,
     );
 
-    return this.recipeStepRepository.save(step);
-  }
-
-  findAll() {
-    return this.recipeStepRepository.find();
-  }
-
-  findOne(id: number) {
-    return this.recipeStepRepository.findOneByOrFail({ id });
-  }
-
-  async update(id: number, updateRecipeStepDto: UpdateRecipeStepDto) {
-    await this.findOne(id);
-
-    return this.recipeStepRepository.update(id, updateRecipeStepDto);
-  }
-
-  async remove(id: number) {
-    await this.findOne(id);
-
-    return this.recipeStepRepository.softDelete(id);
+    return this.repository.save(step);
   }
 }

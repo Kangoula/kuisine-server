@@ -1,22 +1,15 @@
 import {
   Column,
-  DeleteDateColumn,
   Entity,
   OneToMany,
-  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IngredientToRecipe } from '../../ingredient-to-recipe/entities/ingredient-to-recipe.entity';
+import { SoftDeletableEntity } from 'src/common/entities/soft-deletable.entity';
 
 @Entity()
-export class Ingredient {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ type: 'varchar', precision: 255 })
+export class Ingredient extends SoftDeletableEntity {
+  @Column({ type: 'varchar', precision: 255, unique: true })
   name: string;
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date;
 
   @OneToMany(
     () => IngredientToRecipe,

@@ -27,20 +27,22 @@ export class IngredientsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: string) {
-    return this.ingredientsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.ingredientsService.findOneOrFail(id);
   }
 
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: string,
+  async update(
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateIngredientDto: UpdateIngredientDto,
   ) {
+    await this.ingredientsService.findOneOrFail(id);
     return this.ingredientsService.update(+id, updateIngredientDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
-    return this.ingredientsService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.ingredientsService.findOneOrFail(id);
+    return this.ingredientsService.remove(id);
   }
 }

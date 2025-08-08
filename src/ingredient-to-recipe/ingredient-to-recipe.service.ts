@@ -6,25 +6,28 @@ import { CreateIngredientToRecipeDto } from './dto/create-ingredient-to-recipe.d
 import { RecipesService } from 'src/recipes/recipes.service';
 import { IngredientsService } from 'src/ingredients/ingredients.service';
 import { UpdateIngredientToRecipeDto } from './dto/update-ingredient-to-recipe.dto';
+import { BaseEntityService } from 'src/common/base-entity.service';
 
 @Injectable()
-export class IngredientToRecipeService {
+export class IngredientToRecipeService extends BaseEntityService(
+  IngredientToRecipe,
+) {
   constructor(
-    @InjectRepository(IngredientToRecipe)
-    private ingredientToRecipeRepository: Repository<IngredientToRecipe>,
     @Inject(forwardRef(() => RecipesService))
     private recipesService: RecipesService,
     private ingredientsService: IngredientsService,
-  ) {}
+  ) {
+    super();
+  }
 
   async create(createIngredientToRecipeDto: CreateIngredientToRecipeDto) {
     const ingredientToRecipe = new IngredientToRecipe();
 
-    ingredientToRecipe.recipe = await this.recipesService.findOne(
+    ingredientToRecipe.recipe = await this.recipesService.findOneOrFail(
       createIngredientToRecipeDto.recipeId,
     );
 
-    ingredientToRecipe.ingredient = await this.ingredientsService.findOne(
+    ingredientToRecipe.ingredient = await this.ingredientsService.findOneOrFail(
       createIngredientToRecipeDto.ingredientId,
     );
 
@@ -32,15 +35,12 @@ export class IngredientToRecipeService {
     ingredientToRecipe.quantity = createIngredientToRecipeDto.quantity;
     ingredientToRecipe.quantityUnit = createIngredientToRecipeDto.quantityUnit;
 
-    return this.ingredientToRecipeRepository.save(ingredientToRecipe);
+    return this.repository.save(ingredientToRecipe);
   }
 
-  findOne(id: number) {
-    return this.ingredientToRecipeRepository.findOneByOrFail({ id });
-  }
-
+  // TODO utiliser les param find
   findByRecipeId(recipeId: number) {
-    return this.ingredientToRecipeRepository
+    return this.repository
       .createQueryBuilder('ingredientToRecipe')
       .leftJoinAndSelect('ingredientToRecipe.ingredient', 'ingredient')
       .select([
@@ -55,23 +55,5 @@ export class IngredientToRecipeService {
       .where('ingredientToRecipe.recipeId = :id', { id: recipeId })
       .orderBy('ingredientToRecipe.order')
       .getMany();
-  }
-
-  async update(
-    id: number,
-    updateIngredientToRecipeDto: UpdateIngredientToRecipeDto,
-  ) {
-    await this.findOne(id);
-
-    return this.ingredientToRecipeRepository.update(
-      id,
-      updateIngredientToRecipeDto,
-    );
-  }
-
-  async remove(id: number) {
-    await this.findOne(id);
-
-    return this.ingredientToRecipeRepository.softDelete(id);
   }
 }

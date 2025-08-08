@@ -2,10 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { EntityNotFoundErrorFilter } from './common/filters/entity-not-found-error.filter';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.set('query parser', 'extended');
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  );
   app.useGlobalFilters(new EntityNotFoundErrorFilter());
   await app.listen(process.env.PORT ?? 3000);
 }

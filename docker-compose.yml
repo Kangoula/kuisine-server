@@ -3,11 +3,13 @@ volumes:
     driver: local
 
 services:
-  api-dev:
+  api:
     build:
       target: development
       context: .
       dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=${APP_ENV}
     ports:
       - '3000:3000'
     depends_on:
@@ -16,15 +18,14 @@ services:
       - .:/usr/src/app
     env_file:
       - ./.env
-    command: npm run start:dev
 
   db:
     image: postgres:17.5-alpine3.22
     restart: always
     environment:
-      - POSTGRES_DB=kuisine
-      - POSTGRES_USER=kuisine
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
       - db:/var/lib/postgresql/data
     ports:

@@ -27,20 +27,24 @@ export class RecipeStepsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: string) {
-    return this.recipeStepsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.recipeStepsService.findOneOrFail(id);
   }
 
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: string,
+  async update(
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateRecipeStepDto: UpdateRecipeStepDto,
   ) {
-    return this.recipeStepsService.update(+id, updateRecipeStepDto);
+    await this.recipeStepsService.findOneOrFail(id);
+
+    return this.recipeStepsService.update(id, updateRecipeStepDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
-    return this.recipeStepsService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.recipeStepsService.findOneOrFail(id);
+
+    return this.recipeStepsService.remove(id);
   }
 }
