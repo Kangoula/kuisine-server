@@ -19,7 +19,7 @@ export class RecipeStepsService {
     const step = new RecipeStep();
     step.order = createRecipeStepDto.order;
     step.description = createRecipeStepDto.description;
-    step.recipe = await this.recipeService.findOne(
+    step.recipe = await this.recipeService.findOneOrFail(
       createRecipeStepDto.recipeId,
     );
 

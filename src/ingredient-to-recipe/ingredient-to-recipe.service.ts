@@ -20,7 +20,7 @@ export class IngredientToRecipeService {
   async create(createIngredientToRecipeDto: CreateIngredientToRecipeDto) {
     const ingredientToRecipe = new IngredientToRecipe();
 
-    ingredientToRecipe.recipe = await this.recipesService.findOne(
+    ingredientToRecipe.recipe = await this.recipesService.findOneOrFail(
       createIngredientToRecipeDto.recipeId,
     );
 

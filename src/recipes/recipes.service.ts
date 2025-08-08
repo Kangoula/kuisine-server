@@ -17,8 +17,4 @@ export class RecipesService extends BaseEntityService(Recipe) {
   async update(id: number, updateRecipeDto: UpdateRecipeDto) {
     return this.repository.update(id, updateRecipeDto);
   }
-
-  remove(id: number) {
-    return this.repository.softDelete({ id });
-  }
 }

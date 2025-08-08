@@ -1,5 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, ObjectLiteral, Repository } from 'typeorm';
+import {
+  DeleteResult,
+  FindOptionsWhere,
+  ObjectLiteral,
+  Repository,
+  UpdateResult,
+} from 'typeorm';
 import { PaginationDto } from './dto/pagination.dto';
 import { Type } from '@nestjs/common';
 import { SoftDeletableEntity } from './entities/soft-deletable.entity';
@@ -16,30 +22,16 @@ export interface IBaseService<T extends ObjectLiteral> {
   paginate(paginationDto: PaginationDto): Promise<T[]>;
   findAll(): Promise<T[]>;
   findOneOrFail(id: number): Promise<T>;
+  remove(id: number): Promise<UpdateResult | DeleteResult>;
 }
 
 export function BaseEntityService<T extends ObjectLiteral>(
   entity: Constructor<T>,
 ): Type<IBaseService<T>> {
+  const isEntitySoftDeletable = new entity() instanceof SoftDeletableEntity;
+
   class BaseServiceHost implements IBaseService<T> {
     @InjectRepository(entity) public readonly repository: Repository<T>;
-
-    public paginate(paginationDto: PaginationDto) {
-      console.log(new entity() instanceof SoftDeletableEntity);
-      return this.repository.find({
-        ...this.getQueryBuilderPaginationParams(paginationDto),
-      });
-    }
-
-    findAll() {
-      return this.repository.find();
-    }
-
-    findOneOrFail(id: number) {
-      const whereId = { id } as FindOptionsWhere<Constructor<T>>;
-
-      return this.repository.findOneByOrFail(whereId);
-    }
 
     private getQueryBuilderPaginationParams(
       paginationDto: PaginationDto,
@@ -53,6 +45,30 @@ export function BaseEntityService<T extends ObjectLiteral>(
         take,
         skip,
       };
+    }
+
+    public paginate(paginationDto: PaginationDto) {
+      return this.repository.find({
+        ...this.getQueryBuilderPaginationParams(paginationDto),
+      });
+    }
+
+    public findAll() {
+      return this.repository.find();
+    }
+
+    public findOneOrFail(id: number) {
+      const whereId = { id } as FindOptionsWhere<Constructor<T>>;
+
+      return this.repository.findOneByOrFail(whereId);
+    }
+
+    public remove(id: number) {
+      if (isEntitySoftDeletable) {
+        return this.repository.softDelete(id);
+      }
+
+      return this.repository.delete(id);
     }
   }
 
