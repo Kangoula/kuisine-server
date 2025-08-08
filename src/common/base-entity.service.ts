@@ -1,14 +1,8 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  FindOptionsWhere,
-  ObjectLiteral,
-  Repository,
-  UpdateResult,
-} from 'typeorm';
+import { FindOptionsWhere, ObjectLiteral, Repository } from 'typeorm';
 import { PaginationDto } from './dto/pagination.dto';
 import { Type } from '@nestjs/common';
 import { SoftDeletableEntity } from './entities/soft-deletable.entity';
-import { BaseEntity } from './entities/base.entity';
 
 type QueryBuilderPaginationParams = {
   take: number;
