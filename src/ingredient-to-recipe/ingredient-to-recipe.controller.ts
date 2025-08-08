@@ -16,10 +16,11 @@ export class IngredientToRecipeController {
   ) {}
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateIngredientToRecipeDto: UpdateIngredientToRecipeDto,
   ) {
+    await this.ingredientToRecipeService.findOneOrFail(id);
     return this.ingredientToRecipeService.update(
       id,
       updateIngredientToRecipeDto,
@@ -27,7 +28,8 @@ export class IngredientToRecipeController {
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.ingredientToRecipeService.findOneOrFail(id);
     return this.ingredientToRecipeService.remove(id);
   }
 }
