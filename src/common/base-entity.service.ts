@@ -6,14 +6,10 @@ import {
   Repository,
   UpdateResult,
 } from 'typeorm';
-import { PaginationDto } from './dto/pagination.dto';
+import { PaginationDto } from './pagination/dto/pagination.dto';
 import { Type } from '@nestjs/common';
 import { SoftDeletableEntity } from './entities/soft-deletable.entity';
-
-type QueryBuilderPaginationParams = {
-  take: number;
-  skip: number;
-};
+import { getQueryBuilderPaginationParams } from './pagination/typeorm';
 
 type Constructor<I> = new (...args: any[]) => I;
 
@@ -22,7 +18,8 @@ export interface IBaseService<T extends ObjectLiteral> {
   paginate(paginationDto: PaginationDto): Promise<T[]>;
   findAll(): Promise<T[]>;
   findOneOrFail(id: number): Promise<T>;
-  remove(id: number): Promise<UpdateResult | DeleteResult>;
+  update(id: number, partialEntity: any): Promise<UpdateResult>;
+  remove(id: number): Promise<UpdateResult | DeleteResult>; // UpdateResult dans le cas d'un softDelete
 }
 
 export function BaseEntityService<T extends ObjectLiteral>(
@@ -33,23 +30,9 @@ export function BaseEntityService<T extends ObjectLiteral>(
   class BaseServiceHost implements IBaseService<T> {
     @InjectRepository(entity) public readonly repository: Repository<T>;
 
-    private getQueryBuilderPaginationParams(
-      paginationDto: PaginationDto,
-    ): QueryBuilderPaginationParams {
-      const page: number = paginationDto.page;
-
-      const take: number = paginationDto.perPage;
-      const skip: number = page === 1 ? 0 : take * (page - 1);
-
-      return {
-        take,
-        skip,
-      };
-    }
-
     public paginate(paginationDto: PaginationDto) {
       return this.repository.find({
-        ...this.getQueryBuilderPaginationParams(paginationDto),
+        ...getQueryBuilderPaginationParams(paginationDto),
       });
     }
 
@@ -61,6 +44,10 @@ export function BaseEntityService<T extends ObjectLiteral>(
       const whereId = { id } as FindOptionsWhere<Constructor<T>>;
 
       return this.repository.findOneByOrFail(whereId);
+    }
+
+    public update(id: number, partialEntity: Partial<T>) {
+      return this.repository.update(id, partialEntity);
     }
 
     public remove(id: number) {

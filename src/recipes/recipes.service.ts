@@ -13,8 +13,4 @@ export class RecipesService extends BaseEntityService(Recipe) {
 
     return this.repository.save(recipe);
   }
-
-  async update(id: number, updateRecipeDto: UpdateRecipeDto) {
-    return this.repository.update(id, updateRecipeDto);
-  }
 }
