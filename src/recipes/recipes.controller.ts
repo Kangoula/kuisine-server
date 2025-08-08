@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  Put,
   Query,
 } from '@nestjs/common';
 import { RecipesService } from './recipes.service';
@@ -17,9 +16,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('recipes')
 export class RecipesController {
-  constructor(
-    private readonly recipesService: RecipesService,
-  ) {}
+  constructor(private readonly recipesService: RecipesService) {}
 
   @Post()
   create(@Body() createRecipeDto: CreateRecipeDto) {
@@ -28,24 +25,28 @@ export class RecipesController {
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
-    return this.recipesService.findAll();
+    return this.recipesService.paginate(paginationDto);
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.recipesService.findOne(id);
+    return this.recipesService.findOneOrFail(id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRecipeDto: UpdateRecipeDto,
   ) {
+    await this.recipesService.findOneOrFail(id);
+
     return this.recipesService.update(id, updateRecipeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.recipesService.findOneOrFail(id);
+
     return this.recipesService.remove(id);
   }
 }

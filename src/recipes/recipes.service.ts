@@ -1,42 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Recipe } from './entities/recipe.entity';
-import { Repository } from 'typeorm';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { BaseEntityService } from 'src/common/base-entity.service';
 
 @Injectable()
-export class RecipesService {
-  constructor(
-    @InjectRepository(Recipe) private recipeRepository: Repository<Recipe>,
-  ) {}
-
+export class RecipesService extends BaseEntityService(Recipe) {
   create(createRecipeDto: CreateRecipeDto) {
     const recipe = new Recipe();
     recipe.name = createRecipeDto.name;
     recipe.servings = createRecipeDto.servings;
 
-    return this.recipeRepository.save(recipe);
-  }
-
-  findAll(pagination?: PaginationDto) {
-    return this.recipeRepository.find();
-  }
-
-  findOne(id: number) {
-    return this.recipeRepository.findOneByOrFail({ id });
+    return this.repository.save(recipe);
   }
 
   async update(id: number, updateRecipeDto: UpdateRecipeDto) {
-    await this.findOne(id);
-
-    return this.recipeRepository.update(id, updateRecipeDto);
+    return this.repository.update(id, updateRecipeDto);
   }
 
-  async remove(id: number) {
-    await this.findOne(id);
-
-    return this.recipeRepository.softDelete(id);
+  remove(id: number) {
+    return this.repository.softDelete({ id });
   }
 }
