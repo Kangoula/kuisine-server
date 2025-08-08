@@ -3,11 +3,13 @@ volumes:
     driver: local
 
 services:
-  api-dev:
+  api:
     build:
       target: development
       context: .
       dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=${APP_ENV}
     ports:
       - '3000:3000'
     depends_on:
@@ -16,7 +18,6 @@ services:
       - .:/usr/src/app
     env_file:
       - ./.env
-    command: npm run start:dev
 
   db:
     image: postgres:17.5-alpine3.22
