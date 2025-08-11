@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
 import { Ingredient } from './entities/ingredient.entity';
-import { BaseEntityService } from 'src/common/base-entity.service';
+import { BaseEntityService } from '@/common/base-entity.service';
 
 @Injectable()
 export class IngredientsService extends BaseEntityService(Ingredient) {

@@ -6,9 +6,9 @@ import {
   Repository,
   UpdateResult,
 } from 'typeorm';
-import { PaginationDto } from './pagination/dto/pagination.dto';
 import { Type } from '@nestjs/common';
-import { SoftDeletableEntity } from './entities/soft-deletable.entity';
+import { PaginationDto } from './pagination';
+import { SoftDeletableEntity } from './entities';
 import { getQueryBuilderPaginationParams } from './pagination/typeorm';
 
 type Constructor<I> = new (...args: any[]) => I;

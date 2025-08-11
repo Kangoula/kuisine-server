@@ -1,5 +1,5 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import typeormConfig from './typeorm.config';
+import typeormConfig from '../config/typeorm.config';
 
 // nécessaire pour les migrations
 const dataSource = new DataSource(typeormConfig as DataSourceOptions);

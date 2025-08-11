@@ -9,10 +9,8 @@ const typeormConfig: TypeOrmModuleOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: false,
-  autoLoadEntities: true,
-  // ajouter ici ce qu'on ne charge pas avec .forFeature
-  entities: [],
-  migrations: ['dist/migrations/*{.ts,.js}'],
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  migrations: ['dist/database/migrations/*{.ts,.js}'],
   namingStrategy: new SnakeNamingStrategy(),
 };
 

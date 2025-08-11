@@ -1,9 +1,9 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { IngredientToRecipe } from './entities/ingredient-to-recipe.entity';
 import { CreateIngredientToRecipeDto } from './dto/create-ingredient-to-recipe.dto';
-import { RecipesService } from 'src/recipes/recipes.service';
-import { IngredientsService } from 'src/ingredients/ingredients.service';
-import { BaseEntityService } from 'src/common/base-entity.service';
+import { RecipesService } from '@/recipes/recipes.service';
+import { IngredientsService } from '@/ingredients/ingredients.service';
+import { BaseEntityService } from '@/common/base-entity.service';
 
 @Injectable()
 export class IngredientToRecipeService extends BaseEntityService(

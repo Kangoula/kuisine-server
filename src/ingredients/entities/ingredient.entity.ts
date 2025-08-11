@@ -1,10 +1,6 @@
-import {
-  Column,
-  Entity,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { IngredientToRecipe } from '../../ingredient-to-recipe/entities/ingredient-to-recipe.entity';
-import { SoftDeletableEntity } from 'src/common/entities/soft-deletable.entity';
+import { SoftDeletableEntity } from '@/common/entities/soft-deletable.entity';
 
 @Entity()
 export class Ingredient extends SoftDeletableEntity {

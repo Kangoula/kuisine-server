@@ -6,7 +6,8 @@
             "Host": "db",
             "Port": 5432,
             "MaintenanceDB": "postgres",
-            "SSLMode": "prefer"
+            "SSLMode": "prefer",
+            "Username": "kuisine"
         }
     }
 }

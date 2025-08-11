@@ -1,10 +1,6 @@
-import { SoftDeletableEntity } from 'src/common/entities/soft-deletable.entity';
-import { Recipe } from 'src/recipes/entities/recipe.entity';
-import {
-  Column,
-  Entity,
-  ManyToOne,
-} from 'typeorm';
+import { SoftDeletableEntity } from '@/common/entities/soft-deletable.entity';
+import { Recipe } from '@/recipes/entities/recipe.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
 export class RecipeStep extends SoftDeletableEntity {

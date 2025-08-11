@@ -2,8 +2,8 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateRecipeStepDto } from './dto/create-recipe_step.dto';
 import { RecipeStep } from './entities/recipe-step.entity';
 import { Repository } from 'typeorm';
-import { RecipesService } from 'src/recipes/recipes.service';
-import { BaseEntityService } from 'src/common/base-entity.service';
+import { RecipesService } from '@/recipes/recipes.service';
+import { BaseEntityService } from '@/common/base-entity.service';
 
 @Injectable()
 export class RecipeStepsService extends BaseEntityService(RecipeStep) {
