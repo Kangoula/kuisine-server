@@ -6,6 +6,7 @@ import { IngredientsModule } from './ingredients/ingredients.module';
 import { RecipeStepsModule } from './recipe-steps/recipe-steps.module';
 import { IngredientToRecipeModule } from './ingredient-to-recipe/ingredient-to-recipe.module';
 import { DatabaseModule } from './database/database.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DatabaseModule } from './database/database.module';
     IngredientsModule,
     RecipeStepsModule,
     IngredientToRecipeModule,
+    UsersModule,
   ],
   controllers: [AppController],
 })
