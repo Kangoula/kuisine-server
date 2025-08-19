@@ -7,6 +7,7 @@ import { RecipeStepsModule } from './recipe-steps/recipe-steps.module';
 import { IngredientToRecipeModule } from './ingredient-to-recipe/ingredient-to-recipe.module';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module';
     RecipeStepsModule,
     IngredientToRecipeModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
 })
