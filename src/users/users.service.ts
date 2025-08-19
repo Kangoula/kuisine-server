@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BaseEntityService } from '@/common/base-entity.service';
 import { User } from './entities/user.entity';
-import { hash as bcryptHash } from 'bcrypt';
+import { hash as bcryptHash, compare as bcryptCompare } from 'bcrypt';
 
 @Injectable()
 export class UsersService extends BaseEntityService(User) {
@@ -17,5 +17,17 @@ export class UsersService extends BaseEntityService(User) {
     // TODO: à mettre dans la config
     const saltRounds = 10;
     return bcryptHash(password, saltRounds);
+  }
+
+  public async comparePasswordWithStoredHash(
+    userId: number,
+    password: string,
+  ): Promise<boolean> {
+    const user = await this.repository.findOneOrFail({
+      where: { id: userId },
+      select: ['id', 'password'],
+    });
+
+    return bcryptCompare(password, user.password);
   }
 }

@@ -1,6 +1,7 @@
 import { User } from '@/users/entities/user.entity';
 import { UsersService } from '@/users/users.service';
 import { Injectable } from '@nestjs/common';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -9,12 +10,21 @@ export class AuthService {
   public async validateUser(
     username: string,
     password: string,
-  ): Promise<boolean> {
-    const user = await this.usersService.findOneBy({
-      username,
-      password: await this.usersService.hashPassword(password),
-    });
+  ): Promise<User | null> {
+    const user = await this.usersService.findOneBy({ username });
 
-    return Boolean(user);
+    if (user) {
+      const isPasswordValid =
+        await this.usersService.comparePasswordWithStoredHash(
+          user.id,
+          password,
+        );
+
+      if (isPasswordValid) {
+        return user;
+      }
+    }
+
+    return null;
   }
 }
