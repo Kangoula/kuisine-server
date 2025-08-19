@@ -1,11 +1,14 @@
 import { User } from '@/users/entities/user.entity';
 import { UsersService } from '@/users/users.service';
 import { Injectable } from '@nestjs/common';
-import { compare } from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(public usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   public async validateUser(
     username: string,
@@ -26,5 +29,14 @@ export class AuthService {
     }
 
     return null;
+  }
+
+  public async getJwt(user: User) {
+    return {
+      access_token: this.jwtService.sign({
+        username: user.username,
+        sub: user.id,
+      }),
+    };
   }
 }
