@@ -1,0 +1,1 @@
+postgres://kuisine:kuisine@localhost:5432/app_test_1755630363842
