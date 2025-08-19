@@ -10,12 +10,12 @@ export class UsersService extends BaseEntityService(User) {
     const user = new User();
     user.username = createUserDto.username;
     user.password = await this.hashPassword(createUserDto.password);
+    return this.repository.save(user);
   }
 
   private hashPassword(password: string): Promise<string> {
     // TODO: à mettre dans la config
     const saltRounds = 10;
-
     return bcryptHash(password, saltRounds);
   }
 }
