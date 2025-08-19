@@ -12,6 +12,7 @@ import { IngredientToRecipeModule } from './ingredient-to-recipe/ingredient-to-r
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   providers: [
@@ -40,6 +41,7 @@ import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
     RecipeStepsModule,
     IngredientToRecipeModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
 })
