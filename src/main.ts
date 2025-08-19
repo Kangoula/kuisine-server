@@ -12,12 +12,6 @@ async function bootstrap() {
   app.use(helmet());
   app.use(compression());
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      transformOptions: { enableImplicitConversion: true },
-    }),
-  );
   app.useGlobalFilters(new EntityNotFoundErrorFilter());
   await app.listen(process.env.PORT ?? 3000);
 }

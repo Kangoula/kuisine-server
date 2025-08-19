@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { RecipesModule } from './recipes/recipes.module';
 import { ConfigModule } from '@nestjs/config';
@@ -8,8 +8,19 @@ import { IngredientToRecipeModule } from './ingredient-to-recipe/ingredient-to-r
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_PIPE } from '@nestjs/core';
 
 @Module({
+  providers: [
+    {
+      provide: APP_PIPE,
+      useFactory: () =>
+        new ValidationPipe({
+          transform: true,
+          transformOptions: { enableImplicitConversion: true },
+        }),
+    },
+  ],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
