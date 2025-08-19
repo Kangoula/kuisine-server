@@ -4,16 +4,20 @@ import { UsersModule } from '@/users/users.module';
 import { LocalStrategy } from './local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtConfigService } from './JwtConfig.service';
+import { JwtConfigService } from './jwt-config.service';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
     UsersModule,
-    PassportModule,
+    PassportModule.register({
+      passwordField: 'password',
+    }),
     JwtModule.registerAsync({
       useClass: JwtConfigService,
     }),
   ],
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

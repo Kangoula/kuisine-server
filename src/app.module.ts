@@ -11,11 +11,16 @@ import { RecipeStepsModule } from './recipe-steps/recipe-steps.module';
 import { IngredientToRecipeModule } from './ingredient-to-recipe/ingredient-to-recipe.module';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
-import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     {
       provide: APP_PIPE,
       useFactory: () =>
