@@ -13,7 +13,7 @@ export class UsersService extends BaseEntityService(User) {
     return this.repository.save(user);
   }
 
-  private hashPassword(password: string): Promise<string> {
+  public hashPassword(password: string): Promise<string> {
     // TODO: à mettre dans la config
     const saltRounds = 10;
     return bcryptHash(password, saltRounds);
