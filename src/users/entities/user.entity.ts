@@ -8,6 +8,6 @@ export class User extends SoftDeletableEntity {
   username: string;
 
   @Exclude()
-  @Column({ type: 'varchar', precision: 255 })
+  @Column({ type: 'varchar', precision: 255, select: false })
   password: string;
 }

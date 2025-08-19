@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 import { EntityNotFoundErrorFilter } from './common/filters/entity-not-found-error.filter';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as compression from 'compression';
