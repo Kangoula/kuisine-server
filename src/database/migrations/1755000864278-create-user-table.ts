@@ -24,6 +24,11 @@ export class CreateUserTable1755000864278 implements MigrationInterface {
             precision: 255,
             isNullable: true,
           },
+          {
+            name: 'deleted_at',
+            type: 'date',
+            isNullable: true,
+          },
         ],
       }),
     );
