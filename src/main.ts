@@ -4,10 +4,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { EntityNotFoundErrorFilter } from './common/filters/entity-not-found-error.filter';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as compression from 'compression';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.set('query parser', 'extended');
+  app.use(helmet());
   app.use(compression());
 
   app.useGlobalPipes(
