@@ -28,13 +28,42 @@ export interface IBaseService<T extends ObjectLiteral> {
   remove(id: number): Promise<UpdateResult | DeleteResult>; // UpdateResult dans le cas d'un softDelete
 }
 
+// type Prout<T> = T extends SoftDeletableEntity ? true : false;
+
+export abstract class EntityService<T extends ObjectLiteral> {
+  protected repository: Repository<T>;
+
+  private useSoftDelete: boolean;
+
+  constructor(useSoftDelete: boolean | undefined = true) {
+    this.useSoftDelete = useSoftDelete;
+  }
+
+  public paginate(paginationDto: PaginationDto) {
+    return this.repository.find({
+      ...getQueryBuilderPaginationParams(paginationDto),
+    });
+  }
+
+  public remove(id: number) {
+    if (this.useSoftDelete) {
+      return this.repository.softDelete(id);
+    }
+
+    return this.repository.delete(id);
+  }
+}
+
+/**
+ * @deprecated
+ * */
 export function BaseEntityService<T extends ObjectLiteral>(
   entity: Constructor<T>,
 ): Type<IBaseService<T>> {
   const isEntitySoftDeletable = new entity() instanceof SoftDeletableEntity;
 
   class BaseServiceHost implements IBaseService<T> {
-    @InjectRepository(entity) public readonly repository: Repository<T>;
+    public readonly repository: Repository<T>;
 
     public paginate(paginationDto: PaginationDto) {
       return this.repository.find({

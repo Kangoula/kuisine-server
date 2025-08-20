@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { BaseEntityService } from '@/common/base-entity.service';
+import { EntityService } from '@/common/base-entity.service';
 import { User } from './entities/user.entity';
 import { hash as bcryptHash, compare as bcryptCompare } from 'bcrypt';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
-export class UsersService extends BaseEntityService(User) {
+export class UsersService extends EntityService<User> {
+  constructor(public readonly repository: UsersRepository) {
+    super(true);
+  }
+
   async create(createUserDto: CreateUserDto) {
     const user = new User();
     user.username = createUserDto.username;
