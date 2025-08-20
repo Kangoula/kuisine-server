@@ -63,6 +63,7 @@ export function BaseEntityService<T extends ObjectLiteral>(
   const isEntitySoftDeletable = new entity() instanceof SoftDeletableEntity;
 
   class BaseServiceHost implements IBaseService<T> {
+    @InjectRepository(entity)
     public readonly repository: Repository<T>;
 
     public paginate(paginationDto: PaginationDto) {
