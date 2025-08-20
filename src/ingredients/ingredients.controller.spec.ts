@@ -1,53 +1,39 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { IngredientsController } from './ingredients.controller';
 import { IngredientsService } from './ingredients.service';
-import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
+import { Mocked, TestBed } from '@suites/unit';
+import { IngredientsController } from './ingredients.controller';
 import { Ingredient } from './entities/ingredient.entity';
-import typeormConfig from '@/config/typeorm-test.config';
-import { DataSource } from 'typeorm';
-import { IngredientToRecipe } from '@/ingredient-to-recipe/entities/ingredient-to-recipe.entity';
 
 describe('IngredientsController', () => {
-  let dataSource: DataSource;
+  // let dataSource: DataSource;
   let controller: IngredientsController;
+  let service: Mocked<IngredientsService>;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot({
-          ...typeormConfig,
-          migrationsRun: true,
-          entities: [Ingredient, IngredientToRecipe],
-        }),
-        TypeOrmModule.forFeature([Ingredient, IngredientToRecipe]),
-      ],
-      controllers: [IngredientsController],
-      providers: [IngredientsService],
-    }).compile();
+    const { unit, unitRef } = await TestBed.solitary(
+      IngredientsController,
+    ).compile();
 
-    dataSource = module.get<DataSource>(getDataSourceToken());
-    controller = module.get<IngredientsController>(IngredientsController);
+    controller = unit;
+    service = unitRef.get(IngredientsService);
   });
 
-  afterAll(async () => {
-    await dataSource?.destroy();
-  });
+  describe('create', () => {
+    it('should create a new Ingredient', async () => {
+      const ingredientName: string = 'Boux de Chruxelles';
+      const expectedIngredient: Ingredient = {
+        id: 1,
+        name: ingredientName,
+        ingredientToRecipe: [],
+      };
+      const newIngredient = { name: ingredientName };
 
-  beforeEach(async () => {
-    // TRUNCATE toutes les tables du schéma public pour repartir propre
-    // (ajuste si tu as plusieurs schémas)
-    const tables = await dataSource.query(`
-      SELECT tablename FROM pg_tables
-      WHERE schemaname = 'public'
-    `);
-    for (const { tablename } of tables) {
-      await dataSource.query(
-        `TRUNCATE TABLE "public"."${tablename}" RESTART IDENTITY CASCADE;`,
-      );
-    }
-  });
+      service.create.mockResolvedValue(expectedIngredient);
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+      const createdIngredient = await controller.create(newIngredient);
+
+      expect(service.create).toHaveBeenCalledWith(newIngredient);
+      expect(createdIngredient).toBeDefined();
+      expect(createdIngredient).toEqual<Ingredient>(expectedIngredient);
+    });
   });
 });
