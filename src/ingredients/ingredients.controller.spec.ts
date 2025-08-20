@@ -1,20 +1,39 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { IngredientsController } from './ingredients.controller';
 import { IngredientsService } from './ingredients.service';
+import { Mocked, TestBed } from '@suites/unit';
+import { IngredientsController } from './ingredients.controller';
+import { Ingredient } from './entities/ingredient.entity';
 
 describe('IngredientsController', () => {
+  // let dataSource: DataSource;
   let controller: IngredientsController;
+  let service: Mocked<IngredientsService>;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [IngredientsController],
-      providers: [IngredientsService],
-    }).compile();
+  beforeAll(async () => {
+    const { unit, unitRef } = await TestBed.solitary(
+      IngredientsController,
+    ).compile();
 
-    controller = module.get<IngredientsController>(IngredientsController);
+    controller = unit;
+    service = unitRef.get(IngredientsService);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  describe('create', () => {
+    it('should create a new Ingredient', async () => {
+      const ingredientName: string = 'Boux de Chruxelles';
+      const expectedIngredient: Ingredient = {
+        id: 1,
+        name: ingredientName,
+        ingredientToRecipe: [],
+      };
+      const newIngredient = { name: ingredientName };
+
+      service.create.mockResolvedValue(expectedIngredient);
+
+      const createdIngredient = await controller.create(newIngredient);
+
+      expect(service.create).toHaveBeenCalledWith(newIngredient);
+      expect(createdIngredient).toBeDefined();
+      expect(createdIngredient).toEqual<Ingredient>(expectedIngredient);
+    });
   });
 });
