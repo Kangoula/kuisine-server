@@ -3,6 +3,10 @@ import { Client } from 'pg';
 import * as fs from 'fs';
 import * as path from 'path';
 
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 export default async () => {
   const urlPath = path.join(process.cwd(), 'test', '.db-url.txt');
   const url = fs.readFileSync(urlPath, 'utf-8').trim();

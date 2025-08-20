@@ -6,19 +6,24 @@ import { config } from 'dotenv';
 
 config({ path: '.env.test' });
 
-const host = process.env.DB_HOST;
-const port = Number(process.env.DB_PORT ?? 5432);
-const user = process.env.DB_USER ?? '';
-const password = process.env.DB_PASSWORD ?? '';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 export default async () => {
-  const admin = new Client({
-    host: 'localhost',
+  const host = process.env.DB_HOST;
+  const port = Number(process.env.DB_PORT ?? 5432);
+  const user = process.env.DB_USER ?? '';
+  const password = process.env.DB_PASSWORD ?? '';
+
+  const admin: Client = new Client({
+    host,
     port,
     user,
     password,
     database: 'postgres',
   });
+
   await admin.connect();
 
   const dbName = `app_test_${Date.now()}`;
