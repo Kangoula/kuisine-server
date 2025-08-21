@@ -25,7 +25,7 @@ export class UsersService extends BaseEntityService(User) {
   ): Promise<boolean> {
     const user = await this.repository.findOneOrFail({
       where: { id: userId },
-      select: ['id', 'password'],
+      select: ['password'],
     });
 
     return bcryptCompare(password, user.password);

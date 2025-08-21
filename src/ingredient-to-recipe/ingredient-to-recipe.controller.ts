@@ -20,7 +20,6 @@ export class IngredientToRecipeController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateIngredientToRecipeDto: UpdateIngredientToRecipeDto,
   ) {
-    await this.ingredientToRecipeService.findOneOrFail(id);
     return this.ingredientToRecipeService.update(
       id,
       updateIngredientToRecipeDto,

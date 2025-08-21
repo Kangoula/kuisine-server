@@ -32,12 +32,10 @@ export class RecipeStepsController {
   }
 
   @Patch(':id')
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRecipeStepDto: UpdateRecipeStepDto,
   ) {
-    await this.recipeStepsService.findOneOrFail(id);
-
     return this.recipeStepsService.update(id, updateRecipeStepDto);
   }
 

@@ -42,7 +42,8 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.usersService.findOneOrFail(id);
     return this.usersService.remove(id);
   }
 }

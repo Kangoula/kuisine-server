@@ -31,10 +31,11 @@ export interface IBaseService<T extends ObjectLiteral> {
 export function BaseEntityService<T extends ObjectLiteral>(
   entity: Constructor<T>,
 ): Type<IBaseService<T>> {
-  const isEntitySoftDeletable = new entity() instanceof SoftDeletableEntity;
+  const isEntitySoftDeletable = entity.prototype instanceof SoftDeletableEntity;
 
   class BaseServiceHost implements IBaseService<T> {
-    @InjectRepository(entity) public readonly repository: Repository<T>;
+    @InjectRepository(entity)
+    public readonly repository: Repository<T>;
 
     public paginate(paginationDto: PaginationDto) {
       return this.repository.find({
