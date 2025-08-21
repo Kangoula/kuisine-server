@@ -12,4 +12,10 @@ export class Ingredient extends SoftDeletableEntity {
     (ingredientToRecipe) => ingredientToRecipe.ingredient,
   )
   ingredientToRecipe: IngredientToRecipe[];
+
+  @Column({
+    type: 'tsvector',
+    nullable: true,
+  })
+  fullTextSearch: string;
 }
