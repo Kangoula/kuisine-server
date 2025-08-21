@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { SoftDeletableEntity } from '@/common/entities/soft-deletable.entity';
 import { IngredientToRecipe } from '@/ingredient-to-recipe/entities/ingredient-to-recipe.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Ingredient extends SoftDeletableEntity {
@@ -13,9 +14,11 @@ export class Ingredient extends SoftDeletableEntity {
   )
   ingredientToRecipe: IngredientToRecipe[];
 
+  @Exclude()
   @Column({
     type: 'tsvector',
     nullable: true,
+    select: false,
   })
   fullTextSearch: string;
 }
