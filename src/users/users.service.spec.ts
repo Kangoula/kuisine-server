@@ -1,18 +1,21 @@
 import { UsersService } from './users.service';
 import { TestBed } from '@suites/unit';
 import { Mocked } from '@suites/doubles.jest';
-import { UsersRepository } from './users.repository';
 import { hash } from 'bcrypt';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let repository: Mocked<UsersRepository>;
+  let repository: Mocked<Repository<User>>;
 
   beforeEach(async () => {
     const { unit, unitRef } = await TestBed.solitary(UsersService).compile();
 
     service = unit;
-    repository = unitRef.get<UsersRepository>(UsersRepository);
+
+    repository = unitRef.get(getRepositoryToken(User) as string);
   });
 
   it('should hash password on creation', async () => {
