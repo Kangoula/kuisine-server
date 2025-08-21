@@ -11,4 +11,16 @@ export class IngredientsService extends BaseEntityService(Ingredient) {
 
     return this.repository.save(ingredient);
   }
+
+  search(term: string) {
+    const formattedTerm: string = term.trim().replace(/ /g, ' & ');
+
+    return this.repository
+      .createQueryBuilder('ingredient')
+      .where(
+        `to_tsvector('simple',ingredient.name) @@ to_tsquery('simple', :query)`,
+        { query: `${formattedTerm}:*` },
+      )
+      .getMany();
+  }
 }
