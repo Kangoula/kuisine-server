@@ -34,19 +34,16 @@ export class RecipesController {
   }
 
   @Patch(':id')
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRecipeDto: UpdateRecipeDto,
   ) {
-    await this.recipesService.findOneOrFail(id);
-
     return this.recipesService.update(id, updateRecipeDto);
   }
 
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     await this.recipesService.findOneOrFail(id);
-
     return this.recipesService.remove(id);
   }
 }

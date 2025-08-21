@@ -32,11 +32,10 @@ export class IngredientsController {
   }
 
   @Patch(':id')
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateIngredientDto: UpdateIngredientDto,
   ) {
-    await this.ingredientsService.findOneOrFail(id);
     return this.ingredientsService.update(+id, updateIngredientDto);
   }
 
