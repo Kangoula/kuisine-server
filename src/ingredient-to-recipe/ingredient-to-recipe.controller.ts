@@ -1,13 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Param,
-  ParseIntPipe,
-  Patch,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Patch } from '@nestjs/common';
 import { UpdateIngredientToRecipeDto } from './dto/update-ingredient-to-recipe.dto';
 import { IngredientToRecipeService } from './ingredient-to-recipe.service';
+import { EntityId } from '@/common/decorators/route-params.decorator';
 
 @Controller('ingredient-to-recipe')
 export class IngredientToRecipeController {
@@ -17,7 +11,7 @@ export class IngredientToRecipeController {
 
   @Patch(':id')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @EntityId() id: number,
     @Body() updateIngredientToRecipeDto: UpdateIngredientToRecipeDto,
   ) {
     return this.ingredientToRecipeService.update(
@@ -27,7 +21,7 @@ export class IngredientToRecipeController {
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@EntityId() id: number) {
     await this.ingredientToRecipeService.findOneOrFail(id);
     return this.ingredientToRecipeService.remove(id);
   }

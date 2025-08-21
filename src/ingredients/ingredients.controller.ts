@@ -1,16 +1,8 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
 import { IngredientsService } from './ingredients.service';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
 import { UpdateIngredientDto } from './dto/update-ingredient.dto';
+import { EntityId } from '@/common/decorators/route-params.decorator';
 
 @Controller('ingredients')
 export class IngredientsController {
@@ -27,20 +19,20 @@ export class IngredientsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@EntityId() id: number) {
     return this.ingredientsService.findOneOrFail(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @EntityId() id: number,
     @Body() updateIngredientDto: UpdateIngredientDto,
   ) {
     return this.ingredientsService.update(+id, updateIngredientDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@EntityId() id: number) {
     await this.ingredientsService.findOneOrFail(id);
     return this.ingredientsService.remove(id);
   }

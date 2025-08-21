@@ -4,15 +4,14 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   Delete,
-  ParseIntPipe,
   Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '@/common/pagination';
 import { UsersService } from './users.service';
+import { EntityId } from '@/common/decorators/route-params.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -29,20 +28,17 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@EntityId() id: number) {
     return this.usersService.findOneOrFail(id);
   }
 
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
+  update(@EntityId() id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@EntityId() id: number) {
     await this.usersService.findOneOrFail(id);
     return this.usersService.remove(id);
   }
