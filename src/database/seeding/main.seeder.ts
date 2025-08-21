@@ -9,7 +9,7 @@ import { sample } from 'remeda';
 
 const RECIPES_COUNT = 10;
 const MAX_RECIPE_STEPS_COUNT = 8;
-const INGREDIENTS_COUNT = 30;
+const INGREDIENTS_COUNT = 3000;
 const MAX_RECIPE_INGREDIENTS = 7;
 
 export class MainSeeder implements Seeder {

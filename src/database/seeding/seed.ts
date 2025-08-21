@@ -1,6 +1,6 @@
-import typeormConfig from '../../config/typeorm.config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { runSeeders } from 'typeorm-extension';
+import typeormConfig from '../typeorm.config';
 
 const dataSource = new DataSource(typeormConfig as DataSourceOptions);
 

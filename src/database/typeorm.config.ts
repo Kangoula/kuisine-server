@@ -1,5 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { IngredientSubscriber } from './subscribers/ingredient.subscriber';
 
 const typeormConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -10,6 +11,7 @@ const typeormConfig: TypeOrmModuleOptions = {
   database: process.env.DB_NAME,
   synchronize: false,
   entities: ['dist/**/*.entity{.ts,.js}'],
+  subscribers: [IngredientSubscriber],
   migrations: ['dist/database/migrations/*{.ts,.js}'],
   namingStrategy: new SnakeNamingStrategy(),
 };
