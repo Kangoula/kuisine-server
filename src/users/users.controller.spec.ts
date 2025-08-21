@@ -2,7 +2,6 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { TestBed } from '@suites/unit';
 import { Mocked } from '@suites/doubles.jest';
-import { EntityNotFoundError } from 'typeorm';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -65,7 +64,7 @@ describe('UsersController', () => {
     expect(returnedUser).toBe(user);
   });
 
-  it('should throw an error when the requested user does not exists', () => {
+  it('should reject when the requested user does not exists', () => {
     const userId = 1;
     const err = new Error('not found');
 
@@ -95,5 +94,45 @@ describe('UsersController', () => {
 
     expect(service.update).toHaveBeenCalledWith(user.id, updateData);
     expect(result.affected).toBe(1);
+  });
+
+  it('should reject when the user to update does not exists', () => {
+    const userId = 1;
+    const updateData = { username: 'Clorge Geooney' };
+    const err = new Error('not found');
+
+    service.update.mockImplementation(() => {
+      return Promise.reject(err);
+    });
+
+    //eslint-disable-next-line @typescript-eslint/no-floating-promises
+    expect(controller.update(userId, updateData)).rejects.toBe(err);
+  });
+
+  it('should delete user', async () => {
+    const userId = 1;
+
+    service.remove.mockResolvedValue({
+      affected: 1,
+      raw: [],
+      generatedMaps: [],
+    });
+
+    const result = await controller.remove(userId);
+
+    expect(service.remove).toHaveBeenCalledWith(userId);
+    expect(result.affected).toBe(1);
+  });
+
+  it('should reject when user to delete does not exists', async () => {
+    const userId = 1;
+    const err = new Error('not found');
+
+    service.remove.mockImplementation(() => {
+      return Promise.reject(err);
+    });
+
+    //eslint-disable-next-line @typescript-eslint/no-floating-promises
+    expect(controller.remove(userId)).rejects.toBe(err);
   });
 });
