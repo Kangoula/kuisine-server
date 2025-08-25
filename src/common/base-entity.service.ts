@@ -10,8 +10,7 @@ import { Type } from '@nestjs/common';
 import { PaginationDto } from './pagination';
 import { SoftDeletableEntity } from './entities';
 import { getQueryBuilderPaginationParams } from './pagination/typeorm';
-
-type Constructor<I> = new (...args: any[]) => I;
+import { Constructor } from './types';
 
 export interface IBaseService<T extends ObjectLiteral> {
   readonly repository: Repository<T>;
