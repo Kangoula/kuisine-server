@@ -1,15 +1,18 @@
-import { Ingredient } from '@/ingredients/entities/ingredient.entity';
 import {
   EntitySubscriberInterface,
   EventSubscriber,
   InsertEvent,
   UpdateEvent,
 } from 'typeorm';
+import { IngredientsService } from '../ingredients.service';
+import { Ingredient } from '../entities/ingredient.entity';
 
 @EventSubscriber()
 export class IngredientSubscriber
   implements EntitySubscriberInterface<Ingredient>
 {
+  constructor(private readonly service: IngredientsService) {}
+
   listenTo() {
     return Ingredient;
   }
@@ -27,13 +30,6 @@ export class IngredientSubscriber
   ): Promise<void> {
     if (!event.entity) return;
 
-    await event.manager.query(
-      `
-      UPDATE ingredient 
-      SET full_text_search = to_tsvector('simple',ingredient.name)
-      WHERE ingredient.id = $1
-      `,
-      [event.entity.id],
-    );
+    await this.service.updateFullTextSearch(+event.entity.id);
   }
 }
