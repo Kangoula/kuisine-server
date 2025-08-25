@@ -5,12 +5,11 @@ import { BaseEntityService } from '@/common/base-entity.service';
 
 @Injectable()
 export class IngredientsService extends BaseEntityService(Ingredient) {
-  async create(createIngredientDto: CreateIngredientDto) {
+  create(createIngredientDto: CreateIngredientDto) {
     const ingredient = new Ingredient();
     ingredient.name = createIngredientDto.name;
 
-    await this.repository.insert(ingredient);
-    return ingredient;
+    return this.insert(ingredient);
   }
 
   search(term: string) {
