@@ -23,4 +23,15 @@ export class IngredientsService extends BaseEntityService(Ingredient) {
       )
       .getMany();
   }
+
+  updateFullTextSearch(id: number) {
+    return this.repository.query(
+      `
+        UPDATE ingredient 
+          SET full_text_search = to_tsvector('french',ingredient.name)
+          WHERE ingredient.id = $1
+      `,
+      [{ id }],
+    );
+  }
 }
