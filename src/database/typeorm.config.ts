@@ -9,8 +9,9 @@ const typeormConfig: TypeOrmModuleOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: false,
-  entities: ['dist/**/*.entity{.ts,.js}'],
+  autoLoadEntities: true,
   migrations: ['dist/database/migrations/*{.ts,.js}'],
+  migrationsRun: process.env.APP_ENV === 'test',
   namingStrategy: new SnakeNamingStrategy(),
 };
 
