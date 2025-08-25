@@ -68,7 +68,7 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
     );
 
     await queryRunner.query(`
-        CREATE INDEX "IDX_full_text_search" 
+        CREATE INDEX "IDX_ingredient_full_text_search" 
         ON "ingredient" 
         USING GIN ("full_text_search");
     `);
@@ -192,6 +192,10 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
     await queryRunner.dropForeignKey(
       'ingredient_to_recipe',
       'ingredient_to_recipe_recipe_foreign',
+    );
+    await queryRunner.dropIndex(
+      'ingredient',
+      'IDX_ingredient_full_text_search',
     );
     await queryRunner.dropTable('ingredient_to_recipe');
     await queryRunner.dropTable('recipe_step');
