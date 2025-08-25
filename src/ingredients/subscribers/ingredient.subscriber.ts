@@ -28,7 +28,6 @@ export class IngredientSubscriber extends BaseEntitySubscriber(Ingredient) {
   ): Promise<void> {
     if (!event.entity?.id) return;
 
-    console.log(event.entity.id);
     await this.ingredientsService.updateFullTextSearch(+event.entity.id);
   }
 }
