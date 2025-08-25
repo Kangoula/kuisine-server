@@ -1,17 +1,23 @@
 import {
+  DataSource,
   EntitySubscriberInterface,
-  EventSubscriber,
   InsertEvent,
   UpdateEvent,
 } from 'typeorm';
 import { IngredientsService } from '../ingredients.service';
 import { Ingredient } from '../entities/ingredient.entity';
+import { Injectable } from '@nestjs/common';
 
-@EventSubscriber()
+@Injectable()
 export class IngredientSubscriber
   implements EntitySubscriberInterface<Ingredient>
 {
-  constructor(private readonly service: IngredientsService) {}
+  constructor(
+    dataSource: DataSource,
+    private readonly ingredientsService: IngredientsService,
+  ) {
+    dataSource.subscribers.push(this);
+  }
 
   listenTo() {
     return Ingredient;
@@ -21,15 +27,17 @@ export class IngredientSubscriber
     await this.updateSearchVector(event);
   }
 
-  async afterUpdate(event: UpdateEvent<Ingredient>): Promise<void> {
-    await this.updateSearchVector(event);
-  }
+  // TODO check whether the name changed or not
+  // async afterUpdate(event: UpdateEvent<Ingredient>): Promise<void> {
+  //   await this.updateSearchVector(event);
+  // }
 
   private async updateSearchVector(
     event: UpdateEvent<Ingredient> | InsertEvent<Ingredient>,
   ): Promise<void> {
-    if (!event.entity) return;
+    if (!event.entity?.id) return;
 
-    await this.service.updateFullTextSearch(+event.entity.id);
+    console.log(event.entity.id);
+    await this.ingredientsService.updateFullTextSearch(+event.entity.id);
   }
 }
