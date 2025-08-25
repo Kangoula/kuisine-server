@@ -24,10 +24,8 @@ export class IngredientsService extends BaseEntityService(Ingredient) {
   }
 
   updateFullTextSearch(id: number) {
-    const q = this.update(id, {
+    return this.update(id, {
       fullTextSearch: () => "to_tsvector('french', name)",
     });
-
-    return q;
   }
 }
