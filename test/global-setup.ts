@@ -1,20 +1,19 @@
 // test/global-setup.ts
-import { Client } from 'pg';
-import * as fs from 'fs';
-import * as path from 'path';
 import { config } from 'dotenv';
-
-config({ path: '.env.test' });
+import { Client } from 'pg';
 
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+config({ path: '.env.test', override: true });
 
 export default async () => {
   const host = process.env.DB_HOST;
   const port = Number(process.env.DB_PORT ?? 5432);
   const user = process.env.DB_USER ?? '';
   const password = process.env.DB_PASSWORD ?? '';
+  const dbName = process.env.DB_NAME;
 
   const admin: Client = new Client({
     host,
@@ -26,12 +25,7 @@ export default async () => {
 
   await admin.connect();
 
-  const dbName = `app_test_${Date.now()}`;
   await admin.query(`CREATE DATABASE ${dbName};`);
-
-  const url = `postgres://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}:${port}/${dbName}`;
-  const out = path.join(process.cwd(), 'test', '.db-url.txt');
-  fs.writeFileSync(out, url, 'utf-8');
 
   await admin.end();
 };

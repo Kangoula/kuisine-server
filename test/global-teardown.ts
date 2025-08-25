@@ -1,16 +1,15 @@
 // test/global-teardown.ts
 import { Client } from 'pg';
-import * as fs from 'fs';
-import * as path from 'path';
+import { config } from 'dotenv';
 
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
+config({ path: '.env.test', override: true });
+
 export default async () => {
-  const urlPath = path.join(process.cwd(), 'test', '.db-url.txt');
-  const url = fs.readFileSync(urlPath, 'utf-8').trim();
-  const dbName = url.substring(url.lastIndexOf('/') + 1);
+  const dbName = process.env.DB_NAME;
 
   const admin = new Client({
     host: process.env.DB_HOST,
