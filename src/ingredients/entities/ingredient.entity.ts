@@ -20,5 +20,5 @@ export class Ingredient extends SoftDeletableEntity {
     nullable: true,
     select: false,
   })
-  fullTextSearch: string;
+  fullTextSearch?: string | null;
 }
