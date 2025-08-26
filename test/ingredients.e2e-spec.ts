@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { AppModule } from '@/app.module';
-import { getRealUserBearerToken } from './utils/auth.test-utils';
+import { loginAs } from './utils/auth.test-utils';
 import { IngredientsService } from '@/ingredients/ingredients.service';
 
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -33,8 +33,8 @@ describe('Ingredients', () => {
     describe('authenticated', () => {
       let bearerToken: string;
 
-      beforeAll(async () => {
-        bearerToken = await getRealUserBearerToken(app);
+      beforeEach(async () => {
+        bearerToken = await loginAs(app, 'admin');
       });
 
       it('with correct payload should return the created ingredient with Created response', async () => {

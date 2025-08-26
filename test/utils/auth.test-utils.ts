@@ -2,24 +2,12 @@ import { AuthService } from '@/auth/auth.service';
 import { UsersService } from '@/users/users.service';
 import { INestApplication } from '@nestjs/common';
 
-/**
- * For e2e tests
- *
- * returns the access token to put in the Authorization header
- */
-export const getRealUserBearerToken = async (
-  app: INestApplication,
-): Promise<string> => {
-  const user = {
-    username: 'user test',
-    password: 'test',
-  };
-
+export const loginAs = async (app: INestApplication, username: string) => {
   const usersService = app.get(UsersService);
   const authService = app.get(AuthService);
 
-  const u = await usersService.create(user);
-  const { access_token } = authService.login(u);
+  const user = await usersService.findOneBy({ username });
 
+  const { access_token } = authService.login(user);
   return `Bearer ${access_token}`;
 };
