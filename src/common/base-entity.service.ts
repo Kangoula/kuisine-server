@@ -17,11 +17,6 @@ export interface IBaseService<T extends ObjectLiteral> {
   paginate(paginationDto: PaginationDto): Promise<T[]>;
   findAll(): Promise<T[]>;
   findOne(id: number): Promise<T>;
-  findOneBy(
-    where:
-      | FindOptionsWhere<Constructor<T>>
-      | FindOptionsWhere<Constructor<T>>[],
-  ): Promise<T>;
   update(id: number, partialEntity: any): Promise<UpdateResult>;
   insert(entity: T): Promise<T>;
   remove(id: number): Promise<UpdateResult | DeleteResult>; // we receive UpdateResult when entity is soft deleted
@@ -54,15 +49,7 @@ export function BaseEntityService<T extends ObjectLiteral>(
     public findOne(id: number) {
       const whereId = { id } as FindOptionsWhere<Constructor<T>>;
 
-      return this.findOneBy(whereId);
-    }
-
-    findOneBy(
-      where:
-        | FindOptionsWhere<Constructor<T>>
-        | FindOptionsWhere<Constructor<T>>[],
-    ) {
-      return this.repository.findOneByOrFail(where);
+      return this.repository.findOneByOrFail(whereId);
     }
 
     public update(id: number, partialEntity: Partial<T>) {
