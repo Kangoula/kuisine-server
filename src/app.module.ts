@@ -3,7 +3,6 @@ import {
   Module,
   ValidationPipe,
 } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { RecipesModule } from './recipes/recipes.module';
 import { ConfigModule } from '@nestjs/config';
 import { IngredientsModule } from './ingredients/ingredients.module';
@@ -48,6 +47,5 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     UsersModule,
     AuthModule,
   ],
-  controllers: [AppController],
 })
 export class AppModule {}
