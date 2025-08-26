@@ -5,8 +5,6 @@ import { AppModule } from '@/app.module';
 import { loginAs } from './utils/auth.test-utils';
 import { IngredientsService } from '@/ingredients/ingredients.service';
 
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
 describe('Ingredients', () => {
   let app: INestApplication;
 
