@@ -12,7 +12,5 @@
   },
   "moduleNameMapper": {
     "^@/(.*)$": "<rootDir>/../src/$1"
-  },
-  "globalSetup": "<rootDir>/global-setup.ts",
-  "globalTeardown": "<rootDir>/global-teardown.ts"
+  }
 }
