@@ -1,7 +1,6 @@
 import { UsersService } from './users.service';
 import { TestBed } from '@suites/unit';
 import { Mocked } from '@suites/doubles.jest';
-import { hash } from 'bcrypt';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -18,14 +17,15 @@ describe('UsersService', () => {
     repository = unitRef.get(getRepositoryToken(User) as string);
   });
 
-  it('should hash password on creation', async () => {
+  it('should create user', async () => {
     const username = 'Lucien Marcheciel';
     const password = 'LeChictabaDansLeMilleniumCondor';
+    const expectedUserId = 1;
 
     repository.save.mockResolvedValue({
-      id: 1,
+      id: expectedUserId,
       username,
-      password: await hash(password, 10),
+      password,
     });
 
     const userToCreate = {
@@ -36,8 +36,11 @@ describe('UsersService', () => {
     const createdUser = await service.create(userToCreate);
 
     expect(repository.save).toHaveBeenCalled();
-    expect(createdUser.password).toBeDefined();
-    expect(createdUser.password).not.toBe(password);
+    expect(createdUser).toEqual({
+      id: expectedUserId,
+      username,
+      password,
+    });
   });
 
   it('should soft delete user', async () => {
