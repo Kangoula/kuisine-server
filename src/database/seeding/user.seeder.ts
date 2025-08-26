@@ -19,7 +19,7 @@ export class UserSeeder implements Seeder {
     const password = await bcryptHash('xb2212');
 
     await userFactory.save({
-      username: 'Stalvester Silone',
+      username: 'admin',
       password,
     });
 

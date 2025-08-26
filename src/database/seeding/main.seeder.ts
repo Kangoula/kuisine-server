@@ -6,11 +6,10 @@ import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import { Ingredient } from '@/ingredients/entities/ingredient.entity';
 import { IngredientToRecipe } from '@/ingredient-to-recipe/entities/ingredient-to-recipe.entity';
 import { sample } from 'remeda';
-import { User } from '@/users/entities/user.entity';
 
 const RECIPES_COUNT = 10;
 const MAX_RECIPE_STEPS_COUNT = 8;
-const INGREDIENTS_COUNT = 3000;
+const INGREDIENTS_COUNT = 30;
 const MAX_RECIPE_INGREDIENTS = 7;
 
 export class MainSeeder implements Seeder {
@@ -18,7 +17,6 @@ export class MainSeeder implements Seeder {
     dataSource: DataSource,
     factoryManager: SeederFactoryManager,
   ): Promise<any> {
-    await this.seedUsers(factoryManager);
     const ingredients = await this.seedIngredients(factoryManager);
     await this.seedRecipes(factoryManager, ingredients);
   }
@@ -103,17 +101,5 @@ export class MainSeeder implements Seeder {
     console.log('ingredients created');
 
     return ingredients;
-  }
-
-  private async seedUsers(factoryManager: SeederFactoryManager) {
-    console.log('seeding users...');
-
-    const userFactory = factoryManager.get(User);
-    await userFactory.save({
-      username: 'Stalvester Silone',
-      password: 'xb2212',
-    });
-
-    console.log('users created');
   }
 }
