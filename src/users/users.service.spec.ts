@@ -47,42 +47,4 @@ describe('UsersService', () => {
 
     expect(repository.softDelete).toHaveBeenCalledWith(userId);
   });
-
-  it('should return true when passwords are the same', async () => {
-    const userId = 1;
-    const password = 'LeChictabaDansLeMilleniumCondor';
-
-    repository.findOneOrFail.mockResolvedValue({
-      id: userId,
-      username: 'user',
-      password: await hash(password, 10),
-    });
-
-    const result = await service.comparePasswordWithStoredHash(
-      userId,
-      password,
-    );
-
-    expect(repository.findOneOrFail).toHaveBeenCalled();
-    expect(result).toBe(true);
-  });
-
-  it('should return false when passwords are different', async () => {
-    const userId = 1;
-    const wrongPassword = 'JabbaLeForestierEmbaucheZ6PO';
-
-    repository.findOneOrFail.mockResolvedValue({
-      id: userId,
-      username: 'user',
-      password: await hash('LeChictabaDansLeMilleniumCondor', 10),
-    });
-
-    const result = await service.comparePasswordWithStoredHash(
-      userId,
-      wrongPassword,
-    );
-
-    expect(repository.findOneOrFail).toHaveBeenCalled();
-    expect(result).toBe(false);
-  });
 });

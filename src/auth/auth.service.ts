@@ -1,7 +1,8 @@
 import { User } from '@/users/entities/user.entity';
 import { UsersService } from '@/users/users.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { compare as bcryptCompare } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -10,25 +11,26 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  public async validateUser(
-    username: string,
-    password: string,
-  ): Promise<User | null> {
-    const user = await this.usersService.findOneBy({ username });
+  public async validateUser(username: string, password: string) {
+    try {
+      const user = await this.usersService.findOneBy({ username });
 
-    if (user) {
-      const isPasswordValid =
-        await this.usersService.comparePasswordWithStoredHash(
-          user.id,
-          password,
-        );
+      if (user) {
+        await this.verifyPassword(user.password, password);
 
-      if (isPasswordValid) {
         return user;
       }
+    } catch {
+      throw new BadRequestException('Wrong credentials provided');
     }
+  }
 
-    return null;
+  private async verifyPassword(userPassword: string, givenPassword: string) {
+    const isPasswordValid = await bcryptCompare(givenPassword, userPassword);
+
+    if (!isPasswordValid) {
+      throw new BadRequestException('Wrong credentials provided');
+    }
   }
 
   public login(user: User) {

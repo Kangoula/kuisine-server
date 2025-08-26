@@ -1,18 +1,56 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
+import { TestBed } from '@suites/unit';
+import { UsersService } from '@/users/users.service';
+import { Mocked } from '@suites/doubles.jest';
+import { bcryptHash } from '@/common/helpers/bcryptHash';
+import { BadRequestException } from '@nestjs/common';
 
 describe('AuthService', () => {
   let service: AuthService;
+  let usersSerivce: Mocked<UsersService>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService],
-    }).compile();
+    const { unit, unitRef } = await TestBed.solitary(AuthService).compile();
 
-    service = module.get<AuthService>(AuthService);
+    service = unit;
+
+    usersSerivce = unitRef.get(UsersService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('should return true when passwords are the same', async () => {
+    const userId = 1;
+    const username = 'user';
+    const password = 'LeChictabaDansLeMilleniumCondor';
+
+    usersSerivce.findOneBy.mockResolvedValue({
+      id: userId,
+      username,
+      password: await bcryptHash(password),
+    });
+
+    const result = await service.validateUser(username, password);
+
+    expect(usersSerivce.findOneBy).toHaveBeenCalled();
+    expect(result).toBeTruthy();
+    expect(result?.username).toBe(username);
+    expect(result?.id).toBe(userId);
+  });
+
+  it('should return false when passwords are different', async () => {
+    const userId = 1;
+    const username = 'user';
+    const wrongPassword = 'JabbaLeForestierEmbaucheZ6PO';
+
+    usersSerivce.findOneBy.mockResolvedValue({
+      id: userId,
+      username,
+      password: await bcryptHash('LeChictabaDansLeMilleniumCondor'),
+    });
+
+    await expect(service.validateUser(username, wrongPassword)).rejects.toThrow(
+      new BadRequestException('Wrong credentials provided'),
+    );
+
+    expect(usersSerivce.findOneBy).toHaveBeenCalled();
   });
 });
