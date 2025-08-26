@@ -2,6 +2,7 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { AppModule } from '@/app.module';
+import { getRealUserBearerToken } from './utils/auth.test-utils';
 
 describe('Ingredients', () => {
   let app: INestApplication;
@@ -16,32 +17,44 @@ describe('Ingredients', () => {
   });
 
   describe('/POST ingredients', () => {
-    it('without being authenticated should fail with Unauthorized response', async () => {
-      const response = await request(app.getHttpServer())
-        .post('/ingredients')
-        .send({ name: 'durian' });
+    describe('unauthenticated', () => {
+      it('should fail with Unauthorized response', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/ingredients')
+          .send({ name: 'durian' });
 
-      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+      });
     });
 
-    it('with correct payload should return the created ingradient with Created response', async () => {
-      const response = await request(app.getHttpServer())
-        .post('/ingredients')
-        .send({ name: 'durian' });
+    describe('authenticated', () => {
+      let bearerToken: string;
 
-      expect(response.status).toBe(HttpStatus.CREATED);
-      expect(response.body).toHaveProperty('id', 1);
-      expect(response.body).toHaveProperty('name', 'durian');
-      expect(response.body).not.toHaveProperty('deletedAt');
-      expect(response.body).not.toHaveProperty('fullTextSeach');
-    });
+      beforeAll(async () => {
+        bearerToken = await getRealUserBearerToken(app);
+      });
 
-    it('with incorrect payload should fail with Bad Request response', async () => {
-      const response = await request(app.getHttpServer())
-        .post('/ingredients')
-        .send({ name: '' });
+      it('with correct payload should return the created ingredient with Created response', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/ingredients')
+          .set('Authorization', bearerToken)
+          .send({ name: 'durian' });
 
-      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.status).toBe(HttpStatus.CREATED);
+        expect(response.body).toHaveProperty('id', 1);
+        expect(response.body).toHaveProperty('name', 'durian');
+        expect(response.body).not.toHaveProperty('deletedAt');
+        expect(response.body).not.toHaveProperty('fullTextSeach');
+      });
+
+      it('with incorrect payload should fail with Bad Request response', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/ingredients')
+          .set('Authorization', bearerToken)
+          .send({ name: '' });
+
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+      });
     });
   });
 
