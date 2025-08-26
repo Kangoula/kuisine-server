@@ -18,7 +18,7 @@ export class RecipeStepsService extends BaseEntityService(RecipeStep) {
     const step = new RecipeStep();
     step.order = createRecipeStepDto.order;
     step.description = createRecipeStepDto.description;
-    step.recipe = await this.recipeService.findOneOrFail(
+    step.recipe = await this.recipeService.findOne(
       createRecipeStepDto.recipeId,
     );
 

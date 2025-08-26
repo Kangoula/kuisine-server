@@ -20,7 +20,7 @@ export class RecipeStepsController {
 
   @Get(':id')
   findOne(@EntityId() id: number) {
-    return this.recipeStepsService.findOneOrFail(id);
+    return this.recipeStepsService.findOne(id);
   }
 
   @Patch(':id')
@@ -33,7 +33,7 @@ export class RecipeStepsController {
 
   @Delete(':id')
   async remove(@EntityId() id: number) {
-    await this.recipeStepsService.findOneOrFail(id);
+    await this.recipeStepsService.findOne(id);
 
     return this.recipeStepsService.remove(id);
   }

@@ -18,7 +18,7 @@ export class MainSeeder implements Seeder {
     factoryManager: SeederFactoryManager,
   ): Promise<any> {
     const ingredients = await this.seedIngredients(factoryManager);
-    const recipes = await this.seedRecipes(factoryManager, ingredients);
+    await this.seedRecipes(factoryManager, ingredients);
   }
 
   private async seedRecipes(

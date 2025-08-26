@@ -1,8 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { IngredientsService } from './ingredients.service';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
 import { UpdateIngredientDto } from './dto/update-ingredient.dto';
 import { EntityId } from '@/common/decorators/route-params.decorator';
+import { PaginationDto } from '@/common/pagination';
 
 @Controller('ingredients')
 export class IngredientsController {
@@ -14,13 +23,18 @@ export class IngredientsController {
   }
 
   @Get()
-  findAll() {
-    return this.ingredientsService.findAll();
+  findAll(@Body() paginationDto: PaginationDto) {
+    return this.ingredientsService.paginate(paginationDto);
+  }
+
+  @Get('search')
+  search(@Query('term') term: string) {
+    return this.ingredientsService.search(term);
   }
 
   @Get(':id')
   findOne(@EntityId() id: number) {
-    return this.ingredientsService.findOneOrFail(id);
+    return this.ingredientsService.findOne(id);
   }
 
   @Patch(':id')
@@ -33,7 +47,7 @@ export class IngredientsController {
 
   @Delete(':id')
   async remove(@EntityId() id: number) {
-    await this.ingredientsService.findOneOrFail(id);
+    await this.ingredientsService.findOne(id);
     return this.ingredientsService.remove(id);
   }
 }

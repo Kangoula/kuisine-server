@@ -23,6 +23,7 @@ describe('IngredientsController', () => {
       const expectedIngredient: Ingredient = {
         id: 1,
         name: ingredientName,
+        fullTextSearch: null,
         ingredientToRecipe: [],
       };
       const newIngredient = { name: ingredientName };

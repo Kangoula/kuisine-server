@@ -10,22 +10,21 @@ import { Type } from '@nestjs/common';
 import { PaginationDto } from './pagination';
 import { SoftDeletableEntity } from './entities';
 import { getQueryBuilderPaginationParams } from './pagination/typeorm';
-
-type Constructor<I> = new (...args: any[]) => I;
+import { Constructor } from './types';
 
 export interface IBaseService<T extends ObjectLiteral> {
   readonly repository: Repository<T>;
   paginate(paginationDto: PaginationDto): Promise<T[]>;
   findAll(): Promise<T[]>;
-  findOne(id: number): Promise<T | null>;
+  findOne(id: number): Promise<T>;
   findOneBy(
     where:
       | FindOptionsWhere<Constructor<T>>
       | FindOptionsWhere<Constructor<T>>[],
-  ): Promise<T | null>;
-  findOneOrFail(id: number): Promise<T>;
+  ): Promise<T>;
   update(id: number, partialEntity: any): Promise<UpdateResult>;
-  remove(id: number): Promise<UpdateResult | DeleteResult>; // UpdateResult dans le cas d'un softDelete
+  insert(entity: T): Promise<T>;
+  remove(id: number): Promise<UpdateResult | DeleteResult>; // we receive UpdateResult when entity is soft deleted
 }
 
 export function BaseEntityService<T extends ObjectLiteral>(
@@ -36,6 +35,11 @@ export function BaseEntityService<T extends ObjectLiteral>(
   class BaseServiceHost implements IBaseService<T> {
     @InjectRepository(entity)
     public readonly repository: Repository<T>;
+
+    public async insert(entity: T) {
+      await this.repository.insert(entity);
+      return entity;
+    }
 
     public paginate(paginationDto: PaginationDto) {
       return this.repository.find({
@@ -50,7 +54,7 @@ export function BaseEntityService<T extends ObjectLiteral>(
     public findOne(id: number) {
       const whereId = { id } as FindOptionsWhere<Constructor<T>>;
 
-      return this.repository.findOneBy(whereId);
+      return this.findOneBy(whereId);
     }
 
     findOneBy(
@@ -58,13 +62,7 @@ export function BaseEntityService<T extends ObjectLiteral>(
         | FindOptionsWhere<Constructor<T>>
         | FindOptionsWhere<Constructor<T>>[],
     ) {
-      return this.repository.findOneBy(where);
-    }
-
-    public findOneOrFail(id: number) {
-      const whereId = { id } as FindOptionsWhere<Constructor<T>>;
-
-      return this.repository.findOneByOrFail(whereId);
+      return this.repository.findOneByOrFail(where);
     }
 
     public update(id: number, partialEntity: Partial<T>) {

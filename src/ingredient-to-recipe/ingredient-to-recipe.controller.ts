@@ -22,7 +22,7 @@ export class IngredientToRecipeController {
 
   @Delete(':id')
   async remove(@EntityId() id: number) {
-    await this.ingredientToRecipeService.findOneOrFail(id);
+    await this.ingredientToRecipeService.findOne(id);
     return this.ingredientToRecipeService.remove(id);
   }
 }

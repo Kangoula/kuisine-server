@@ -1,7 +1,8 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { SeederOptions } from 'typeorm-extension';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
-const typeormConfig: TypeOrmModuleOptions = {
+const typeormConfig: TypeOrmModuleOptions & SeederOptions = {
   type: 'postgres',
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT ?? 5432),
@@ -9,9 +10,13 @@ const typeormConfig: TypeOrmModuleOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: false,
+  autoLoadEntities: true,
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/database/migrations/*{.ts,.js}'],
+  migrationsRun: process.env.NODE_ENV === 'test',
   namingStrategy: new SnakeNamingStrategy(),
+  seeds: ['dist/database/seeding/**/*.seeder{.ts,.js}'],
+  factories: ['dist/database/seeding/factories/**/*.factory{.ts,.js}'],
 };
 
 export default typeormConfig;
