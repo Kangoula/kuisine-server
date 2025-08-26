@@ -13,6 +13,7 @@ import { UsersModule } from './users/users.module';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import * as Joi from '@hapi/joi';
 
 @Module({
   providers: [
@@ -38,6 +39,14 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+      validationSchema: Joi.object({
+        DB_HOST: Joi.string().required(),
+        DB_PORT: Joi.number().required(),
+        DB_NAME: Joi.string().required(),
+        DB_PASSWORD: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION: Joi.string().required(),
+      }),
     }),
     DatabaseModule,
     RecipesModule,
