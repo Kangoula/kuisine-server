@@ -22,7 +22,7 @@ describe('AuthService', () => {
     const username = 'user';
     const password = 'LeChictabaDansLeMilleniumCondor';
 
-    usersSerivce.findOneBy.mockResolvedValue({
+    usersSerivce.findByUsernameWithPassword.mockResolvedValue({
       id: userId,
       username,
       password: await bcryptHash(password),
@@ -30,7 +30,7 @@ describe('AuthService', () => {
 
     const result = await service.validateUser(username, password);
 
-    expect(usersSerivce.findOneBy).toHaveBeenCalled();
+    expect(usersSerivce.findByUsernameWithPassword).toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(result?.username).toBe(username);
     expect(result?.id).toBe(userId);
@@ -41,7 +41,7 @@ describe('AuthService', () => {
     const username = 'user';
     const wrongPassword = 'JabbaLeForestierEmbaucheZ6PO';
 
-    usersSerivce.findOneBy.mockResolvedValue({
+    usersSerivce.findByUsernameWithPassword.mockResolvedValue({
       id: userId,
       username,
       password: await bcryptHash('LeChictabaDansLeMilleniumCondor'),
@@ -51,6 +51,6 @@ describe('AuthService', () => {
       new BadRequestException('Wrong credentials provided'),
     );
 
-    expect(usersSerivce.findOneBy).toHaveBeenCalled();
+    expect(usersSerivce.findByUsernameWithPassword).toHaveBeenCalled();
   });
 });

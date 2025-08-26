@@ -11,4 +11,12 @@ export class UsersService extends BaseEntityService(User) {
     user.password = createUserDto.password;
     return this.repository.save(user);
   }
+
+  public findByUsernameWithPassword(username: string) {
+    return this.repository.findOneOrFail({
+      where: { username },
+
+      select: ['id', 'username', 'password'], // the password column default behavior makes it not selectable, we have to add an explicit selection to retrieve it
+    });
+  }
 }
