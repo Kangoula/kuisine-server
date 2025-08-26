@@ -3,6 +3,9 @@ import { Test } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { AppModule } from '@/app.module';
 import { getRealUserBearerToken } from './utils/auth.test-utils';
+import { IngredientsService } from '@/ingredients/ingredients.service';
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 describe('Ingredients', () => {
   let app: INestApplication;
@@ -30,7 +33,7 @@ describe('Ingredients', () => {
     describe('authenticated', () => {
       let bearerToken: string;
 
-      beforeAll(async () => {
+      beforeEach(async () => {
         bearerToken = await getRealUserBearerToken(app);
       });
 
@@ -54,6 +57,42 @@ describe('Ingredients', () => {
           .send({ name: '' });
 
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+      });
+
+      it('should return expected ingredient in fulltext search', async () => {
+        const ingredientService = app.get(IngredientsService);
+        const expectedName = 'tomate';
+
+        const ingredient = await ingredientService.create({
+          name: expectedName,
+        });
+
+        const response = await request(app.getHttpServer())
+          .get('/ingredients/search')
+          .query({ term: 'tom' })
+          .set('Authorization', bearerToken);
+
+        expect(response.status).toBe(HttpStatus.OK);
+        expect(response.body[0]).toBeDefined();
+        expect(response.body[0].id).toBe(ingredient.id);
+      });
+
+      it('should return expected ingredient in fulltext search', async () => {
+        const expectedName = 'tomate';
+
+        await request(app.getHttpServer())
+          .post('/ingredients')
+          .set('Authorization', bearerToken)
+          .send({ name: expectedName });
+
+        const response = await request(app.getHttpServer())
+          .get('/ingredients/search')
+          .query({ term: 'tom' })
+          .set('Authorization', bearerToken);
+
+        expect(response.status).toBe(HttpStatus.OK);
+        expect(response.body[0]).toBeDefined();
+        expect(response.body[0].name).toBe(expectedName);
       });
     });
   });
