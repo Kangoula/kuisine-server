@@ -20,11 +20,11 @@ export class IngredientToRecipeService extends BaseEntityService(
   async create(createIngredientToRecipeDto: CreateIngredientToRecipeDto) {
     const ingredientToRecipe = new IngredientToRecipe();
 
-    ingredientToRecipe.recipe = await this.recipesService.findOneOrFail(
+    ingredientToRecipe.recipe = await this.recipesService.findOne(
       createIngredientToRecipeDto.recipeId,
     );
 
-    ingredientToRecipe.ingredient = await this.ingredientsService.findOneOrFail(
+    ingredientToRecipe.ingredient = await this.ingredientsService.findOne(
       createIngredientToRecipeDto.ingredientId,
     );
 

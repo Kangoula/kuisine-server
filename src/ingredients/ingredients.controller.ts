@@ -34,7 +34,7 @@ export class IngredientsController {
 
   @Get(':id')
   findOne(@EntityId() id: number) {
-    return this.ingredientsService.findOneOrFail(id);
+    return this.ingredientsService.findOne(id);
   }
 
   @Patch(':id')
@@ -47,7 +47,7 @@ export class IngredientsController {
 
   @Delete(':id')
   async remove(@EntityId() id: number) {
-    await this.ingredientsService.findOneOrFail(id);
+    await this.ingredientsService.findOne(id);
     return this.ingredientsService.remove(id);
   }
 }

@@ -22,7 +22,7 @@ export class UsersService extends BaseEntityService(User) {
     userId: number,
     password: string,
   ): Promise<boolean> {
-    const user = await this.repository.findOneOrFail({
+    const user = await this.findOneBy({
       where: { id: userId },
       select: ['password'],
     });

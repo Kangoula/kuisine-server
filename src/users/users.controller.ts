@@ -29,7 +29,7 @@ export class UsersController {
 
   @Get(':id')
   findOne(@EntityId() id: number) {
-    return this.usersService.findOneOrFail(id);
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
@@ -39,7 +39,7 @@ export class UsersController {
 
   @Delete(':id')
   async remove(@EntityId() id: number) {
-    await this.usersService.findOneOrFail(id);
+    await this.usersService.findOne(id);
     return this.usersService.remove(id);
   }
 }
