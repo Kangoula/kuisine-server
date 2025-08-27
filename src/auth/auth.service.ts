@@ -2,7 +2,6 @@ import { User } from '@/users/entities/user.entity';
 import { UsersService } from '@/users/users.service';
 import {
   BadRequestException,
-  Inject,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -65,27 +64,25 @@ export class AuthService {
     }
   }
 
-  public getCookieWithJwtToken(userId: number) {
+  private getJwtToken(userId: number) {
     const payload: TokenPayload = { userId };
 
-    console.log(
-      '.??????????????????????????????????',
-      this.configService.get('JWT_EXPIRATION_TIME') || 'caca',
-    );
+    return this.jwtService.sign(payload);
+  }
 
-    const token = this.jwtService.sign(payload);
-
-    console.log('exp', this.configService.get('JWT_EXPIRATION_TIME'));
+  public getCookieWithJwtToken(userId: number) {
+    const token = this.getJwtToken(userId);
 
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
   }
 
-  // public login(user: User) {
-  //   return {
-  //     access_token: this.jwtService.sign({
-  //       username: user.username,
-  //       sub: user.id,
-  //     }),
-  //   };
-  // }
+  public getAccessToken(userId: number) {
+    return {
+      access_token: this.getJwtToken(userId),
+    };
+  }
+
+  public getCookieForLogOut() {
+    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
+  }
 }
