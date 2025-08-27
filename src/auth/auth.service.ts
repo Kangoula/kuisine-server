@@ -1,4 +1,3 @@
-import { User } from '@/users/entities/user.entity';
 import { UsersService } from '@/users/users.service';
 import {
   BadRequestException,
@@ -14,8 +13,13 @@ import { PostgresErrorCode } from '@/database/postgresErrorCodes.enum';
 import { CookieOptions } from 'express';
 import * as ms from 'ms';
 
+export enum CookieTypeNames {
+  Refresh = 'Refresh',
+  Access = 'Authentication',
+}
+
 export type JwtCookieParams = {
-  name: string;
+  name: CookieTypeNames;
   token: string;
   params: CookieOptions;
 };
@@ -72,7 +76,7 @@ export class AuthService {
     ) as string;
 
     return {
-      name: 'Authentication',
+      name: CookieTypeNames.Access,
       token: this.getJwtToken(userId, secret, expirationTime),
       params: {
         maxAge: ms(expirationTime as ms.StringValue),
@@ -89,7 +93,7 @@ export class AuthService {
     ) as string;
 
     return {
-      name: 'Refresh',
+      name: CookieTypeNames.Refresh,
       token: this.getJwtToken(userId, secret, expirationTime),
       params: {
         maxAge: ms(expirationTime as ms.StringValue),

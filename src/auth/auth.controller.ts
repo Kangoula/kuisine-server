@@ -16,6 +16,7 @@ import { ReqWithUser } from '@/common/types';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '@/users/users.service';
+import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -81,5 +82,22 @@ export class AuthController {
   authenticate(@Request() request: ReqWithUser) {
     const user = request.user;
     return user;
+  }
+
+  @UseGuards(JwtRefreshGuard)
+  @Get('refresh')
+  refresh(
+    @Request() req: ReqWithUser,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const { user } = req;
+    const accessTokenCookie =
+      this.authService.getCookieParametersForAccessToken(user.id);
+
+    response.cookie(
+      accessTokenCookie.name,
+      accessTokenCookie.token,
+      accessTokenCookie.params,
+    );
   }
 }
