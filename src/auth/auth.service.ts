@@ -109,12 +109,19 @@ export class AuthService {
     return this.jwtService.sign(payload, { secret, expiresIn });
   }
 
-  // TODO
-  public getLogoutCookieOptions(): CookieOptions {
+  public getLogoutCookieParametersForAccessToken() {
     return {
       maxAge: 0,
       httpOnly: true,
       path: '/',
+    };
+  }
+
+  public getLogoutCookieParametersForRefreshToken() {
+    return {
+      maxAge: 0,
+      httpOnly: true,
+      path: '/auth',
     };
   }
 

@@ -68,10 +68,16 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logOut(@Res({ passthrough: true }) response: Response) {
-    const logoutCookieOptions = this.authService.getLogoutCookieOptions();
-
-    response.cookie(CookieTypeNames.Access, '', logoutCookieOptions);
-    response.cookie(CookieTypeNames.Refresh, '', logoutCookieOptions);
+    response.cookie(
+      CookieTypeNames.Access,
+      '',
+      this.authService.getLogoutCookieParametersForAccessToken(),
+    );
+    response.cookie(
+      CookieTypeNames.Refresh,
+      '',
+      this.authService.getLogoutCookieParametersForRefreshToken(),
+    );
   }
 
   @Get('me')
