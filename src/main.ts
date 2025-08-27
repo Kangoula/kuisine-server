@@ -30,7 +30,9 @@ async function bootstrap() {
 
   app.useGlobalFilters(new EntityNotFoundErrorFilter());
 
-  setupSwagger(app);
+  if (process.env.NODE_ENV === 'development') {
+    setupSwagger(app);
+  }
 
   await app.listen(process.env.PORT ?? 3000);
 }
