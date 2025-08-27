@@ -40,7 +40,7 @@ export class AuthController {
     return response.sendStatus(200);
   }
 
-  @Get()
+  @Get('me')
   authenticate(@Request() request: ReqWithUser) {
     const user = request.user;
     return user;
