@@ -1,4 +1,4 @@
-import { AuthService } from './auth.service';
+import { AuthService, CookieTypeNames } from './auth.service';
 import { TestBed } from '@suites/unit';
 import { UsersService } from '@/users/users.service';
 import { Mocked } from '@suites/doubles.jest';
@@ -8,10 +8,13 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { PostgresErrorCode } from '@/database/postgresErrorCodes.enum';
+import { ConfigService } from '@nestjs/config';
+import * as ms from 'ms';
 
 describe('AuthService', () => {
   let service: AuthService;
   let usersSerivce: Mocked<UsersService>;
+  let configService: Mocked<ConfigService>;
 
   beforeEach(async () => {
     const { unit, unitRef } = await TestBed.solitary(AuthService).compile();
@@ -19,6 +22,7 @@ describe('AuthService', () => {
     service = unit;
 
     usersSerivce = unitRef.get(UsersService);
+    configService = unitRef.get(ConfigService);
   });
 
   it('should return true when passwords are the same', async () => {
@@ -120,5 +124,51 @@ describe('AuthService', () => {
         password,
       }),
     );
+  });
+
+  it('should return cookie params for access token', () => {
+    const expirationTime = '60s';
+    const expectedMaxAge = ms(expirationTime as ms.StringValue);
+
+    configService.get.mockImplementation((key) => {
+      if (key === 'auth.accessToken.expirationTime') {
+        return expirationTime;
+      }
+
+      return 'Criquette Rockwell';
+    });
+
+    const cookieParam = service.getCookieParametersForAccessToken(1);
+
+    expect(configService.get).toHaveBeenCalledWith('auth.accessToken.secret');
+    expect(configService.get).toHaveBeenCalledWith(
+      'auth.accessToken.expirationTime',
+    );
+
+    expect(cookieParam.name).toBe(CookieTypeNames.Access);
+    expect(cookieParam.params.maxAge).toBe(expectedMaxAge);
+  });
+
+  it('should return cookie params for refresh token', () => {
+    const expirationTime = '15m';
+    const expectedMaxAge = ms(expirationTime as ms.StringValue);
+
+    configService.get.mockImplementation((key) => {
+      if (key === 'auth.refreshToken.expirationTime') {
+        return expirationTime;
+      }
+
+      return 'Brett Montgomery ';
+    });
+
+    const cookieParam = service.getCookieParametersForRefreshToken(1);
+
+    expect(configService.get).toHaveBeenCalledWith('auth.refreshToken.secret');
+    expect(configService.get).toHaveBeenCalledWith(
+      'auth.refreshToken.expirationTime',
+    );
+
+    expect(cookieParam.name).toBe(CookieTypeNames.Refresh);
+    expect(cookieParam.params.maxAge).toBe(expectedMaxAge);
   });
 });
