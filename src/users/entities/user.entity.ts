@@ -10,4 +10,8 @@ export class User extends SoftDeletableEntity {
   @Exclude()
   @Column({ type: 'varchar', precision: 255, select: false })
   password: string;
+
+  @Exclude()
+  @Column({ type: 'varchar', precision: 255, nullable: true, select: false })
+  refreshToken?: string;
 }

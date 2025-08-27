@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { UsersService } from '@/users/users.service';
 import { Request } from 'express';
 import { TokenPayload } from '../tokenPayload.interface';
+import { CookieTypeNames } from '../auth.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,16 +17,20 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       // extract jwt from cookie or from Bearer Token
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
-          return request?.cookies?.Authentication as string | null;
+          return this.getAcessTokenFromCookie(request);
         },
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
       ignoreExpiration: false,
-      secretOrKey: String(configService.get('JWT_SECRET')),
+      secretOrKey: configService.get('JWT_ACCESS_SECRET') as string,
     });
   }
 
   validate(payload: TokenPayload) {
     return this.usersService.findOne(payload.userId);
+  }
+
+  private getAcessTokenFromCookie(req: Request) {
+    return req?.cookies?.[CookieTypeNames.Access] as string;
   }
 }

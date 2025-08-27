@@ -1,4 +1,3 @@
-import { User } from '@/users/entities/user.entity';
 import { UsersService } from '@/users/users.service';
 import {
   BadRequestException,
@@ -8,12 +7,22 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { compare as bcryptCompare } from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
-import { bcryptHash } from '@/common/helpers/bcryptHash';
 import { TokenPayload } from './tokenPayload.interface';
 import { ConfigService } from '@nestjs/config';
 import { PostgresErrorCode } from '@/database/postgresErrorCodes.enum';
 import { CookieOptions } from 'express';
 import * as ms from 'ms';
+
+export enum CookieTypeNames {
+  Refresh = 'Refresh',
+  Access = 'Authentication',
+}
+
+export type JwtCookieParams = {
+  name: CookieTypeNames;
+  token: string;
+  params: CookieOptions;
+};
 
 @Injectable()
 export class AuthService {
@@ -46,14 +55,8 @@ export class AuthService {
   }
 
   public async register(registerData: RegisterDto) {
-    const hashedPassword = await bcryptHash(registerData.password);
-
     try {
-      const createdUser = (await this.usersService.create({
-        ...registerData,
-        password: hashedPassword,
-      })) as Partial<User>;
-      createdUser.password = undefined;
+      const createdUser = await this.usersService.create(registerData);
       return createdUser;
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
@@ -66,19 +69,77 @@ export class AuthService {
     }
   }
 
-  public getJwtToken(userId: number) {
-    const payload: TokenPayload = { userId };
+  public getCookieParametersForAccessToken(userId: number): JwtCookieParams {
+    const secret = this.configService.get(`auth.accessToken.secret`) as string;
+    const expirationTime = this.configService.get(
+      `auth.accessToken.expirationTime`,
+    ) as string;
 
-    return this.jwtService.sign(payload);
+    return {
+      name: CookieTypeNames.Access,
+      token: this.getJwtToken(userId, secret, expirationTime),
+      params: {
+        maxAge: ms(expirationTime as ms.StringValue),
+        httpOnly: true,
+        path: '/',
+      },
+    };
   }
 
-  public getLoginCookieOptions(): CookieOptions {
+  public getCookieParametersForRefreshToken(userId: number): JwtCookieParams {
+    const secret = this.configService.get(`auth.refreshToken.secret`) as string;
+    const expirationTime = this.configService.get(
+      `auth.refreshToken.expirationTime`,
+    ) as string;
+
     return {
-      maxAge: ms(
-        this.configService.get('JWT_EXPIRATION_TIME') as ms.StringValue,
+      name: CookieTypeNames.Refresh,
+      token: this.getJwtToken(userId, secret, expirationTime),
+      params: {
+        maxAge: ms(expirationTime as ms.StringValue),
+        httpOnly: true,
+        path: '/auth',
+      },
+    };
+  }
+
+  private getJwtToken(userId: number, secret: string, expiresIn: string) {
+    const payload: TokenPayload = { userId };
+
+    return this.jwtService.sign(payload, { secret, expiresIn });
+  }
+
+  public getLogoutCookieParametersForAccessToken(): JwtCookieParams {
+    return {
+      name: CookieTypeNames.Access,
+      token: '',
+      params: {
+        maxAge: 0,
+        httpOnly: true,
+        path: '/',
+      },
+    };
+  }
+
+  public getLogoutCookieParametersForRefreshToken() {
+    return {
+      name: CookieTypeNames.Refresh,
+      token: '',
+      params: {
+        maxAge: 0,
+        httpOnly: true,
+        path: '/auth',
+      },
+    };
+  }
+
+  public getAccessToken(userId: number) {
+    return {
+      access_token: this.getJwtToken(
+        userId,
+        this.configService.get('auth.accessToken.secret') as string,
+        this.configService.get('auth.accessToken.expirationTime') as string,
       ),
-      httpOnly: true,
-      path: '/',
     };
   }
 
@@ -87,12 +148,6 @@ export class AuthService {
       maxAge: 0,
       httpOnly: true,
       path: '/',
-    };
-  }
-
-  public getAccessToken(userId: number) {
-    return {
-      access_token: this.getJwtToken(userId),
     };
   }
 

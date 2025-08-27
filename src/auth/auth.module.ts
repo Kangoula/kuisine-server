@@ -7,6 +7,7 @@ import { JwtConfigService } from './jwt-config.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './auth.controller';
+import { JwtRefreshTokenStrategy } from './strategies/jwt-refresh-token.strategy';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { AuthController } from './auth.controller';
       useClass: JwtConfigService,
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshTokenStrategy],
   exports: [AuthService],
   controllers: [AuthController],
 })

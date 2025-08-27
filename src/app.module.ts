@@ -14,6 +14,8 @@ import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import * as Joi from '@hapi/joi';
+import authConfig from './config/auth.config';
+import databaseConfig from './config/database.config';
 
 @Module({
   providers: [
@@ -38,15 +40,18 @@ import * as Joi from '@hapi/joi';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      load: [authConfig, databaseConfig],
       // ensure all env variables are present before starting
       validationSchema: Joi.object({
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
         DB_NAME: Joi.string().required(),
+        DB_USER: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
-        JWT_SECRET: Joi.string().required(),
-        JWT_EXPIRATION_TIME: Joi.string().required(),
+        JWT_ACCESS_SECRET: Joi.string().required(),
+        JWT_ACCESS_EXPIRATION_TIME: Joi.string().required(),
+        JWT_REFRESH_SECRET: Joi.string().required(),
+        JWT_REFRESH_EXPIRATION_TIME: Joi.string().required(),
       }),
     }),
     DatabaseModule,
