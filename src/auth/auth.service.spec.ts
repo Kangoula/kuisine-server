@@ -147,6 +147,8 @@ describe('AuthService', () => {
 
     expect(cookieParam.name).toBe(CookieTypeNames.Access);
     expect(cookieParam.params.maxAge).toBe(expectedMaxAge);
+    expect(cookieParam.params.httpOnly).toBe(true);
+    expect(cookieParam.params.path).toBe('/');
   });
 
   it('should return cookie params for refresh token', () => {
@@ -170,5 +172,7 @@ describe('AuthService', () => {
 
     expect(cookieParam.name).toBe(CookieTypeNames.Refresh);
     expect(cookieParam.params.maxAge).toBe(expectedMaxAge);
+    expect(cookieParam.params.httpOnly).toBe(true);
+    expect(cookieParam.params.path).toBe('/auth');
   });
 });
