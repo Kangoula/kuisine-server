@@ -10,11 +10,13 @@ import {
 import { PostgresErrorCode } from '@/database/postgresErrorCodes.enum';
 import { ConfigService } from '@nestjs/config';
 import * as ms from 'ms';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthService', () => {
   let service: AuthService;
   let usersSerivce: Mocked<UsersService>;
   let configService: Mocked<ConfigService>;
+  let jwtService: Mocked<JwtService>;
 
   beforeEach(async () => {
     const { unit, unitRef } = await TestBed.solitary(AuthService).compile();
@@ -23,6 +25,7 @@ describe('AuthService', () => {
 
     usersSerivce = unitRef.get(UsersService);
     configService = unitRef.get(ConfigService);
+    jwtService = unitRef.get(JwtService);
   });
 
   it('should return true when passwords are the same', async () => {
@@ -127,52 +130,121 @@ describe('AuthService', () => {
   });
 
   it('should return cookie params for access token', () => {
+    const userId = 1;
+
+    const secret = 'Criquette Rockwell';
+
     const expirationTime = '60s';
     const expectedMaxAge = ms(expirationTime as ms.StringValue);
 
+    const expectedToken = 'signed-token';
+
+    jwtService.sign.mockReturnValue(expectedToken);
     configService.get.mockImplementation((key) => {
       if (key === 'auth.accessToken.expirationTime') {
         return expirationTime;
       }
 
-      return 'Criquette Rockwell';
+      return secret;
     });
 
-    const cookieParam = service.getCookieParametersForAccessToken(1);
+    const cookieParam = service.getCookieParametersForAccessToken(userId);
 
     expect(configService.get).toHaveBeenCalledWith('auth.accessToken.secret');
     expect(configService.get).toHaveBeenCalledWith(
       'auth.accessToken.expirationTime',
     );
+    expect(jwtService.sign).toHaveBeenCalledWith(
+      expect.objectContaining({ userId }),
+      expect.objectContaining({ secret, expiresIn: expirationTime }),
+    );
 
-    expect(cookieParam.name).toBe(CookieTypeNames.Access);
-    expect(cookieParam.params.maxAge).toBe(expectedMaxAge);
-    expect(cookieParam.params.httpOnly).toBe(true);
-    expect(cookieParam.params.path).toBe('/');
+    expect(cookieParam).toEqual(
+      expect.objectContaining({
+        name: CookieTypeNames.Access,
+        token: expectedToken,
+        params: {
+          maxAge: expectedMaxAge,
+          httpOnly: true,
+          path: '/',
+        },
+      }),
+    );
   });
 
   it('should return cookie params for refresh token', () => {
+    const userId = 1;
+
+    const secret = 'Brett Montgomery';
+
     const expirationTime = '15m';
     const expectedMaxAge = ms(expirationTime as ms.StringValue);
+
+    const expectedToken = 'signed-refresh-token';
+
+    jwtService.sign.mockReturnValue(expectedToken);
 
     configService.get.mockImplementation((key) => {
       if (key === 'auth.refreshToken.expirationTime') {
         return expirationTime;
       }
 
-      return 'Brett Montgomery ';
+      return secret;
     });
 
-    const cookieParam = service.getCookieParametersForRefreshToken(1);
+    const cookieParam = service.getCookieParametersForRefreshToken(userId);
 
     expect(configService.get).toHaveBeenCalledWith('auth.refreshToken.secret');
     expect(configService.get).toHaveBeenCalledWith(
       'auth.refreshToken.expirationTime',
     );
+    expect(jwtService.sign).toHaveBeenCalledWith(
+      expect.objectContaining({ userId }),
+      expect.objectContaining({ secret, expiresIn: expirationTime }),
+    );
 
-    expect(cookieParam.name).toBe(CookieTypeNames.Refresh);
-    expect(cookieParam.params.maxAge).toBe(expectedMaxAge);
-    expect(cookieParam.params.httpOnly).toBe(true);
-    expect(cookieParam.params.path).toBe('/auth');
+    expect(cookieParam).toEqual(
+      expect.objectContaining({
+        name: CookieTypeNames.Refresh,
+        token: expectedToken,
+        params: {
+          maxAge: expectedMaxAge,
+          httpOnly: true,
+          path: '/auth',
+        },
+      }),
+    );
+  });
+
+  it('should return logout cookie for access token', () => {
+    const result = service.getLogoutCookieParametersForAccessToken();
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        name: CookieTypeNames.Access,
+        token: '',
+        params: {
+          maxAge: 0,
+          httpOnly: true,
+          path: '/',
+        },
+      }),
+    );
+  });
+
+  it('should return logout cookie for refresh token', () => {
+    const result = service.getLogoutCookieParametersForRefreshToken();
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        name: CookieTypeNames.Refresh,
+        token: '',
+        params: {
+          maxAge: 0,
+          httpOnly: true,
+          path: '/auth',
+        },
+      }),
+    );
   });
 });

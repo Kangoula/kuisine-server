@@ -109,19 +109,27 @@ export class AuthService {
     return this.jwtService.sign(payload, { secret, expiresIn });
   }
 
-  public getLogoutCookieParametersForAccessToken() {
+  public getLogoutCookieParametersForAccessToken(): JwtCookieParams {
     return {
-      maxAge: 0,
-      httpOnly: true,
-      path: '/',
+      name: CookieTypeNames.Access,
+      token: '',
+      params: {
+        maxAge: 0,
+        httpOnly: true,
+        path: '/',
+      },
     };
   }
 
   public getLogoutCookieParametersForRefreshToken() {
     return {
-      maxAge: 0,
-      httpOnly: true,
-      path: '/auth',
+      name: CookieTypeNames.Refresh,
+      token: '',
+      params: {
+        maxAge: 0,
+        httpOnly: true,
+        path: '/auth',
+      },
     };
   }
 
