@@ -12,6 +12,8 @@ import { bcryptHash } from '@/common/helpers/bcryptHash';
 import { TokenPayload } from './tokenPayload.interface';
 import { ConfigService } from '@nestjs/config';
 import { PostgresErrorCode } from '@/database/postgresErrorCodes.enum';
+import { CookieOptions } from 'express';
+import * as ms from 'ms';
 
 @Injectable()
 export class AuthService {
@@ -64,18 +66,28 @@ export class AuthService {
     }
   }
 
-  private getJwtToken(userId: number) {
+  public getJwtToken(userId: number) {
     const payload: TokenPayload = { userId };
 
     return this.jwtService.sign(payload);
   }
 
-  public getCookieWithJwtToken(userId: number) {
-    const token = this.getJwtToken(userId);
+  public getLoginCookieOptions(): CookieOptions {
+    return {
+      maxAge: ms(
+        this.configService.get('JWT_EXPIRATION_TIME') as ms.StringValue,
+      ),
+      httpOnly: true,
+      path: '/',
+    };
+  }
 
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
-      'JWT_EXPIRATION_TIME',
-    )}`;
+  public getLogoutCookieOptions(): CookieOptions {
+    return {
+      maxAge: 0,
+      httpOnly: true,
+      path: '/',
+    };
   }
 
   public getAccessToken(userId: number) {

@@ -24,11 +24,17 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  logIn(@Request() req: ReqWithUser, @Res() response: Response) {
+  logIn(
+    @Request() req: ReqWithUser,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const { user } = req;
-    const cookie = this.authService.getCookieWithJwtToken(user.id);
-    response.setHeader('Set-Cookie', cookie);
-    response.send();
+
+    response.cookie(
+      'Authentication',
+      this.authService.getJwtToken(user.id),
+      this.authService.getLoginCookieOptions(),
+    );
   }
 
   @Public()
@@ -39,9 +45,15 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logOut(@Request() request: ReqWithUser, @Res() response: Response) {
-    response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
-    response.send();
+  logOut(
+    // @Request() request: ReqWithUser,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    response.cookie(
+      'Authentication',
+      '',
+      this.authService.getLogoutCookieOptions(),
+    );
   }
 
   @Get('me')
