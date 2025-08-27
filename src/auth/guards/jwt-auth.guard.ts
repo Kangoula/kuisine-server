@@ -1,4 +1,4 @@
-import { IS_PULBIC_KEY } from '@/common/decorators/public.decorator';
+import { IS_PULBIC_KEY } from '@/auth/decorators/public.decorator';
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';

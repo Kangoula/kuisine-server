@@ -1,6 +1,6 @@
-import { Public } from '@/common/decorators/public.decorator';
+import { Public } from '@/auth/decorators/public.decorator';
 import { Controller, Post, Request, Res, UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from './local-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { ReqWithUser } from '@/common/types';
 import { Response } from 'express';
