@@ -75,7 +75,7 @@ export class AuthService {
   public getLoginCookieOptions(): CookieOptions {
     return {
       maxAge: ms(
-        this.configService.get('JWT_EXPIRATION_TIME') as ms.StringValue,
+        this.configService.get('JWT_ACCESS_EXPIRATION_TIME') as ms.StringValue,
       ),
       httpOnly: true,
       path: '/',
