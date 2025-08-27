@@ -30,10 +30,13 @@ export class AuthController {
   ) {
     const { user } = req;
 
+    const accessTokenCookie =
+      this.authService.getCookieParametersForAccessToken(user.id);
+
     response.cookie(
-      'Authentication',
-      this.authService.getJwtToken(user.id),
-      this.authService.getLoginCookieOptions(),
+      accessTokenCookie.name,
+      accessTokenCookie.token,
+      accessTokenCookie.params,
     );
   }
 

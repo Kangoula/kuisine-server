@@ -15,6 +15,12 @@ import { PostgresErrorCode } from '@/database/postgresErrorCodes.enum';
 import { CookieOptions } from 'express';
 import * as ms from 'ms';
 
+export type JwtCookieParams = {
+  name: string;
+  token: string;
+  params: CookieOptions;
+};
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -66,22 +72,47 @@ export class AuthService {
     }
   }
 
-  public getJwtToken(userId: number) {
-    const payload: TokenPayload = { userId };
+  public getCookieParametersForAccessToken(userId: number): JwtCookieParams {
+    const secret = this.configService.get(`auth.accessToken.secret`) as string;
+    const expirationTime = this.configService.get(
+      `auth.accessToken.expirationTime`,
+    ) as string;
 
-    return this.jwtService.sign(payload);
-  }
-
-  public getLoginCookieOptions(): CookieOptions {
     return {
-      maxAge: ms(
-        this.configService.get('JWT_ACCESS_EXPIRATION_TIME') as ms.StringValue,
-      ),
-      httpOnly: true,
-      path: '/',
+      name: 'Authentication',
+      token: this.getJwtToken(userId, secret, expirationTime),
+      params: {
+        maxAge: ms(expirationTime as ms.StringValue),
+        httpOnly: true,
+        path: '/',
+      },
     };
   }
 
+  public getCookieParametersForRefreshToken(userId: number): JwtCookieParams {
+    const secret = this.configService.get(`auth.refreshToken.secret`) as string;
+    const expirationTime = this.configService.get(
+      `auth.refreshToken.expirationTime`,
+    ) as string;
+
+    return {
+      name: 'Authentication',
+      token: this.getJwtToken(userId, secret, expirationTime),
+      params: {
+        maxAge: ms(expirationTime as ms.StringValue),
+        httpOnly: true,
+        path: '/auth',
+      },
+    };
+  }
+
+  private getJwtToken(userId: number, secret: string, expiresIn: string) {
+    const payload: TokenPayload = { userId };
+
+    return this.jwtService.sign(payload, { secret, expiresIn });
+  }
+
+  // TODO
   public getLogoutCookieOptions(): CookieOptions {
     return {
       maxAge: 0,
@@ -92,11 +123,11 @@ export class AuthService {
 
   public getAccessToken(userId: number) {
     return {
-      access_token: this.getJwtToken(userId),
+      access_token: this.getJwtToken(
+        userId,
+        this.configService.get('auth.accessToken.secret') as string,
+        this.configService.get('auth.accessToken.expirationTime') as string,
+      ),
     };
-  }
-
-  public getCookieForLogOut() {
-    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
   }
 }
