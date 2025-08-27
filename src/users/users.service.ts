@@ -19,4 +19,8 @@ export class UsersService extends BaseEntityService(User) {
       select: ['id', 'username', 'password'], // the password column default behavior makes it not selectable, we have to add an explicit selection to retrieve it
     });
   }
+
+  findByUsername(username: string) {
+    return this.repository.findOneByOrFail({ username });
+  }
 }
