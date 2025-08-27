@@ -30,4 +30,9 @@ export class UsersService extends BaseEntityService(User) {
   findByUsername(username: string) {
     return this.repository.findOneByOrFail({ username });
   }
+
+  async setCurrentRefreshToken(userId: number, refreshToken: string) {
+    const hashedRefreshToken = await bcryptHash(refreshToken);
+    await this.update(userId, { refreshToken: hashedRefreshToken });
+  }
 }

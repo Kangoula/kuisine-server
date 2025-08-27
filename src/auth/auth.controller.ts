@@ -15,16 +15,20 @@ import { AuthService } from './auth.service';
 import { ReqWithUser } from '@/common/types';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
+import { UsersService } from '@/users/users.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  logIn(
+  async logIn(
     @Request() req: ReqWithUser,
     @Res({ passthrough: true }) response: Response,
   ) {
@@ -34,6 +38,11 @@ export class AuthController {
       this.authService.getCookieParametersForAccessToken(user.id);
     const refreshTokenCookie =
       this.authService.getCookieParametersForRefreshToken(user.id);
+
+    await this.usersService.setCurrentRefreshToken(
+      user.id,
+      refreshTokenCookie.token,
+    );
 
     response.cookie(
       accessTokenCookie.name,
@@ -45,6 +54,8 @@ export class AuthController {
       refreshTokenCookie.token,
       refreshTokenCookie.params,
     );
+
+    return user;
   }
 
   @Public()

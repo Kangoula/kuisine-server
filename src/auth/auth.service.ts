@@ -8,7 +8,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { compare as bcryptCompare } from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
-import { bcryptHash } from '@/common/helpers/bcryptHash';
 import { TokenPayload } from './tokenPayload.interface';
 import { ConfigService } from '@nestjs/config';
 import { PostgresErrorCode } from '@/database/postgresErrorCodes.enum';
