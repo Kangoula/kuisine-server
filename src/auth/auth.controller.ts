@@ -32,11 +32,18 @@ export class AuthController {
 
     const accessTokenCookie =
       this.authService.getCookieParametersForAccessToken(user.id);
+    const refreshTokenCookie =
+      this.authService.getCookieParametersForRefreshToken(user.id);
 
     response.cookie(
       accessTokenCookie.name,
       accessTokenCookie.token,
       accessTokenCookie.params,
+    );
+    response.cookie(
+      refreshTokenCookie.name,
+      refreshTokenCookie.token,
+      refreshTokenCookie.params,
     );
   }
 

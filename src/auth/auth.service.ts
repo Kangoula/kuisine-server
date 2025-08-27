@@ -52,14 +52,8 @@ export class AuthService {
   }
 
   public async register(registerData: RegisterDto) {
-    const hashedPassword = await bcryptHash(registerData.password);
-
     try {
-      const createdUser = (await this.usersService.create({
-        ...registerData,
-        password: hashedPassword,
-      })) as Partial<User>;
-      createdUser.password = undefined;
+      const createdUser = await this.usersService.create(registerData);
       return createdUser;
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
@@ -96,7 +90,7 @@ export class AuthService {
     ) as string;
 
     return {
-      name: 'Authentication',
+      name: 'Refresh',
       token: this.getJwtToken(userId, secret, expirationTime),
       params: {
         maxAge: ms(expirationTime as ms.StringValue),

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BaseEntityService } from '@/common/base-entity.service';
 import { User } from './entities/user.entity';
+import { bcryptHash } from '@/common/helpers/bcryptHash';
 
 type UserWithoutPassword = Omit<User, 'password'>;
 
@@ -10,7 +11,7 @@ export class UsersService extends BaseEntityService(User) {
   async create(createUserDto: CreateUserDto): Promise<UserWithoutPassword> {
     const user = new User();
     user.username = createUserDto.username;
-    user.password = createUserDto.password;
+    user.password = await bcryptHash(createUserDto.password);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...createdUser } = await this.repository.save(user);
