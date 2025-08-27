@@ -2,31 +2,31 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BaseEntityService } from '@/common/base-entity.service';
 import { User } from './entities/user.entity';
-import { compare as bcryptCompare } from 'bcrypt';
-import { bcryptHash } from '@/common/helpers/bcryptHash';
+
+type UserWithoutPassword = Omit<User, 'password'>;
 
 @Injectable()
 export class UsersService extends BaseEntityService(User) {
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<UserWithoutPassword> {
     const user = new User();
     user.username = createUserDto.username;
-    user.password = await this.hashPassword(createUserDto.password);
-    return this.repository.save(user);
+    user.password = createUserDto.password;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...createdUser } = await this.repository.save(user);
+
+    return createdUser;
   }
 
-  private hashPassword(password: string): Promise<string> {
-    return bcryptHash(password);
-  }
-
-  public async comparePasswordWithStoredHash(
-    userId: number,
-    password: string,
-  ): Promise<boolean> {
-    const user = await this.findOneBy({
-      where: { id: userId },
-      select: ['password'],
+  public findByUsernameWithPassword(username: string) {
+    return this.repository.findOneOrFail({
+      where: { username },
+      // the password column default behavior makes it not selectable, we have to add an explicit selection to retrieve it
+      select: ['id', 'username', 'password'],
     });
+  }
 
-    return bcryptCompare(password, user.password);
+  findByUsername(username: string) {
+    return this.repository.findOneByOrFail({ username });
   }
 }

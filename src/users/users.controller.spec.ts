@@ -14,26 +14,6 @@ describe('UsersController', () => {
     service = unitRef.get<UsersService>(UsersService);
   });
 
-  it('should create the given user', async () => {
-    const userData = {
-      username: 'Seaven Stegal',
-      password: 'MielEnHautePierre',
-    };
-
-    const expectedUser = {
-      id: 1,
-      username: 'Seaven Stegal',
-      password: 'MielEnHautePierre',
-    };
-
-    service.create.mockResolvedValue(expectedUser);
-
-    const createdUser = await controller.create(userData);
-
-    expect(service.create).toHaveBeenCalledWith(userData);
-    expect(createdUser).toBe(expectedUser);
-  });
-
   it('should return a list of users', async () => {
     const users = [
       { id: 1, username: 'Seaven Stegal', password: 'MielEnHautePierre' },
@@ -56,11 +36,11 @@ describe('UsersController', () => {
       password: 'MonsieurGelDansChauveSourisHomme',
     };
 
-    service.findOneOrFail.mockResolvedValue(user);
+    service.findOne.mockResolvedValue(user);
 
     const returnedUser = await controller.findOne(userId);
 
-    expect(service.findOneOrFail).toHaveBeenCalledWith(userId);
+    expect(service.findOne).toHaveBeenCalledWith(userId);
     expect(returnedUser).toBe(user);
   });
 
@@ -68,7 +48,7 @@ describe('UsersController', () => {
     const userId = 1;
     const err = new Error('not found');
 
-    service.findOneOrFail.mockImplementation(() => {
+    service.findOne.mockImplementation(() => {
       return Promise.reject(err);
     });
 

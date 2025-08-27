@@ -16,7 +16,7 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - JWT_EXPIRATION_TIME=${JWT_EXPIRATION_TIME}
     ports:
       - '3000:3000'
     depends_on:

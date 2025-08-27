@@ -4,7 +4,7 @@ import { Column, Entity } from 'typeorm';
 
 @Entity()
 export class User extends SoftDeletableEntity {
-  @Column({ type: 'varchar', precision: 255 })
+  @Column({ type: 'varchar', precision: 255, unique: true })
   username: string;
 
   @Exclude()

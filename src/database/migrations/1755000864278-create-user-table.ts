@@ -17,12 +17,12 @@ export class CreateUserTable1755000864278 implements MigrationInterface {
             name: 'username',
             type: 'varchar',
             precision: 255,
+            isUnique: true,
           },
           {
             name: 'password',
             type: 'varchar',
             precision: 255,
-            isNullable: true,
           },
           {
             name: 'deleted_at',

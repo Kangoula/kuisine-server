@@ -6,8 +6,8 @@ export const loginAs = async (app: INestApplication, username: string) => {
   const usersService = app.get(UsersService);
   const authService = app.get(AuthService);
 
-  const user = await usersService.findOneBy({ username });
+  const user = await usersService.findByUsername(username);
 
-  const { access_token } = authService.login(user);
+  const { access_token } = authService.getAccessToken(user.id);
   return `Bearer ${access_token}`;
 };

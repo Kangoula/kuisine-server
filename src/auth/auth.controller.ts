@@ -1,8 +1,20 @@
-import { Public } from '@/common/decorators/public.decorator';
-import { Controller, Post, Request, UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from './local-auth.guard';
+import { Public } from '@/auth/decorators/public.decorator';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Request,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { ReqWithUser } from '@/common/types';
+import { Response } from 'express';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +23,42 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Request() req: ReqWithUser) {
-    return this.authService.login(req.user);
+  @HttpCode(HttpStatus.OK)
+  logIn(
+    @Request() req: ReqWithUser,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const { user } = req;
+
+    response.cookie(
+      'Authentication',
+      this.authService.getJwtToken(user.id),
+      this.authService.getLoginCookieOptions(),
+    );
+  }
+
+  @Public()
+  @Post('register')
+  async register(@Body() registrationData: RegisterDto) {
+    return this.authService.register(registrationData);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  logOut(
+    // @Request() request: ReqWithUser,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    response.cookie(
+      'Authentication',
+      '',
+      this.authService.getLogoutCookieOptions(),
+    );
+  }
+
+  @Get('me')
+  authenticate(@Request() request: ReqWithUser) {
+    const user = request.user;
+    return user;
   }
 }
