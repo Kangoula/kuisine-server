@@ -39,7 +39,6 @@ describe('UsersService', () => {
     expect(createdUser).toEqual({
       id: expectedUserId,
       username,
-      password,
     });
   });
 
