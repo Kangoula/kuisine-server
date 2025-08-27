@@ -67,16 +67,26 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logOut(@Res({ passthrough: true }) response: Response) {
+  async logOut(
+    @Request() req: ReqWithUser,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    await this.usersService.removeRefreshToken(req.user.id);
+
+    const accessLogoutCookie =
+      this.authService.getLogoutCookieParametersForAccessToken();
+    const refreshLogoutCookie =
+      this.authService.getLogoutCookieParametersForRefreshToken();
+
     response.cookie(
-      CookieTypeNames.Access,
-      '',
-      this.authService.getLogoutCookieParametersForAccessToken(),
+      accessLogoutCookie.name,
+      accessLogoutCookie.token,
+      accessLogoutCookie.params,
     );
     response.cookie(
-      CookieTypeNames.Refresh,
-      '',
-      this.authService.getLogoutCookieParametersForRefreshToken(),
+      refreshLogoutCookie.name,
+      refreshLogoutCookie.token,
+      refreshLogoutCookie.params,
     );
   }
 

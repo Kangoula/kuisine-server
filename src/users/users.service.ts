@@ -61,4 +61,8 @@ export class UsersService extends BaseEntityService(User) {
       return user;
     }
   }
+
+  async removeRefreshToken(userId: number) {
+    return this.update(userId, { refreshToken: null });
+  }
 }
