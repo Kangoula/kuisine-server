@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { AuthService } from './auth.service';
+import { AuthService, CookieTypeNames } from './auth.service';
 import { ReqWithUser } from '@/common/types';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
@@ -67,15 +67,11 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logOut(
-    // @Request() request: ReqWithUser,
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    response.cookie(
-      'Authentication',
-      '',
-      this.authService.getLogoutCookieOptions(),
-    );
+  logOut(@Res({ passthrough: true }) response: Response) {
+    const logoutCookieOptions = this.authService.getLogoutCookieOptions();
+
+    response.cookie(CookieTypeNames.Access, '', logoutCookieOptions);
+    response.cookie(CookieTypeNames.Refresh, '', logoutCookieOptions);
   }
 
   @Get('me')
