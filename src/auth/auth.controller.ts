@@ -17,6 +17,8 @@ import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '@/users/users.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { ApiBody } from '@nestjs/swagger';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -29,6 +31,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @ApiBody({ type: LoginDto })
   async logIn(
     @Request() req: ReqWithUser,
     @Res({ passthrough: true }) response: Response,
