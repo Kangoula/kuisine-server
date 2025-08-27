@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { AuthService, CookieTypeNames } from './auth.service';
+import { AuthService } from './auth.service';
 import { ReqWithUser } from '@/common/types';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';

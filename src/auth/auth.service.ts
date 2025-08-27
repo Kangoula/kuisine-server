@@ -142,4 +142,16 @@ export class AuthService {
       ),
     };
   }
+
+  public getLogoutCookieOptions(): CookieOptions {
+    return {
+      maxAge: 0,
+      httpOnly: true,
+      path: '/',
+    };
+  }
+
+  public getCookieForLogOut() {
+    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
+  }
 }
