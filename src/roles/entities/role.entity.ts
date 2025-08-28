@@ -1,9 +1,10 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { SoftDeletableEntity } from '@/common/entities/soft-deletable.entity';
 import { User } from '@/users/entities/user.entity';
+
 export interface Permission {
-  subject: any;
-  actions: string;
+  subject: string;
+  action: string;
   conditions?: any;
 }
 
