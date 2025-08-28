@@ -13,15 +13,21 @@ import { UsersModule } from './users/users.module';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { CaslModule } from './casl/casl.module';
 import * as Joi from '@hapi/joi';
 import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
+import { PoliciesGuard } from './casl/policies.guard';
 
 @Module({
   providers: [
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PoliciesGuard,
     },
     {
       provide: APP_PIPE,
@@ -61,6 +67,7 @@ import databaseConfig from './config/database.config';
     IngredientToRecipeModule,
     UsersModule,
     AuthModule,
+    CaslModule,
   ],
 })
 export class AppModule {}
