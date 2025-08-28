@@ -2,15 +2,15 @@ import { BaseEntity } from '@/common/entities';
 import { Constructor } from '@/common/types';
 import { SetMetadata } from '@nestjs/common';
 
-export const CHECK_ABILITY = 'checkAbility';
+export const REQUIRED_ABILITY = 'requiredAbility';
 
 type Subject = Constructor<BaseEntity> | string;
 
-export interface RequiredRule {
+export interface RequiredAbility {
   action: string;
   subject: Subject;
   conditions?: any;
 }
 
-export const Can = (...requirements: RequiredRule[]) =>
-  SetMetadata(CHECK_ABILITY, requirements);
+export const Can = (...abilities: RequiredAbility[]) =>
+  SetMetadata(REQUIRED_ABILITY, abilities);
