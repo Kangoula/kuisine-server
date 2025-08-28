@@ -167,6 +167,7 @@ describe('AuthService', () => {
           maxAge: expectedMaxAge,
           httpOnly: true,
           path: '/',
+          sameSite: true,
         },
       }),
     );
@@ -211,6 +212,7 @@ describe('AuthService', () => {
           maxAge: expectedMaxAge,
           httpOnly: true,
           path: '/auth',
+          sameSite: true,
         },
       }),
     );
@@ -227,6 +229,7 @@ describe('AuthService', () => {
           maxAge: 0,
           httpOnly: true,
           path: '/',
+          sameSite: true,
         },
       }),
     );
@@ -243,6 +246,7 @@ describe('AuthService', () => {
           maxAge: 0,
           httpOnly: true,
           path: '/auth',
+          sameSite: true,
         },
       }),
     );
