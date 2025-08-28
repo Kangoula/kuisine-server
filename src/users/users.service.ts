@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { BaseEntityService } from '@/common/base-entity.service';
+import { BaseEntityService } from '@/common/mixins/base-entity.service.mixin';
 import { User } from './entities/user.entity';
 import { bcryptHash } from '@/common/helpers/bcryptHash';
 import { compare } from 'bcrypt';
