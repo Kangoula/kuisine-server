@@ -23,7 +23,7 @@ export class IngredientsController {
   }
 
   @Get()
-  findAll(@Body() paginationDto: PaginationDto) {
+  findAll(@Query() paginationDto: PaginationDto) {
     return this.ingredientsService.paginate(paginationDto);
   }
 

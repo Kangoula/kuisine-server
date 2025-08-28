@@ -17,8 +17,9 @@ import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '@/users/users.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
+import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -64,6 +65,7 @@ export class AuthController {
 
   @Public()
   @Post('register')
+  @ApiCreatedResponse({ type: UserWithoutCredentials })
   async register(@Body() registrationData: RegisterDto) {
     return this.authService.register(registrationData);
   }
