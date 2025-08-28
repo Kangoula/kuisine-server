@@ -57,6 +57,7 @@ export class AuthService {
   public async register(registerData: RegisterDto) {
     try {
       const createdUser = await this.usersService.create(registerData);
+
       return createdUser;
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
@@ -82,6 +83,7 @@ export class AuthService {
         maxAge: ms(expirationTime as ms.StringValue),
         httpOnly: true,
         path: '/',
+        sameSite: true,
       },
     };
   }
@@ -99,6 +101,7 @@ export class AuthService {
         maxAge: ms(expirationTime as ms.StringValue),
         httpOnly: true,
         path: '/auth',
+        sameSite: true,
       },
     };
   }
@@ -117,6 +120,7 @@ export class AuthService {
         maxAge: 0,
         httpOnly: true,
         path: '/',
+        sameSite: true,
       },
     };
   }
@@ -129,6 +133,7 @@ export class AuthService {
         maxAge: 0,
         httpOnly: true,
         path: '/auth',
+        sameSite: true,
       },
     };
   }
@@ -141,17 +146,5 @@ export class AuthService {
         this.configService.get('auth.accessToken.expirationTime') as string,
       ),
     };
-  }
-
-  public getLogoutCookieOptions(): CookieOptions {
-    return {
-      maxAge: 0,
-      httpOnly: true,
-      path: '/',
-    };
-  }
-
-  public getCookieForLogOut() {
-    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
   }
 }

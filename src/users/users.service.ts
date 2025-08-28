@@ -4,20 +4,16 @@ import { BaseEntityService } from '@/common/mixins/base-entity.service.mixin';
 import { User } from './entities/user.entity';
 import { bcryptHash } from '@/common/helpers/bcryptHash';
 import { compare } from 'bcrypt';
-
-type UserWithoutPassword = Omit<User, 'password'>;
+import { UserWithoutCredentials } from './dto/user-without-credentials.dto';
 
 @Injectable()
 export class UsersService extends BaseEntityService(User) {
-  async create(createUserDto: CreateUserDto): Promise<UserWithoutPassword> {
+  async create(createUserDto: CreateUserDto): Promise<UserWithoutCredentials> {
     const user = new User();
     user.username = createUserDto.username;
     user.password = await bcryptHash(createUserDto.password);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...createdUser } = await this.repository.save(user);
-
-    return createdUser;
+    return this.insert(user);
   }
 
   public findByUsernameWithPassword(username: string) {
