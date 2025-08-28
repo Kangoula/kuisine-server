@@ -6,13 +6,11 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Request,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
-import { ReqWithUser } from '@/common/types';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '@/users/users.service';
@@ -20,6 +18,7 @@ import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
+import { RequestUser } from '@/common/decorators/request-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -34,11 +33,9 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: LoginDto })
   async logIn(
-    @Request() req: ReqWithUser,
+    @RequestUser() user: UserWithoutCredentials,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { user } = req;
-
     const accessTokenCookie =
       this.authService.getCookieParametersForAccessToken(user.id);
     const refreshTokenCookie =
@@ -73,10 +70,10 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logOut(
-    @Request() req: ReqWithUser,
+    @RequestUser() user: UserWithoutCredentials,
     @Res({ passthrough: true }) response: Response,
   ) {
-    await this.usersService.removeRefreshToken(req.user.id);
+    await this.usersService.removeRefreshToken(user.id);
 
     const accessLogoutCookie =
       this.authService.getLogoutCookieParametersForAccessToken();
@@ -96,18 +93,16 @@ export class AuthController {
   }
 
   @Get('me')
-  authenticate(@Request() request: ReqWithUser) {
-    const user = request.user;
+  authenticate(@RequestUser() user: UserWithoutCredentials) {
     return user;
   }
 
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
   refresh(
-    @Request() req: ReqWithUser,
+    @RequestUser() user: UserWithoutCredentials,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { user } = req;
     const accessTokenCookie =
       this.authService.getCookieParametersForAccessToken(user.id);
 
