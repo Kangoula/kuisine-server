@@ -3,7 +3,7 @@ import { TestBed } from '@suites/unit';
 import { Mocked } from '@suites/doubles.jest';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { InsertResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 describe('UsersService', () => {
   let service: UsersService;
