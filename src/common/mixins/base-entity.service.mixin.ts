@@ -7,10 +7,10 @@ import {
   UpdateResult,
 } from 'typeorm';
 import { Type } from '@nestjs/common';
-import { PaginationDto } from './pagination';
-import { SoftDeletableEntity } from './entities';
-import { getQueryBuilderPaginationParams } from './pagination/typeorm';
-import { Constructor } from './types';
+import { PaginationDto } from '../pagination';
+import { SoftDeletableEntity } from '../entities';
+import { getQueryBuilderPaginationParams } from '../pagination/typeorm';
+import { Constructor } from '../types';
 
 export interface IBaseService<T extends ObjectLiteral> {
   readonly repository: Repository<T>;

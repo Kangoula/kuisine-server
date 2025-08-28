@@ -3,7 +3,7 @@ import { IngredientToRecipe } from './entities/ingredient-to-recipe.entity';
 import { CreateIngredientToRecipeDto } from './dto/create-ingredient-to-recipe.dto';
 import { RecipesService } from '@/recipes/recipes.service';
 import { IngredientsService } from '@/ingredients/ingredients.service';
-import { BaseEntityService } from '@/common/base-entity.service';
+import { BaseEntityService } from '@/common/mixins/base-entity.service.mixin';
 
 @Injectable()
 export class IngredientToRecipeService extends BaseEntityService(

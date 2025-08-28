@@ -13,11 +13,6 @@ export class RecipeStepsController {
     return this.recipeStepsService.create(createRecipeStepDto);
   }
 
-  @Get()
-  findAll() {
-    return this.recipeStepsService.findAll();
-  }
-
   @Get(':id')
   findOne(@EntityId() id: number) {
     return this.recipeStepsService.findOne(id);
