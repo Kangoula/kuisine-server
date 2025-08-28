@@ -1,10 +1,12 @@
-import { IsNumber, IsString, Length } from 'class-validator';
+import { User } from '../entities/user.entity';
+import { Role } from '@/roles/entities/role.entity';
 
-export class UserWithoutCredentials {
-  @IsNumber()
+export class UserWithoutCredentials
+  implements Omit<User, 'password' | 'refreshToken'>
+{
   id: number;
 
-  @IsString()
-  @Length(1, 255)
   username: string;
+
+  role: Role;
 }

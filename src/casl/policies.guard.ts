@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { REQUIRED_ABILITY, RequiredAbility } from './check-abilities.decorator';
 import { CaslAbilityFactory } from './casl-ability.factory';
 import { ReqWithUser } from '@/common/decorators/request-user.decorator';
+import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 
 @Injectable()
 export class PoliciesGuard implements CanActivate {
@@ -28,12 +29,17 @@ export class PoliciesGuard implements CanActivate {
     const request: ReqWithUser = context.switchToHttp().getRequest();
     const user = request.user;
 
+    return this.isActionAllowed(user, abilities);
+  }
+
+  private isActionAllowed(
+    user: UserWithoutCredentials,
+    abilities: RequiredAbility[],
+  ) {
     const userAbilities = this.caslAbilityFactory.createForUser(user);
 
     return abilities.every((ability) => {
       return userAbilities.can(ability.action, ability.subject);
     });
-
-    return true;
   }
 }

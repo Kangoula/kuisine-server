@@ -1,4 +1,3 @@
-import { User } from '@/users/entities/user.entity';
 import {
   AbilityBuilder,
   createMongoAbility,
@@ -17,13 +16,11 @@ export type AppAbility = MongoAbility<[Action, Subjects]>;
 
 @Injectable()
 export class CaslAbilityFactory {
-  createForUser(user: User | UserWithoutCredentials) {
+  createForUser(user: UserWithoutCredentials) {
     const { can, cannot, build } = new AbilityBuilder(createMongoAbility);
 
-    if (user.username === 'admin') {
+    if (user.role.name === 'Admin') {
       can(Action.Manage, 'all'); // read-write access to everything
-    } else {
-      can(Action.Read, 'all'); // read-only access to everything
     }
 
     // TODO retrieve permissions from DB
