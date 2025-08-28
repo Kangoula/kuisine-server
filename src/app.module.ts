@@ -18,6 +18,7 @@ import * as Joi from '@hapi/joi';
 import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
 import { PoliciesGuard } from './casl/policies.guard';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   providers: [
@@ -68,6 +69,7 @@ import { PoliciesGuard } from './casl/policies.guard';
     UsersModule,
     AuthModule,
     CaslModule,
+    RolesModule,
   ],
 })
 export class AppModule {}

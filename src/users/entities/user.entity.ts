@@ -1,6 +1,7 @@
 import { SoftDeletableEntity } from '@/common/entities';
+import { Role } from '@/roles/entities/role.entity';
 import { Exclude } from 'class-transformer';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
 export class User extends SoftDeletableEntity {
@@ -14,4 +15,7 @@ export class User extends SoftDeletableEntity {
   @Exclude()
   @Column({ type: 'varchar', precision: 255, nullable: true, select: false })
   refreshToken?: string;
+
+  @ManyToOne(() => Role, (role) => role.users)
+  role: Role;
 }
