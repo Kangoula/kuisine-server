@@ -68,7 +68,7 @@ export class CreateUserTable1755000864278 implements MigrationInterface {
           },
           {
             name: 'permissions',
-            type: 'json[]',
+            type: 'json',
             isNullable: true,
           },
           {
