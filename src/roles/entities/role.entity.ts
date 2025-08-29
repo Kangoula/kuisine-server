@@ -1,11 +1,16 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { SoftDeletableEntity } from '@/common/entities/soft-deletable.entity';
 import { User } from '@/users/entities/user.entity';
+import { MongoQuery, RawRule } from '@casl/ability';
+import { Action } from '@/casl/action.enum';
 
-export interface Permission {
-  subject: string;
-  action: string;
-  conditions?: any;
+export interface Conditions extends MongoQuery {
+  own?: boolean;
+}
+
+export interface Permission extends RawRule {
+  action: Action | Action[] | string | string[];
+  conditions?: Conditions;
 }
 
 @Entity()
