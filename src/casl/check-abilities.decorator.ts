@@ -1,16 +1,17 @@
 import { BaseEntity } from '@/common/entities';
 import { Constructor } from '@/common/types';
 import { SetMetadata } from '@nestjs/common';
+import { Action } from './action.enum';
 
 export const REQUIRED_ABILITY = 'requiredAbility';
 
-type Subject = Constructor<BaseEntity> | string;
+type Subject = Constructor<BaseEntity> | 'all';
 
 export interface RequiredAbility {
-  action: string;
+  action: `${Action}`;
   subject: Subject;
-  conditions?: any;
+  field?: string;
 }
 
-export const Can = (...abilities: RequiredAbility[]) =>
-  SetMetadata(REQUIRED_ABILITY, abilities);
+export const Can = (subject: Subject, action: Action) =>
+  SetMetadata(REQUIRED_ABILITY, { subject, action });

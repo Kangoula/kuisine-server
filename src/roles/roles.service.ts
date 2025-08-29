@@ -3,4 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { Role } from './entities/role.entity';
 
 @Injectable()
-export class RolesService extends BaseEntityService(Role) {}
+export class RolesService extends BaseEntityService(Role) {
+  findByName(name: string) {
+    return this.repository.findOneByOrFail({
+      name,
+    });
+  }
+}

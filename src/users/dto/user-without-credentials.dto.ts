@@ -1,12 +1,4 @@
-import { User } from '../entities/user.entity';
-import { Role } from '@/roles/entities/role.entity';
+import { User, CredentialsColumn } from '../entities/user.entity';
+import { OmitType } from '@nestjs/swagger';
 
-export class UserWithoutCredentials
-  implements Omit<User, 'password' | 'refreshToken'>
-{
-  id: number;
-
-  username: string;
-
-  role: Role;
-}
+export class UserWithoutCredentials extends OmitType(User, CredentialsColumn) {}

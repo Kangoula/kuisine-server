@@ -32,14 +32,22 @@ export class PoliciesGuard implements CanActivate {
     return this.isActionAllowed(user, abilities);
   }
 
-  private isActionAllowed(
+  private async isActionAllowed(
     user: UserWithoutCredentials,
-    abilities: RequiredAbility[],
+    abilities: RequiredAbility | RequiredAbility[],
   ) {
-    const userAbilities = this.caslAbilityFactory.createForUser(user);
+    const userAbilities = await this.caslAbilityFactory.createForUser(user);
 
-    return abilities.every((ability) => {
-      return userAbilities.can(ability.action, ability.subject);
-    });
+    if (Array.isArray(abilities)) {
+      return abilities.every((ability) => {
+        return userAbilities.can(ability.action, ability.subject);
+      });
+    }
+
+    return userAbilities.can(
+      abilities.action,
+      abilities.subject,
+      abilities.field,
+    );
   }
 }

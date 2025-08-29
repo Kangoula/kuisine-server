@@ -10,6 +10,7 @@ import { BaseEntity } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 import { Permission } from '@/roles/entities/role.entity';
+import { RolesService } from '@/roles/roles.service';
 
 type Subjects = InferSubjects<typeof BaseEntity> | 'all';
 
@@ -17,15 +18,23 @@ export type AppAbility = MongoAbility<[Action, Subjects]>;
 
 @Injectable()
 export class CaslAbilityFactory {
-  createForUser(user: UserWithoutCredentials) {
+  constructor(private readonly rolesService: RolesService) {}
+  async createForUser(user: UserWithoutCredentials) {
     const { can, cannot, build } = new AbilityBuilder(createMongoAbility);
 
-    if (user.role.name === 'Admin') {
+    const role = await this.rolesService.findOne(user.roleId);
+
+    if (role.name === 'Admin') {
       can(Action.Manage, 'all'); // read-write access to everything
     } else {
       const roleUserAbilities: Permission[] = [
         {
-          subject: 'all',
+          subject: 'User',
+          action: 'read',
+        },
+        //
+        {
+          subject: 'Ingredient',
           action: 'read',
         },
         {
@@ -39,10 +48,46 @@ export class CaslAbilityFactory {
             own: true,
           },
         },
+        {
+          subject: 'Ingredient',
+          action: ['update', 'delete'],
+          conditions: {
+            ingredientToRecipe: { $size: 0 },
+          },
+        },
+        //
+        {
+          subject: 'Recipe',
+          action: 'read',
+        },
+        {
+          subject: 'Recipe',
+          action: 'create',
+        },
+        {
+          subject: 'Recipe',
+          action: ['update', 'delete'],
+          conditions: {
+            own: true,
+          },
+        },
+        //
+        {
+          subject: 'RecipeStep',
+          action: 'read',
+        },
+        {
+          subject: 'RecipeStep',
+          action: 'create',
+        },
+        {
+          subject: 'RecipeStep',
+          action: ['update', 'delete'],
+          conditions: {
+            own: true,
+          },
+        },
       ];
-
-      // we can update or delete our own profile
-      can(['update', 'delete'], 'User', { id: user.id });
 
       roleUserAbilities.forEach((ability: Permission) => {
         let conditions = ability.conditions;

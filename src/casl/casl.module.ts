@@ -1,5 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CaslAbilityFactory } from './casl-ability.factory';
+import { RolesModule } from '@/roles/roles.module';
 
-@Module({ providers: [CaslAbilityFactory], exports: [CaslAbilityFactory] })
+@Module({
+  imports: [RolesModule],
+  providers: [CaslAbilityFactory],
+  exports: [CaslAbilityFactory],
+})
 export class CaslModule {}
