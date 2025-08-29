@@ -25,69 +25,10 @@ export class CaslAbilityFactory {
     const role = await this.rolesService.findOne(user.roleId);
 
     if (role.name === 'Admin') {
-      can(Action.Manage, 'all'); // read-write access to everything
+      can(Action.Manage, 'all'); // access to everything
     } else {
-      const roleUserAbilities: Permission[] = [
-        {
-          subject: 'User',
-          action: 'read',
-        },
-        //
-        {
-          subject: 'Ingredient',
-          action: 'read',
-        },
-        {
-          subject: 'Ingredient',
-          action: 'create',
-        },
-        {
-          subject: 'Ingredient',
-          action: ['update', 'delete'],
-          conditions: {
-            own: true,
-          },
-        },
-        {
-          subject: 'Ingredient',
-          action: ['update', 'delete'],
-          conditions: {
-            ingredientToRecipe: { $size: 0 },
-          },
-        },
-        //
-        {
-          subject: 'Recipe',
-          action: 'read',
-        },
-        {
-          subject: 'Recipe',
-          action: 'create',
-        },
-        {
-          subject: 'Recipe',
-          action: ['update', 'delete'],
-          conditions: {
-            own: true,
-          },
-        },
-        //
-        {
-          subject: 'RecipeStep',
-          action: 'read',
-        },
-        {
-          subject: 'RecipeStep',
-          action: 'create',
-        },
-        {
-          subject: 'RecipeStep',
-          action: ['update', 'delete'],
-          conditions: {
-            own: true,
-          },
-        },
-      ];
+      // TODO retrieve permissions from DB
+      const roleUserAbilities: Permission[] = role.permissions || [];
 
       roleUserAbilities.forEach((ability: Permission) => {
         let conditions = ability.conditions;
@@ -98,24 +39,12 @@ export class CaslAbilityFactory {
         }
 
         if (ability.inverted) {
-          cannot(
-            ability.action,
-            ability.subject,
-            ability.fields,
-            ability.conditions,
-          );
+          cannot(ability.action, ability.subject, ability.fields, conditions);
         } else {
-          can(
-            ability.action,
-            ability.subject,
-            ability.fields,
-            ability.conditions,
-          );
+          can(ability.action, ability.subject, ability.fields, conditions);
         }
       });
     }
-
-    // TODO retrieve permissions from DB
 
     return build({
       // Read https://casl.js.org/v6/en/guide/subject-type-detection#use-classes-as-subject-types for details
