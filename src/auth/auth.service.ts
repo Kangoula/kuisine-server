@@ -54,9 +54,12 @@ export class AuthService {
     }
   }
 
-  public async register(registerData: RegisterDto) {
+  public async register(registerDto: RegisterDto) {
     try {
-      const createdUser = await this.usersService.create(registerData);
+      const createdUser = await this.usersService.create({
+        username: registerDto.username,
+        password: registerDto.password,
+      });
 
       return createdUser;
     } catch (error) {
