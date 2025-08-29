@@ -11,6 +11,7 @@ import { PostgresErrorCode } from '@/database/postgresErrorCodes.enum';
 import { ConfigService } from '@nestjs/config';
 import * as ms from 'ms';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from '@/roles/entities/role.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -32,11 +33,15 @@ describe('AuthService', () => {
     const userId = 1;
     const username = 'user';
     const password = 'LeChictabaDansLeMilleniumCondor';
+    const roleId = 1;
+    const role = { id: roleId } as Role;
 
     usersSerivce.findByUsernameWithPassword.mockResolvedValue({
       id: userId,
       username,
       password: await bcryptHash(password),
+      roleId,
+      role,
     });
 
     const result = await service.validateUser(username, password);
@@ -51,11 +56,15 @@ describe('AuthService', () => {
     const userId = 1;
     const username = 'user';
     const wrongPassword = 'JabbaLeForestierEmbaucheZ6PO';
+    const roleId = 1;
+    const role = { id: roleId } as Role;
 
     usersSerivce.findByUsernameWithPassword.mockResolvedValue({
       id: userId,
       username,
       password: await bcryptHash('LeChictabaDansLeMilleniumCondor'),
+      roleId,
+      role,
     });
 
     await expect(service.validateUser(username, wrongPassword)).rejects.toThrow(
@@ -69,10 +78,14 @@ describe('AuthService', () => {
     const expectedUserId = 1;
     const username = 'Nuck Chorris';
     const password = 'pw';
+    const roleId = 1;
+    const role = { id: roleId } as Role;
 
     usersSerivce.create.mockResolvedValue({
       id: expectedUserId,
       username,
+      roleId,
+      role,
     });
 
     const result = await service.register({ username, password });
