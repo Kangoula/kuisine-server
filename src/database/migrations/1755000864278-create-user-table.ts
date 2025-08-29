@@ -4,10 +4,6 @@ import {
   Table,
   TableForeignKey,
 } from 'typeorm';
-import dataSource from '../data-source';
-import { Permission, Role } from '@/roles/entities/role.entity';
-import { Ingredient } from '@/ingredients/entities/ingredient.entity';
-import { Action } from '@/casl/action.enum';
 
 export class CreateUserTable1755000864278 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -97,6 +93,8 @@ export class CreateUserTable1755000864278 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropForeignKey('user', 'user_role_foreign');
     await queryRunner.dropTable('user');
+    await queryRunner.dropTable('role');
   }
 }
