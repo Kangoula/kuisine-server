@@ -3,6 +3,7 @@ import { SoftDeletableEntity } from '@/common/entities/soft-deletable.entity';
 import { User } from '@/users/entities/user.entity';
 import { MongoQuery, RawRule } from '@casl/ability';
 import { Action } from '@/casl/action.enum';
+import { Exclude } from 'class-transformer';
 
 export interface Conditions extends MongoQuery {
   own?: boolean;
@@ -18,6 +19,7 @@ export class Role extends SoftDeletableEntity {
   @Column({ type: 'varchar', precision: 255, unique: true })
   name: string;
 
+  @Exclude()
   @Column({ type: 'simple-json', nullable: true })
   permissions?: Permission[];
 
