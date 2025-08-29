@@ -21,7 +21,7 @@ export class IngredientsController {
   constructor(private readonly ingredientsService: IngredientsService) {}
 
   @Post()
-  @Can({ subject: Ingredient, action: Action.Create })
+  @Can(Ingredient, Action.Create)
   create(@Body() createIngredientDto: CreateIngredientDto) {
     return this.ingredientsService.create(createIngredientDto);
   }
