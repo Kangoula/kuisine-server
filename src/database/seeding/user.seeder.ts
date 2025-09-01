@@ -2,7 +2,6 @@ import { DataSource } from 'typeorm';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import { User } from '@/users/entities/user.entity';
 import { bcryptHash } from '@/common/helpers/bcryptHash';
-import { Role } from '@/roles/entities/role.entity';
 
 export class UserSeeder implements Seeder {
   public async run(
@@ -19,13 +18,16 @@ export class UserSeeder implements Seeder {
 
     const password = await bcryptHash('xb2212');
 
-    const role = new Role();
-    role.id = 1;
-
     await userFactory.save({
       username: 'admin',
       password,
-      role,
+      roleId: 1,
+    });
+
+    await userFactory.save({
+      username: 'jabba',
+      password,
+      roleId: 2,
     });
 
     console.log('test user created');
