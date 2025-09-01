@@ -1,8 +1,11 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
-import { REQUIRED_ABILITY, RequiredAbility } from './check-abilities.decorator';
-import { CaslAbilityFactory } from './casl-ability.factory';
+import { REQUIRED_ABILITY, RequiredAbility } from './permission.decorator';
+import {
+  CaslAbilityFactory,
+  getSubjectFromClass,
+} from './casl-ability.factory';
 import { ReqWithUser } from '@/common/decorators/request-user.decorator';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 
@@ -40,13 +43,16 @@ export class PoliciesGuard implements CanActivate {
 
     if (Array.isArray(abilities)) {
       return abilities.every((ability) => {
-        return userAbilities.can(ability.action, ability.subject);
+        return userAbilities.can(
+          ability.action,
+          getSubjectFromClass(ability.subject),
+        );
       });
     }
 
     return userAbilities.can(
       abilities.action,
-      abilities.subject,
+      getSubjectFromClass(abilities.subject),
       abilities.field,
     );
   }
