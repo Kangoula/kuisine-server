@@ -17,9 +17,9 @@ describe('Ingredients', () => {
     await app.init();
   });
 
-  describe('/POST ingredients', () => {
+  describe('ingredients', () => {
     describe('unauthenticated', () => {
-      it('should fail with Unauthorized response', async () => {
+      it('/POST should fail with Unauthorized response', async () => {
         const response = await request(app.getHttpServer())
           .post('/ingredients')
           .send({ name: 'durian' });
@@ -35,7 +35,7 @@ describe('Ingredients', () => {
         bearerToken = await loginAs(app, 'admin');
       });
 
-      it('with correct payload should return the created ingredient with Created response', async () => {
+      it('/POST with correct payload should return the created ingredient with Created response', async () => {
         const response = await request(app.getHttpServer())
           .post('/ingredients')
           .set('Authorization', bearerToken)
@@ -48,7 +48,7 @@ describe('Ingredients', () => {
         expect(response.body).not.toHaveProperty('fullTextSeach');
       });
 
-      it('with incorrect payload should fail with Bad Request response', async () => {
+      it('/POST with incorrect payload should fail with Bad Request response', async () => {
         const response = await request(app.getHttpServer())
           .post('/ingredients')
           .set('Authorization', bearerToken)
@@ -57,7 +57,7 @@ describe('Ingredients', () => {
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
       });
 
-      it('should return expected ingredient in fulltext search', async () => {
+      it('/GET/search should return expected ingredient in fulltext search', async () => {
         const ingredientService = app.get(IngredientsService);
         const expectedName = 'tomate';
 
@@ -75,7 +75,7 @@ describe('Ingredients', () => {
         expect(response.body[0].name).toBe(expectedName);
       });
 
-      it('should not return anything in fulltext search', async () => {
+      it('/GET/search should not return anything in fulltext search', async () => {
         const response = await request(app.getHttpServer())
           .get('/ingredients/search')
           .query({ term: 'xb2212' })
