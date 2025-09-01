@@ -4,7 +4,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
 export class RecipeStep extends SoftDeletableEntity {
-  @Column({ type: 'smallint', unsigned: true })
+  @Column({ type: 'smallint' })
   order: number;
 
   @Column('text')

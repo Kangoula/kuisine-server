@@ -19,7 +19,7 @@ export class UsersService extends BaseEntityService(User) {
     user.password = await bcryptHash(createUserDto.password);
     user.role = await this.getRoleForUserCreation(createUserDto.roleId);
 
-    return this.insert(user);
+    return this.repository.save(user);
   }
 
   private getRoleForUserCreation(roleId?: number) {

@@ -5,12 +5,8 @@ import { Injectable } from '@nestjs/common';
 import { BaseEntitySubscriber } from '@/common/base-entity.subscriber';
 
 @Injectable()
-// implements EntitySubscriberInterface<Ingredient>
 export class IngredientSubscriber extends BaseEntitySubscriber(Ingredient) {
-  constructor(
-    dataSource: DataSource,
-    private readonly ingredientsService: IngredientsService,
-  ) {
+  constructor(dataSource: DataSource) {
     super(dataSource);
   }
 
@@ -28,6 +24,9 @@ export class IngredientSubscriber extends BaseEntitySubscriber(Ingredient) {
   ): Promise<void> {
     if (!event.entity?.id) return;
 
-    await this.ingredientsService.updateFullTextSearch(+event.entity.id);
+    // update the column in the same transaction, thus not using ingredientsService
+    await event.manager.getRepository(Ingredient).update(event.entity.id, {
+      fullTextSearch: () => "to_tsvector('french', name)",
+    });
   }
 }
