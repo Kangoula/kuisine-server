@@ -7,7 +7,7 @@ import {
 import { Action } from './action.enum';
 import { Injectable } from '@nestjs/common';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
-import { Permission } from '@/roles/entities/role.entity';
+import { Conditions, Permission } from '@/roles/entities/role.entity';
 import { RolesService } from '@/roles/roles.service';
 import { Constructor } from '@/common/types';
 import { BaseEntity } from '@/common/entities';
@@ -49,10 +49,9 @@ export class CaslAbilityFactory {
 
       roleUserAbilities.forEach((ability: Permission) => {
         let conditions = ability.conditions;
-        if (conditions?.own === true) {
-          //eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { own, ...rest } = conditions;
-          conditions = Object.assign(rest, { userId: user.id });
+
+        if (conditions) {
+          conditions = this.getUserIdCondition(conditions, user.id);
         }
 
         if (ability.inverted) {
@@ -64,5 +63,22 @@ export class CaslAbilityFactory {
     }
 
     return build();
+  }
+
+  private getUserIdCondition(
+    conditions: Conditions,
+    userId: number,
+  ): Conditions {
+    const { isOwner, isMe, ...rest } = conditions;
+
+    if (isOwner === true) {
+      return Object.assign(rest, { userId });
+    }
+
+    if (isMe === true) {
+      return Object.assign(rest, { id: userId });
+    }
+
+    return conditions;
   }
 }

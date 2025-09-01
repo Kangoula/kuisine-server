@@ -27,7 +27,7 @@ export class InsertPermissionsAndRoles1756449511143
               action: 'update',
               fields: ['username', 'password'],
               conditions: {
-                own: true,
+                isMe: true,
               },
             },
             //
@@ -45,7 +45,7 @@ export class InsertPermissionsAndRoles1756449511143
               subject: 'Ingredient',
               action: ['update', 'delete'],
               conditions: {
-                own: true,
+                isOwner: true,
               },
             },
             {
@@ -70,7 +70,7 @@ export class InsertPermissionsAndRoles1756449511143
               subject: 'Recipe',
               action: ['update', 'delete'],
               conditions: {
-                own: true,
+                isOwner: true,
               },
             },
             //
@@ -88,7 +88,7 @@ export class InsertPermissionsAndRoles1756449511143
               subject: 'RecipeStep',
               action: ['update', 'delete'],
               conditions: {
-                own: true,
+                isOwner: true,
               },
             }, //
             // IngredientToRecipe
@@ -101,7 +101,7 @@ export class InsertPermissionsAndRoles1756449511143
               subject: 'IngredientToRecipe',
               action: ['update', 'delete'],
               conditions: {
-                own: true,
+                isOwner: true,
               },
             },
           ],

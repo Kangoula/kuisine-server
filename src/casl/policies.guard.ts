@@ -46,6 +46,7 @@ export class PoliciesGuard implements CanActivate {
         return userAbilities.can(
           ability.action,
           getSubjectFromClass(ability.subject),
+          ability.field,
         );
       });
     }

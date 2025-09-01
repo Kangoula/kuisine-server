@@ -6,7 +6,8 @@ import { Action } from '@/casl/action.enum';
 import { Exclude } from 'class-transformer';
 
 export interface Conditions extends MongoQuery {
-  own?: boolean;
+  isOwner?: boolean;
+  isMe?: boolean;
 }
 
 export interface Permission extends RawRule {
