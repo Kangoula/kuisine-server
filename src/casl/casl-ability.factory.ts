@@ -45,7 +45,6 @@ export class CaslAbilityFactory {
     if (role.name === 'Admin') {
       can(Action.Manage, 'all'); // access to everything
     } else {
-      // TODO retrieve permissions from DB
       const roleUserAbilities: Permission[] = role.permissions || [];
 
       roleUserAbilities.forEach((ability: Permission) => {
