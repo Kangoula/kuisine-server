@@ -9,7 +9,7 @@ export class IngredientsService extends BaseEntityService(Ingredient) {
     const ingredient = new Ingredient();
     ingredient.name = createIngredientDto.name;
 
-    return this.insert(ingredient);
+    return this.repository.save(ingredient);
   }
 
   search(term: string) {

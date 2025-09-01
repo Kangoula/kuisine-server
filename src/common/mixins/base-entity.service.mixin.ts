@@ -18,7 +18,6 @@ export interface IBaseService<T extends ObjectLiteral> {
   findAll(): Promise<T[]>;
   findOne(id: number): Promise<T>;
   update(id: number, partialEntity: any): Promise<UpdateResult>;
-  insert(entity: T): Promise<T>;
   remove(id: number): Promise<UpdateResult | DeleteResult>; // we receive UpdateResult when entity is soft deleted
 }
 
@@ -30,11 +29,6 @@ export function BaseEntityService<T extends ObjectLiteral>(
   class BaseServiceHost implements IBaseService<T> {
     @InjectRepository(entity)
     public readonly repository: Repository<T>;
-
-    public async insert(entity: T) {
-      await this.repository.insert(entity);
-      return entity;
-    }
 
     public paginate(paginationDto: PaginationDto) {
       return this.repository.find({
