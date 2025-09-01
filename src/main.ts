@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
+import { useContainer } from 'class-validator';
 
 const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
@@ -29,6 +30,8 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.useGlobalFilters(new EntityNotFoundErrorFilter());
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   if (process.env.NODE_ENV === 'development') {
     setupSwagger(app);

@@ -19,6 +19,7 @@ import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
 import { PoliciesGuard } from './casl/policies.guard';
 import { RolesModule } from './roles/roles.module';
+import { IsUniqueContraintValidator } from './common/validators/is-unique-contstraint.validator';
 
 @Module({
   providers: [
@@ -43,6 +44,7 @@ import { RolesModule } from './roles/roles.module';
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
     },
+    IsUniqueContraintValidator,
   ],
   imports: [
     ConfigModule.forRoot({
