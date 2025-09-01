@@ -13,5 +13,5 @@ export interface RequiredAbility {
   field?: string;
 }
 
-export const Can = (subject: Subject, action: Action) =>
+export const Permission = (subject: Subject, action: Action) =>
   SetMetadata(REQUIRED_ABILITY, { subject, action });
