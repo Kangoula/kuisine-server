@@ -26,9 +26,14 @@ describe('UsersService', () => {
       password,
     };
 
+    repository.save.mockResolvedValue({
+      id: 1,
+      ...userToCreate,
+    });
+
     const createdUser = await service.create(userToCreate);
 
-    expect(repository.insert).toHaveBeenCalled();
+    expect(repository.save).toHaveBeenCalled();
     expect(createdUser).toBeDefined();
     expect(createdUser.username).toBe(username);
   });
