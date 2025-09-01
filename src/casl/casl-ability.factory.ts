@@ -42,7 +42,7 @@ export class CaslAbilityFactory {
 
     const role = await this.rolesService.findOne(user.roleId);
 
-    if (role.name === 'Admin') {
+    if (role.isAdmin) {
       can(Action.Manage, 'all'); // access to everything
     } else {
       const roleUserAbilities: Permission[] = role.permissions || [];
