@@ -7,6 +7,6 @@ export class CreateRecipeDto {
 
   @IsInt()
   @Min(1)
-  @Max(65535) // unsigned small int en db
+  @Max(32767)
   servings: number;
 }

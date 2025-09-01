@@ -10,10 +10,10 @@ export class IngredientToRecipe extends SoftDeletableEntity {
   @Column()
   recipeId: number;
 
-  @Column({ type: 'smallint', unsigned: true })
+  @Column({ type: 'smallint' })
   order: number;
 
-  @Column({ type: 'smallint', unsigned: true })
+  @Column({ type: 'smallint' })
   quantity: number;
 
   @Column({ type: 'varchar', precision: 255, nullable: true })

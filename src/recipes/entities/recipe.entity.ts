@@ -8,7 +8,7 @@ export class Recipe extends SoftDeletableEntity {
   @Column({ type: 'varchar', precision: 255 })
   name: string;
 
-  @Column({ type: 'smallint', unsigned: true })
+  @Column({ type: 'smallint' })
   servings: number;
 
   @OneToMany(() => RecipeStep, (recipeStep) => recipeStep.recipe, {
