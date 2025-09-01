@@ -41,7 +41,7 @@ export class AuthService {
       const user = await this.usersService.findByUsernameWithPassword(username);
 
       if (user) {
-        await this.verifyPassword(user.password, password);
+        await this.verifyPassword(user.password || '', password);
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password: userPassword, ...userWithoutPassword } = user;

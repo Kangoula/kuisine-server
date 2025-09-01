@@ -28,6 +28,7 @@ export class CreateUserTable1755000864278 implements MigrationInterface {
             name: 'password',
             type: 'varchar',
             precision: 255,
+            isNullable: true,
           },
           {
             name: 'refresh_token',

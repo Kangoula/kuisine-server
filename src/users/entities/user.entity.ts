@@ -12,8 +12,8 @@ export class User extends SoftDeletableEntity {
   username: string;
 
   @Exclude()
-  @Column({ type: 'varchar', precision: 255, select: false })
-  password: string;
+  @Column({ type: 'varchar', precision: 255, nullable: true, select: false })
+  password?: string;
 
   @Exclude()
   @Column({ type: 'varchar', precision: 255, nullable: true, select: false })
