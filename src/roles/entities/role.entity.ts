@@ -20,6 +20,10 @@ export class Role extends SoftDeletableEntity {
   name: string;
 
   @Exclude()
+  @Column({ type: 'boolean', update: false })
+  isAdmin: boolean;
+
+  @Exclude()
   @Column({ type: 'simple-json', nullable: true })
   permissions?: Permission[];
 

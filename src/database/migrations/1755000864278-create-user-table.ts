@@ -68,6 +68,11 @@ export class CreateUserTable1755000864278 implements MigrationInterface {
             isUnique: true,
           },
           {
+            name: 'isAdmin',
+            type: 'boolean',
+            default: false,
+          },
+          {
             name: 'permissions',
             type: 'json',
             isNullable: true,
