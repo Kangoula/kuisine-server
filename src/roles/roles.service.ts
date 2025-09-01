@@ -1,6 +1,7 @@
 import { BaseEntityService } from '@/common/mixins/base-entity.service.mixin';
 import { Injectable } from '@nestjs/common';
 import { Role } from './entities/role.entity';
+import { UpdateRoleDto } from './dto/update-role.dto';
 
 @Injectable()
 export class RolesService extends BaseEntityService(Role) {
@@ -8,5 +9,9 @@ export class RolesService extends BaseEntityService(Role) {
     return this.repository.findOneByOrFail({
       name,
     });
+  }
+
+  update(id: number, updateRoleDto: UpdateRoleDto) {
+    return super.update(id, updateRoleDto);
   }
 }
