@@ -9,6 +9,9 @@ export class RecipesService extends BaseEntityService(Recipe) {
     const recipe = new Recipe();
     recipe.name = createRecipeDto.name;
     recipe.servings = createRecipeDto.servings;
+    recipe.cookingDurationMinutes = createRecipeDto.cookingDurationMinutes;
+    recipe.preparationDurationMinutes =
+      createRecipeDto.preparationDurationMinutes;
 
     return this.repository.save(recipe);
   }

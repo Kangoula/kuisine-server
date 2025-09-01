@@ -13,7 +13,7 @@ export class UsersService extends BaseEntityService(User) {
     user.username = createUserDto.username;
     user.password = await bcryptHash(createUserDto.password);
 
-    return this.insert(user);
+    return this.repository.save(user);
   }
 
   public findByUsernameWithPassword(username: string) {

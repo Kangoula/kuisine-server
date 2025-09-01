@@ -26,7 +26,14 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
           {
             name: 'servings',
             type: 'smallint',
-            unsigned: true,
+          },
+          {
+            name: 'cooking_duration_minutes',
+            type: 'smallint',
+          },
+          {
+            name: 'preparation_duration_minutes',
+            type: 'smallint',
           },
           {
             name: 'deleted_at',
@@ -91,7 +98,6 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
           {
             name: 'order',
             type: 'smallint',
-            unsigned: true,
           },
           {
             name: 'description',
@@ -139,12 +145,10 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
           {
             name: 'order',
             type: 'smallint',
-            unsigned: true,
           },
           {
             name: 'quantity',
             type: 'smallint',
-            unsigned: true,
           },
           {
             name: 'quantity_unit',
