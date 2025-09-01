@@ -84,6 +84,19 @@ export class InsertPermissionsAndRoles1756449511143
               },
             },
             //
+            // IngredientToRecipe
+            //
+            {
+              subject: 'IngredientToRecipe',
+              action: 'read',
+            },
+            {
+              subject: 'IngredientToRecipe',
+              action: ['update', 'delete'],
+              conditions: {
+                own: true,
+              },
+            },
           ],
         },
       ])
