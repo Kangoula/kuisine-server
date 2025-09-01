@@ -9,4 +9,14 @@ export class CreateRecipeDto {
   @Min(1)
   @Max(32767)
   servings: number;
+
+  @IsInt()
+  @Min(1)
+  @Max(32767)
+  cookingDurationMinutes: number;
+
+  @IsInt()
+  @Min(1)
+  @Max(32767)
+  preparationDurationMinutes: number;
 }

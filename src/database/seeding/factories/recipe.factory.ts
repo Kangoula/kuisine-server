@@ -6,6 +6,8 @@ export const RecipeFactory = setSeederFactory(Recipe, (faker) => {
 
   recipe.name = faker.lorem.words({ min: 1, max: 4 });
   recipe.servings = faker.number.int({ min: 1, max: 10 });
+  recipe.cookingDurationMinutes = faker.number.int({ min: 1, max: 480 });
+  recipe.preparationDurationMinutes = faker.number.int({ min: 1, max: 120 });
 
   return recipe;
 });

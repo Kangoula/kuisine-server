@@ -28,6 +28,14 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
             type: 'smallint',
           },
           {
+            name: 'cooking_duration_minutes',
+            type: 'smallint',
+          },
+          {
+            name: 'preparation_duration_minutes',
+            type: 'smallint',
+          },
+          {
             name: 'deleted_at',
             type: 'date',
             isNullable: true,

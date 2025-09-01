@@ -11,6 +11,12 @@ export class Recipe extends SoftDeletableEntity {
   @Column({ type: 'smallint' })
   servings: number;
 
+  @Column({ type: 'smallint' })
+  cookingDurationMinutes: number;
+
+  @Column({ type: 'smallint' })
+  preparationDurationMinutes: number;
+
   @OneToMany(() => RecipeStep, (recipeStep) => recipeStep.recipe, {
     cascade: true,
   })
