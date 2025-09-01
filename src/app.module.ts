@@ -16,6 +16,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import * as Joi from '@hapi/joi';
 import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
+import { IsUniqueContraintValidator } from './common/validators/is-unique-contstraint.validator';
 
 @Module({
   providers: [
@@ -36,6 +37,7 @@ import databaseConfig from './config/database.config';
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
     },
+    IsUniqueContraintValidator,
   ],
   imports: [
     ConfigModule.forRoot({
