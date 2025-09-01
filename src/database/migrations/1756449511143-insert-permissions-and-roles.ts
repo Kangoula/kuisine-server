@@ -13,125 +13,126 @@ export class InsertPermissionsAndRoles1756449511143
       .values([
         {
           name: 'Admin',
+          isAdmin: true,
         },
-        this.getUserRole(),
-        this.getGuestRole(),
+        {
+          name: 'User',
+          permissions: [
+            {
+              subject: 'User',
+              action: 'read',
+            },
+            {
+              subject: 'User',
+              action: 'update',
+              fields: ['username', 'password'],
+              conditions: {
+                own: true,
+              },
+            },
+            //
+            // Ingredient
+            //
+            {
+              subject: 'Ingredient',
+              action: 'read',
+            },
+            {
+              subject: 'Ingredient',
+              action: 'create',
+            },
+            {
+              subject: 'Ingredient',
+              action: ['update', 'delete'],
+              conditions: {
+                own: true,
+              },
+            },
+            {
+              subject: 'Ingredient',
+              action: ['update', 'delete'],
+              conditions: {
+                ingredientToRecipe: { $size: 0 },
+              },
+            },
+            //
+            // Recipe
+            //
+            {
+              subject: 'Recipe',
+              action: 'read',
+            },
+            {
+              subject: 'Recipe',
+              action: 'create',
+            },
+            {
+              subject: 'Recipe',
+              action: ['update', 'delete'],
+              conditions: {
+                own: true,
+              },
+            },
+            //
+            // RecipeStep
+            //
+            {
+              subject: 'RecipeStep',
+              action: 'read',
+            },
+            {
+              subject: 'RecipeStep',
+              action: 'create',
+            },
+            {
+              subject: 'RecipeStep',
+              action: ['update', 'delete'],
+              conditions: {
+                own: true,
+              },
+            }, //
+            // IngredientToRecipe
+            //
+            {
+              subject: 'IngredientToRecipe',
+              action: 'read',
+            },
+            {
+              subject: 'IngredientToRecipe',
+              action: ['update', 'delete'],
+              conditions: {
+                own: true,
+              },
+            },
+          ],
+        },
+        {
+          name: 'Guest',
+          permissions: [
+            {
+              subject: 'Recipe',
+              action: 'read',
+            },
+            {
+              subject: 'Ingredient',
+              action: 'read',
+            },
+            {
+              subject: 'RecipeStep',
+              action: 'read',
+            },
+            {
+              subject: 'IngredientToRecipe',
+              action: 'read',
+            },
+            {
+              subject: 'User',
+              action: 'read',
+            },
+          ],
+        },
       ])
       .execute();
-  }
-
-  private getUserRole() {
-    return {
-      name: 'User',
-      permissions: [
-        {
-          subject: 'User',
-          action: 'read',
-        },
-        //
-        // Ingredient
-        //
-        {
-          subject: 'Ingredient',
-          action: 'read',
-        },
-        {
-          subject: 'Ingredient',
-          action: 'create',
-        },
-        {
-          subject: 'Ingredient',
-          action: ['update', 'delete'],
-          conditions: {
-            own: true,
-          },
-        },
-        {
-          subject: 'Ingredient',
-          action: ['update', 'delete'],
-          conditions: {
-            ingredientToRecipe: { $size: 0 },
-          },
-        },
-        //
-        // Recipe
-        //
-        {
-          subject: 'Recipe',
-          action: 'read',
-        },
-        {
-          subject: 'Recipe',
-          action: 'create',
-        },
-        {
-          subject: 'Recipe',
-          action: ['update', 'delete'],
-          conditions: {
-            own: true,
-          },
-        },
-        //
-        // RecipeStep
-        //
-        {
-          subject: 'RecipeStep',
-          action: 'read',
-        },
-        {
-          subject: 'RecipeStep',
-          action: 'create',
-        },
-        {
-          subject: 'RecipeStep',
-          action: ['update', 'delete'],
-          conditions: {
-            own: true,
-          },
-        }, //
-        // IngredientToRecipe
-        //
-        {
-          subject: 'IngredientToRecipe',
-          action: 'read',
-        },
-        {
-          subject: 'IngredientToRecipe',
-          action: ['update', 'delete'],
-          conditions: {
-            own: true,
-          },
-        },
-      ],
-    };
-  }
-
-  private getGuestRole() {
-    return {
-      name: 'Guest',
-      permissions: [
-        {
-          subject: 'Recipe',
-          action: 'read',
-        },
-        {
-          subject: 'Ingredient',
-          action: 'read',
-        },
-        {
-          subject: 'RecipeStep',
-          action: 'read',
-        },
-        {
-          subject: 'IngredientToRecipe',
-          action: 'read',
-        },
-        {
-          subject: 'User',
-          action: 'read',
-        },
-      ],
-    };
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}
