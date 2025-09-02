@@ -1,4 +1,3 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { RecipesService } from './recipes.service';
 import { TestBed } from '@suites/unit';
 import { Recipe } from './entities/recipe.entity';
@@ -55,9 +54,9 @@ describe('RecipesService', () => {
       generatedMaps: [],
     });
 
-    const result = await service.update(66, updateData);
+    const result = await service.update(recipeId, updateData);
 
-    expect(repository.update).toHaveBeenCalledWith(66, updateData);
+    expect(repository.update).toHaveBeenCalledWith(recipeId, updateData);
     expect(result.affected).toBe(1);
   });
 

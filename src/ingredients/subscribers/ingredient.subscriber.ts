@@ -1,5 +1,4 @@
 import { DataSource, InsertEvent, UpdateEvent } from 'typeorm';
-import { IngredientsService } from '../ingredients.service';
 import { Ingredient } from '../entities/ingredient.entity';
 import { Injectable } from '@nestjs/common';
 import { BaseEntitySubscriber } from '@/common/base-entity.subscriber';
