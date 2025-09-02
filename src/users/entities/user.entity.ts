@@ -1,6 +1,10 @@
 import { SoftDeletableEntity } from '@/common/entities';
+import { Role } from '@/roles/entities/role.entity';
 import { Exclude } from 'class-transformer';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+
+export const CredentialsColumn = ['password', 'refreshToken'] as const;
+export type UserCredentialsColumn = (typeof CredentialsColumn)[number];
 
 @Entity()
 export class User extends SoftDeletableEntity {
@@ -8,10 +12,17 @@ export class User extends SoftDeletableEntity {
   username: string;
 
   @Exclude()
-  @Column({ type: 'varchar', precision: 255, select: false })
-  password: string;
+  @Column({ type: 'varchar', precision: 255, nullable: true, select: false })
+  password?: string;
 
   @Exclude()
   @Column({ type: 'varchar', precision: 255, nullable: true, select: false })
   refreshToken?: string;
+
+  @Column({ type: 'int' })
+  roleId: number;
+
+  @ManyToOne(() => Role, (role) => role.users)
+  @JoinColumn({ name: 'role_id' })
+  role: Role;
 }

@@ -12,6 +12,7 @@ import { ConfigService } from '@nestjs/config';
 import { PostgresErrorCode } from '@/database/postgresErrorCodes.enum';
 import { CookieOptions } from 'express';
 import * as ms from 'ms';
+import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 
 export enum CookieTypeNames {
   Refresh = 'Refresh',
@@ -32,14 +33,20 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  public async validateUser(username: string, password: string) {
+  public async validateUser(
+    username: string,
+    password: string,
+  ): Promise<UserWithoutCredentials | undefined> {
     try {
       const user = await this.usersService.findByUsernameWithPassword(username);
 
       if (user) {
-        await this.verifyPassword(user.password, password);
+        await this.verifyPassword(user.password || '', password);
 
-        return user;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password: userPassword, ...userWithoutPassword } = user;
+
+        return userWithoutPassword;
       }
     } catch {
       throw new BadRequestException('Wrong credentials provided');
@@ -54,9 +61,12 @@ export class AuthService {
     }
   }
 
-  public async register(registerData: RegisterDto) {
+  public async register(registerDto: RegisterDto) {
     try {
-      const createdUser = await this.usersService.create(registerData);
+      const createdUser = await this.usersService.create({
+        username: registerDto.username,
+        password: registerDto.password,
+      });
 
       return createdUser;
     } catch (error) {

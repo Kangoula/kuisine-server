@@ -2,6 +2,9 @@ import { Body, Controller, Delete, Patch } from '@nestjs/common';
 import { UpdateIngredientToRecipeDto } from './dto/update-ingredient-to-recipe.dto';
 import { IngredientToRecipeService } from './ingredient-to-recipe.service';
 import { EntityId } from '@/common/decorators/route-params.decorator';
+import { Permission } from '@/casl/permission.decorator';
+import { IngredientToRecipe } from './entities/ingredient-to-recipe.entity';
+import { Action } from '@/casl/action.enum';
 
 @Controller('ingredient-to-recipe')
 export class IngredientToRecipeController {
@@ -10,6 +13,7 @@ export class IngredientToRecipeController {
   ) {}
 
   @Patch(':id')
+  @Permission(IngredientToRecipe, Action.Update)
   async update(
     @EntityId() id: number,
     @Body() updateIngredientToRecipeDto: UpdateIngredientToRecipeDto,
@@ -21,6 +25,7 @@ export class IngredientToRecipeController {
   }
 
   @Delete(':id')
+  @Permission(IngredientToRecipe, Action.Delete)
   async remove(@EntityId() id: number) {
     await this.ingredientToRecipeService.findOne(id);
     return this.ingredientToRecipeService.remove(id);

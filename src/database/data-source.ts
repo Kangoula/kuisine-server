@@ -13,11 +13,12 @@ const dataSource = new DataSource({
   synchronize: false,
   namingStrategy: new SnakeNamingStrategy(),
   migrations: ['dist/database/migrations/*{.ts,.js}'],
+  migrationsTransactionMode: 'each',
   entities: ['dist/**/*.entity{.ts,.js}'],
   seeds: ['dist/database/seeding/**/*.seeder{.ts,.js}'],
   factories: ['dist/database/seeding/factories/**/*.factory{.ts,.js}'],
 } as DataSourceOptions & SeederOptions);
 
-export default dataSource;
-
 dataSource.initialize();
+
+export default dataSource;

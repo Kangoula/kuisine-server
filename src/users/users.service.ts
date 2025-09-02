@@ -1,35 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BaseEntityService } from '@/common/mixins/base-entity.service.mixin';
-import { User } from './entities/user.entity';
+import { User, UserCredentialsColumn } from './entities/user.entity';
 import { bcryptHash } from '@/common/helpers/bcryptHash';
 import { compare } from 'bcrypt';
 import { UserWithoutCredentials } from './dto/user-without-credentials.dto';
+import { RolesService } from '@/roles/roles.service';
 
 @Injectable()
 export class UsersService extends BaseEntityService(User) {
+  constructor(private rolesService: RolesService) {
+    super();
+  }
+
   async create(createUserDto: CreateUserDto): Promise<UserWithoutCredentials> {
     const user = new User();
     user.username = createUserDto.username;
     user.password = await bcryptHash(createUserDto.password);
+    user.role = await this.getRoleForUserCreation(createUserDto.roleId);
 
     return this.repository.save(user);
   }
 
-  public findByUsernameWithPassword(username: string) {
+  private getRoleForUserCreation(roleId?: number) {
+    if (!roleId) {
+      return this.rolesService.findByName('User');
+    }
+
+    return this.rolesService.findOne(roleId);
+  }
+
+  private findByWithCredentials(
+    findByCondition: object,
+    credentialsColumn: UserCredentialsColumn,
+  ) {
     return this.repository.findOneOrFail({
-      where: { username },
+      where: findByCondition,
       // the password column default behavior makes it not selectable, we have to add an explicit selection to retrieve it
-      select: ['id', 'username', 'password'],
+      select: ['id', 'username', credentialsColumn],
     });
   }
 
-  public findByUsernameWithRefreshToken(userId: number) {
-    return this.repository.findOneOrFail({
-      where: { id: userId },
-      // the password column default behavior makes it not selectable, we have to add an explicit selection to retrieve it
-      select: ['id', 'username', 'refreshToken'],
-    });
+  public findByUsernameWithPassword(username: string) {
+    return this.findByWithCredentials({ username }, 'password');
+  }
+
+  public findByIdWithRefreshToken(userId: number) {
+    return this.findByWithCredentials({ id: userId }, 'refreshToken');
   }
 
   findByUsername(username: string) {
@@ -42,7 +59,7 @@ export class UsersService extends BaseEntityService(User) {
   }
 
   async getUserMatchingRefreshToken(userId: number, refreshToken: string) {
-    const user = await this.findByUsernameWithRefreshToken(userId);
+    const user = await this.findByIdWithRefreshToken(userId);
 
     if (!user?.refreshToken) {
       return;

@@ -13,9 +13,12 @@ import { UsersModule } from './users/users.module';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { CaslModule } from './casl/casl.module';
 import * as Joi from '@hapi/joi';
 import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
+import { PermissionsGuard } from './casl/permissions.guard';
+import { RolesModule } from './roles/roles.module';
 import { IsUniqueContraintValidator } from './common/validators/is-unique-contstraint.validator';
 
 @Module({
@@ -23,6 +26,10 @@ import { IsUniqueContraintValidator } from './common/validators/is-unique-contst
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionsGuard,
     },
     {
       provide: APP_PIPE,
@@ -63,6 +70,8 @@ import { IsUniqueContraintValidator } from './common/validators/is-unique-contst
     IngredientToRecipeModule,
     UsersModule,
     AuthModule,
+    CaslModule,
+    RolesModule,
   ],
 })
 export class AppModule {}

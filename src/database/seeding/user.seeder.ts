@@ -21,6 +21,13 @@ export class UserSeeder implements Seeder {
     await userFactory.save({
       username: 'admin',
       password,
+      roleId: 1,
+    });
+
+    await userFactory.save({
+      username: 'jabba',
+      password,
+      roleId: 2,
     });
 
     console.log('test user created');

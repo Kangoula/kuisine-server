@@ -3,22 +3,28 @@ import { RecipeStepsService } from './recipe-steps.service';
 import { CreateRecipeStepDto } from './dto/create-recipe_step.dto';
 import { UpdateRecipeStepDto } from './dto/update-recipe_step.dto';
 import { EntityId } from '@/common/decorators/route-params.decorator';
+import { Permission } from '@/casl/permission.decorator';
+import { RecipeStep } from './entities/recipe-step.entity';
+import { Action } from '@/casl/action.enum';
 
 @Controller('recipe-steps')
 export class RecipeStepsController {
   constructor(private readonly recipeStepsService: RecipeStepsService) {}
 
   @Post()
+  @Permission(RecipeStep, Action.Create)
   create(@Body() createRecipeStepDto: CreateRecipeStepDto) {
     return this.recipeStepsService.create(createRecipeStepDto);
   }
 
   @Get(':id')
+  @Permission(RecipeStep, Action.Read)
   findOne(@EntityId() id: number) {
     return this.recipeStepsService.findOne(id);
   }
 
   @Patch(':id')
+  @Permission(RecipeStep, Action.Update)
   update(
     @EntityId() id: number,
     @Body() updateRecipeStepDto: UpdateRecipeStepDto,
@@ -27,6 +33,7 @@ export class RecipeStepsController {
   }
 
   @Delete(':id')
+  @Permission(RecipeStep, Action.Delete)
   async remove(@EntityId() id: number) {
     await this.recipeStepsService.findOne(id);
 

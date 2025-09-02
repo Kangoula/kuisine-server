@@ -1,10 +1,4 @@
-import { IsNumber, IsString, Length } from 'class-validator';
+import { User, CredentialsColumn } from '../entities/user.entity';
+import { OmitType } from '@nestjs/swagger';
 
-export class UserWithoutCredentials {
-  @IsNumber()
-  id: number;
-
-  @IsString()
-  @Length(1, 255)
-  username: string;
-}
+export class UserWithoutCredentials extends OmitType(User, CredentialsColumn) {}
