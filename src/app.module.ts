@@ -17,7 +17,7 @@ import { CaslModule } from './casl/casl.module';
 import * as Joi from '@hapi/joi';
 import authConfig from './config/auth.config';
 import databaseConfig from './config/database.config';
-import { PoliciesGuard } from './casl/policies.guard';
+import { PermissionsGuard } from './casl/permissions.guard';
 import { RolesModule } from './roles/roles.module';
 import { IsUniqueContraintValidator } from './common/validators/is-unique-contstraint.validator';
 
@@ -29,7 +29,7 @@ import { IsUniqueContraintValidator } from './common/validators/is-unique-contst
     },
     {
       provide: APP_GUARD,
-      useClass: PoliciesGuard,
+      useClass: PermissionsGuard,
     },
     {
       provide: APP_PIPE,

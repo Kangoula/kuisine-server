@@ -10,7 +10,7 @@ import { ReqWithUser } from '@/common/decorators/request-user.decorator';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 
 @Injectable()
-export class PoliciesGuard implements CanActivate {
+export class PermissionsGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private caslAbilityFactory: CaslAbilityFactory,
