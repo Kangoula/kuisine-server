@@ -1,6 +1,4 @@
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { Mocked } from '@suites/doubles.jest';
-import { Repository } from 'typeorm';
 import { TestBed } from '@suites/unit';
 import {
   CaslAbilityFactory,
@@ -10,6 +8,7 @@ import { Ingredient } from '@/ingredients/entities/ingredient.entity';
 import { RolesService } from '@/roles/roles.service';
 import { User } from '@/users/entities/user.entity';
 import { Action } from './action.enum';
+import { Recipe } from '@/recipes/entities/recipe.entity';
 
 describe('CaslAbilityFactory', () => {
   let caslAbilityFactory: CaslAbilityFactory;
@@ -117,14 +116,68 @@ describe('CaslAbilityFactory', () => {
     );
   });
 
-  it('should allow when permission.condition.isOwner is true and the user id matches', () => {
-    // ownership is not implemented yet on entities
-    expect(true).toBe(false);
+  it('should allow when permission.condition.isOwner is true and the user id matches', async () => {
+    const roleId = 1;
+
+    const user = new User();
+    user.id = 1;
+    user.username = 'test';
+    user.roleId = roleId;
+
+    const recipe = new Recipe();
+    recipe.userId = user.id;
+
+    rolesService.findOne.mockResolvedValue({
+      id: roleId,
+      name: 'User',
+      isAdmin: false,
+      permissions: [
+        {
+          subject: 'Recipe',
+          action: Action.Update,
+          conditions: {
+            isOwner: true,
+          },
+        },
+      ],
+      users: [user],
+    });
+
+    const abilities = await caslAbilityFactory.createForUser(user);
+
+    expect(abilities.can(Action.Update, recipe)).toBe(true);
   });
 
-  it("should deny when permission.condition.isOwner is true and the user id doesn't match", () => {
-    // ownership is not implemented yet on entities
-    expect(true).toBe(false);
+  it("should deny when permission.condition.isOwner is true and the user id doesn't match", async () => {
+    const roleId = 1;
+
+    const user = new User();
+    user.id = 1;
+    user.username = 'test';
+    user.roleId = roleId;
+
+    const recipe = new Recipe();
+    recipe.userId = 2;
+
+    rolesService.findOne.mockResolvedValue({
+      id: roleId,
+      name: 'User',
+      isAdmin: false,
+      permissions: [
+        {
+          subject: 'Recipe',
+          action: Action.Update,
+          conditions: {
+            isOwner: true,
+          },
+        },
+      ],
+      users: [user],
+    });
+
+    const abilities = await caslAbilityFactory.createForUser(user);
+
+    expect(abilities.can(Action.Update, recipe)).toBe(false);
   });
 
   it('should allow when permission.condition.isMe is true and the user id matches', async () => {
