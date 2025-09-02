@@ -8,12 +8,16 @@ import {
 } from './casl-ability.factory';
 import { ReqWithUser } from '@/common/decorators/request-user.decorator';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
+import { EntityManager } from 'typeorm';
+import { EntityIdRequestParam } from '@/common/decorators/route-params.decorator';
+import { BaseEntity } from '@/common/entities';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private caslAbilityFactory: CaslAbilityFactory,
+    private readonly entityManager: EntityManager,
   ) {}
 
   canActivate(
@@ -29,15 +33,15 @@ export class PermissionsGuard implements CanActivate {
       return true;
     }
 
-    const request: ReqWithUser = context.switchToHttp().getRequest();
-    const user = request.user;
+    const { user, entityId } = this.retrieveRequiredParamsFromContext(context);
 
-    return this.isActionAllowed(user, abilities);
+    return this.isActionAllowed(user, abilities, entityId);
   }
 
   private async isActionAllowed(
     user: UserWithoutCredentials,
     abilities: RequiredAbility | RequiredAbility[],
+    entityId?: number,
   ) {
     const userAbilities = await this.caslAbilityFactory.createForUser(user);
 
@@ -45,7 +49,7 @@ export class PermissionsGuard implements CanActivate {
       return abilities.every((ability) => {
         return userAbilities.can(
           ability.action,
-          getSubjectFromClass(ability.subject),
+          this.getAbilitySubject(ability, entityId),
           ability.field,
         );
       });
@@ -53,8 +57,42 @@ export class PermissionsGuard implements CanActivate {
 
     return userAbilities.can(
       abilities.action,
-      getSubjectFromClass(abilities.subject),
+      this.getAbilitySubject(abilities),
       abilities.field,
     );
+  }
+
+  private retrieveRequiredParamsFromContext(context: ExecutionContext) {
+    const request: ReqWithUser & EntityIdRequestParam = context
+      .switchToHttp()
+      .getRequest();
+
+    const user = request.user;
+    const entityId = request.params?.id ? +request.params.id : undefined;
+
+    return { user, entityId };
+  }
+
+  /**
+   * When the given ability is field level grained and and entityId is given,
+   * retrieves the entity from the database to be able to check permissions.
+   *
+   * Otherwise retrives the subject as a string
+   */
+  private getAbilitySubject(
+    ability: RequiredAbility,
+    entityId?: number,
+  ): string | Promise<BaseEntity> {
+    const subject = ability.subject;
+
+    if (!entityId || !ability.field) {
+      return getSubjectFromClass(subject);
+    }
+
+    return this.entityManager
+      .getRepository(subject)
+      .createQueryBuilder(getSubjectFromClass(subject))
+      .where({ id: entityId })
+      .execute();
   }
 }
