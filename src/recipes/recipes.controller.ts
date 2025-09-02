@@ -44,19 +44,19 @@ export class RecipesController {
 
   @Get(':id')
   @Permission(Recipe, Action.Read)
-  findOne(@EntityId() id: number) {
+  findOne(@EntityId id: number) {
     return this.recipesService.findOne(id);
   }
 
   @Patch(':id')
   @Permission(Recipe, Action.Update)
-  update(@EntityId() id: number, @Body() updateRecipeDto: UpdateRecipeDto) {
+  update(@EntityId id: number, @Body() updateRecipeDto: UpdateRecipeDto) {
     return this.recipesService.update(id, updateRecipeDto);
   }
 
   @Delete(':id')
   @Permission(Recipe, Action.Delete)
-  async remove(@EntityId() id: number) {
+  async remove(@EntityId id: number) {
     await this.recipesService.findOne(id);
     return this.recipesService.remove(id);
   }

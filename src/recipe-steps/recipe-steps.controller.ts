@@ -22,14 +22,14 @@ export class RecipeStepsController {
 
   @Get(':id')
   @Permission(RecipeStep, Action.Read)
-  findOne(@EntityId() id: number) {
+  findOne(@EntityId id: number) {
     return this.recipeStepsService.findOne(id);
   }
 
   @Patch(':id')
   @Permission(RecipeStep, Action.Update)
   update(
-    @EntityId() id: number,
+    @EntityId id: number,
     @Body() updateRecipeStepDto: UpdateRecipeStepDto,
   ) {
     return this.recipeStepsService.update(id, updateRecipeStepDto);
@@ -37,7 +37,7 @@ export class RecipeStepsController {
 
   @Delete(':id')
   @Permission(RecipeStep, Action.Delete)
-  async remove(@EntityId() id: number) {
+  async remove(@EntityId id: number) {
     await this.recipeStepsService.findOne(id);
 
     return this.recipeStepsService.remove(id);

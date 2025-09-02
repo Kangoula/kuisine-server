@@ -9,7 +9,6 @@ import {
 import { ReqWithUser } from '@/common/decorators/request-user.decorator';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 import { EntityManager } from 'typeorm';
-import { EntityIdRequestParam } from '@/common/decorators/route-params.decorator';
 import { BaseEntity } from '@/common/entities';
 
 @Injectable()
@@ -63,7 +62,7 @@ export class PermissionsGuard implements CanActivate {
   }
 
   private retrieveRequiredParamsFromContext(context: ExecutionContext) {
-    const request: ReqWithUser & EntityIdRequestParam = context
+    const request: ReqWithUser & { params: { id: number } } = context
       .switchToHttp()
       .getRequest();
 
