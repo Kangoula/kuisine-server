@@ -45,18 +45,18 @@ export class PermissionsGuard implements CanActivate {
     const userAbilities = await this.caslAbilityFactory.createForUser(user);
 
     if (Array.isArray(abilities)) {
-      return abilities.every((ability) => {
-        return userAbilities.can(
-          ability.action,
-          this.getAbilitySubject(ability, entityId),
-          ability.field,
-        );
+      const subjects = await Promise.all(
+        abilities.map((ability) => this.getAbilitySubject(ability, entityId)),
+      );
+
+      return abilities.every((ability, idx) => {
+        return userAbilities.can(ability.action, subjects[idx], ability.field);
       });
     }
 
     return userAbilities.can(
       abilities.action,
-      this.getAbilitySubject(abilities),
+      await this.getAbilitySubject(abilities, entityId),
       abilities.field,
     );
   }
@@ -84,7 +84,7 @@ export class PermissionsGuard implements CanActivate {
   ): string | Promise<BaseEntity> {
     const subject = ability.subject;
 
-    if (!entityId || !ability.field) {
+    if (!entityId) {
       return getSubjectFromClass(subject);
     }
 
