@@ -1,4 +1,4 @@
-import { IsInt, IsString, Length, Max, Min } from 'class-validator';
+import { IsInt, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 
 export class CreateRecipeDto {
   @IsString()
@@ -19,4 +19,8 @@ export class CreateRecipeDto {
   @Min(1)
   @Max(32767)
   preparationDurationMinutes: number;
+
+  @IsInt()
+  @IsOptional()
+  userId?: number;
 }

@@ -12,6 +12,7 @@ export class RecipesService extends BaseEntityService(Recipe) {
     recipe.cookingDurationMinutes = createRecipeDto.cookingDurationMinutes;
     recipe.preparationDurationMinutes =
       createRecipeDto.preparationDurationMinutes;
+    recipe.userId = createRecipeDto.userId;
 
     return this.repository.save(recipe);
   }

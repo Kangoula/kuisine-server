@@ -17,6 +17,8 @@ import { Recipe } from './entities/recipe.entity';
 import { Action } from '@/casl/action.enum';
 import { ApiCookieAuth } from '@nestjs/swagger';
 import { CookieTypeNames } from '@/auth/auth.service';
+import { RequestUser } from '@/common/decorators/request-user.decorator';
+import { User } from '@/users/entities/user.entity';
 
 @ApiCookieAuth(CookieTypeNames.Access)
 @Controller('recipes')
@@ -25,8 +27,13 @@ export class RecipesController {
 
   @Post()
   @Permission(Recipe, Action.Create)
-  create(@Body() createRecipeDto: CreateRecipeDto) {
-    return this.recipesService.create(createRecipeDto);
+  create(@RequestUser() user: User, @Body() createRecipeDto: CreateRecipeDto) {
+    let data = createRecipeDto;
+    if (!createRecipeDto.userId) {
+      data = { ...createRecipeDto, userId: user.id };
+    }
+
+    return this.recipesService.create(data);
   }
 
   @Get()
