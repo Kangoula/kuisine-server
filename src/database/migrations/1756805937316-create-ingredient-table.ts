@@ -3,57 +3,19 @@ import {
   QueryRunner,
   Table,
   TableForeignKey,
+  TableIndex,
 } from 'typeorm';
 
-export class CreateRecipesTable1754396785245 implements MigrationInterface {
+export class CreateIngredientTable1756805937316 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createTable(
-      new Table({
-        name: 'recipe',
-        columns: [
-          {
-            name: 'id',
-            type: 'int',
-            isGenerated: true,
-            isPrimary: true,
-            generationStrategy: 'increment',
-          },
-          {
-            name: 'name',
-            type: 'varchar',
-            precision: 255,
-          },
-          {
-            name: 'servings',
-            type: 'smallint',
-          },
-          {
-            name: 'cooking_duration_minutes',
-            type: 'smallint',
-          },
-          {
-            name: 'preparation_duration_minutes',
-            type: 'smallint',
-          },
-          {
-            name: 'deleted_at',
-            type: 'date',
-            isNullable: true,
-          },
-        ],
-      }),
-    );
-
     await queryRunner.createTable(
       new Table({
         name: 'ingredient',
         columns: [
           {
             name: 'id',
-            type: 'int',
-            isGenerated: true,
+            type: 'serial',
             isPrimary: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'name',
@@ -82,57 +44,12 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
 
     await queryRunner.createTable(
       new Table({
-        name: 'recipe_step',
-        columns: [
-          {
-            name: 'id',
-            type: 'int',
-            isGenerated: true,
-            isPrimary: true,
-            generationStrategy: 'increment',
-          },
-          {
-            name: 'recipe_id',
-            type: 'int',
-          },
-          {
-            name: 'order',
-            type: 'smallint',
-          },
-          {
-            name: 'description',
-            type: 'text',
-          },
-          {
-            name: 'deleted_at',
-            type: 'date',
-            isNullable: true,
-          },
-        ],
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'recipe_step',
-      new TableForeignKey({
-        name: 'recipe_step_recipe_foreign',
-        columnNames: ['recipe_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'recipe',
-        onDelete: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createTable(
-      new Table({
         name: 'ingredient_to_recipe',
         columns: [
           {
             name: 'id',
-            type: 'int',
-            isGenerated: true,
+            type: 'serial',
             isPrimary: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'ingredient_id',
@@ -202,8 +119,6 @@ export class CreateRecipesTable1754396785245 implements MigrationInterface {
       'IDX_ingredient_full_text_search',
     );
     await queryRunner.dropTable('ingredient_to_recipe');
-    await queryRunner.dropTable('recipe_step');
     await queryRunner.dropTable('ingredient');
-    await queryRunner.dropTable('recipe');
   }
 }

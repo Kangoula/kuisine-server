@@ -5,7 +5,9 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateUserTable1755000864278 implements MigrationInterface {
+export class CreateUserAndRolesTables1756805739735
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -13,10 +15,8 @@ export class CreateUserTable1755000864278 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'int',
-            isGenerated: true,
+            type: 'serial',
             isPrimary: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'username',
@@ -56,10 +56,8 @@ export class CreateUserTable1755000864278 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'int',
-            isGenerated: true,
+            type: 'serial',
             isPrimary: true,
-            generationStrategy: 'increment',
           },
           {
             name: 'name',
