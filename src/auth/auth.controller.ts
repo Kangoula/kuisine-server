@@ -10,12 +10,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { AuthService } from './auth.service';
+import { AuthService, CookieTypeNames } from './auth.service';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '@/users/users.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
-import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiBody, ApiCookieAuth, ApiCreatedResponse } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 import { RequestUser } from '@/common/decorators/request-user.decorator';
@@ -69,6 +69,7 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
+  @ApiCookieAuth(CookieTypeNames.Access)
   async logOut(
     @RequestUser() user: UserWithoutCredentials,
     @Res({ passthrough: true }) response: Response,
@@ -93,12 +94,14 @@ export class AuthController {
   }
 
   @Get('me')
+  @ApiCookieAuth(CookieTypeNames.Access)
   authenticate(@RequestUser() user: UserWithoutCredentials) {
     return user;
   }
 
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
+  @ApiCookieAuth(CookieTypeNames.Access)
   refresh(
     @RequestUser() user: UserWithoutCredentials,
     @Res({ passthrough: true }) response: Response,

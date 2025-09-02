@@ -5,7 +5,10 @@ import { EntityId } from '@/common/decorators/route-params.decorator';
 import { Permission } from '@/casl/permission.decorator';
 import { IngredientToRecipe } from './entities/ingredient-to-recipe.entity';
 import { Action } from '@/casl/action.enum';
+import { CookieTypeNames } from '@/auth/auth.service';
+import { ApiCookieAuth } from '@nestjs/swagger';
 
+@ApiCookieAuth(CookieTypeNames.Access)
 @Controller('ingredient-to-recipe')
 export class IngredientToRecipeController {
   constructor(

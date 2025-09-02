@@ -8,16 +8,23 @@ import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
 import { useContainer } from 'class-validator';
+import { CookieTypeNames } from './auth/auth.service';
 
 const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
     .setTitle('Kuisine')
     .setDescription('Public API')
     .setVersion('1.0')
+    .addCookieAuth(CookieTypeNames.Access)
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('api', app, documentFactory, {
+    swaggerOptions: {
+      persistAuthorization: true, // Keep auth token after reload
+      withCredentials: true, // Ensures cookies are sent with request
+    },
+  });
 };
 
 async function bootstrap() {

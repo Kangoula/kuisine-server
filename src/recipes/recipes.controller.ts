@@ -15,7 +15,10 @@ import { EntityId } from '@/common/decorators/route-params.decorator';
 import { Permission } from '@/casl/permission.decorator';
 import { Recipe } from './entities/recipe.entity';
 import { Action } from '@/casl/action.enum';
+import { ApiCookieAuth } from '@nestjs/swagger';
+import { CookieTypeNames } from '@/auth/auth.service';
 
+@ApiCookieAuth(CookieTypeNames.Access)
 @Controller('recipes')
 export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}

@@ -12,12 +12,14 @@ import { PaginationDto } from '@/common/pagination';
 import { UsersService } from './users.service';
 import { EntityId } from '@/common/decorators/route-params.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOkResponse } from '@nestjs/swagger';
 import { UserWithoutCredentials } from './dto/user-without-credentials.dto';
 import { Permission } from '@/casl/permission.decorator';
 import { Action } from '@/casl/action.enum';
 import { User } from './entities/user.entity';
+import { CookieTypeNames } from '@/auth/auth.service';
 
+@ApiCookieAuth(CookieTypeNames.Access)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

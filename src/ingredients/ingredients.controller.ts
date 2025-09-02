@@ -15,7 +15,10 @@ import { PaginationDto } from '@/common/pagination';
 import { Permission } from '@/casl/permission.decorator';
 import { Ingredient } from './entities/ingredient.entity';
 import { Action } from '@/casl/action.enum';
+import { ApiCookieAuth } from '@nestjs/swagger';
+import { CookieTypeNames } from '@/auth/auth.service';
 
+@ApiCookieAuth(CookieTypeNames.Access)
 @Controller('ingredients')
 export class IngredientsController {
   constructor(private readonly ingredientsService: IngredientsService) {}
