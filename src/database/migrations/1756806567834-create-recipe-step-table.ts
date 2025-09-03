@@ -32,7 +32,7 @@ export class CreateRecipeStepTable1756806567834 implements MigrationInterface {
           },
           {
             name: 'deleted_at',
-            type: 'date',
+            type: 'timestamptz',
             isNullable: true,
           },
         ],
