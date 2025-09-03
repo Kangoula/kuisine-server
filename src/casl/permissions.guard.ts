@@ -92,6 +92,6 @@ export class PermissionsGuard implements CanActivate {
       .getRepository(subject)
       .createQueryBuilder(getSubjectFromClass(subject))
       .where({ id: entityId })
-      .execute();
+      .getOneOrFail();
   }
 }
