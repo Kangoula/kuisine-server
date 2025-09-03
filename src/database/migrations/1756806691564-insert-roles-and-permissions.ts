@@ -98,6 +98,10 @@ export class InsertRolesAndPermissions1756806691564
           },
           {
             subject: 'IngredientToRecipe',
+            action: 'create',
+          },
+          {
+            subject: 'IngredientToRecipe',
             action: ['update', 'delete'],
             conditions: {
               isOwner: true,
