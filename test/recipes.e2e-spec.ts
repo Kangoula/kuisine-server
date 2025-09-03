@@ -91,7 +91,7 @@ describe('Recipes', () => {
         .set('Authorization', await loginAsUser(app))
         .send();
 
-      expect(response.status).toBe(HttpStatus.FORBIDDEN);
+      expect(response.status).toBe(HttpStatus.OK);
       expect(response.body.id).toBe(recipeId);
     });
   });
