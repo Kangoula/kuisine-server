@@ -242,4 +242,34 @@ describe('CaslAbilityFactory', () => {
 
     expect(abilities.can(Action.Update, userToModify)).toBe(false);
   });
+
+  it('should allow when no permission.condition is not defined', async () => {
+    const roleId = 1;
+
+    const user = new User();
+    user.id = 1;
+    user.username = 'test';
+    user.roleId = roleId;
+
+    const recipe = new Recipe();
+    recipe.userId = 2;
+
+    rolesService.findOne.mockResolvedValue({
+      id: roleId,
+      name: 'User',
+      isAdmin: false,
+      permissions: [
+        {
+          subject: 'Recipe',
+          action: Action.Read,
+        },
+      ],
+      users: [user],
+    });
+
+    const abilities = await caslAbilityFactory.createForUser(user);
+
+    expect(abilities.can(Action.Read, recipe)).toBe(true);
+    expect(abilities.can(Action.Read, getSubjectFromClass(Recipe))).toBe(true);
+  });
 });
