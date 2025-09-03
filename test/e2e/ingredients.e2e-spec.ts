@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { AppModule } from '@/app.module';
-import { loginAs } from './utils/auth.test-utils';
+import { loginAs } from '../utils/auth.test-utils';
 import { IngredientsService } from '@/ingredients/ingredients.service';
 
 describe('Ingredients', () => {

@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { AppModule } from '@/app.module';
-import { loginAsAdmin, loginAsUser } from './utils/auth.test-utils';
+import { loginAsAdmin, loginAsUser } from '../utils/auth.test-utils';
 
 describe('Recipes', () => {
   let app: INestApplication;
