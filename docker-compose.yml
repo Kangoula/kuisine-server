@@ -25,6 +25,7 @@ services:
       - db
     volumes:
       - .:/usr/src/app
+    entrypoint: 'npm run start:dev'
 
   db:
     image: postgres:17.5-alpine3.22

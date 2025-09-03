@@ -1,0 +1,20 @@
+volumes:
+  db-prod:
+    driver: local
+
+services:
+  api:
+    build:
+      target: production
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+    volumes: !reset NULL
+    entrypoint: !reset NULL
+
+  db:
+    volumes:
+      - db-prod:/var/lib/postgresql/data
+
+  pgadmin: !reset NULL
