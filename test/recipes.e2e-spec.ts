@@ -45,7 +45,7 @@ describe('Recipes', () => {
       expect(response.body).toHaveProperty('name', payload.name);
     });
 
-    it('/DELETE should fail when not owner', async () => {
+    it('/DELETE/:id should fail when not owner', async () => {
       const recipeResponse = await request(app.getHttpServer())
         .post('/recipes')
         .set('Authorization', await loginAsAdmin(app))
@@ -66,7 +66,7 @@ describe('Recipes', () => {
       expect(response.status).toBe(HttpStatus.FORBIDDEN);
     });
 
-    it('/DELETE owner should be allowed', async () => {
+    it('/DELETE/:id owner should be allowed', async () => {
       const recipeResponse = await request(app.getHttpServer())
         .post('/recipes')
         .set('Authorization', await loginAsUser(app))
@@ -87,7 +87,7 @@ describe('Recipes', () => {
       expect(response.status).toBe(HttpStatus.OK);
     });
 
-    it('/PATCH should fail when not owner', async () => {
+    it('/PATCH/:id should fail when not owner', async () => {
       const recipeResponse = await request(app.getHttpServer())
         .post('/recipes')
         .set('Authorization', await loginAsAdmin(app))
@@ -130,6 +130,16 @@ describe('Recipes', () => {
 
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body).toHaveProperty('id', recipeId);
+    });
+
+    it('/GET should be allowed', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/recipes`)
+        .set('Authorization', await loginAsUser(app))
+        .send();
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body).toHaveLength(10);
     });
   });
 
