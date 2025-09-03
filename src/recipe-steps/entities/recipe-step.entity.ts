@@ -1,9 +1,10 @@
-import { SoftDeletableEntity } from '@/common/entities/soft-deletable.entity';
+import { BaseEntity, IsSoftDeletable } from '@/common/mixins';
 import { Recipe } from '@/recipes/entities/recipe.entity';
+import { Mixin } from 'ts-mixer';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
-export class RecipeStep extends SoftDeletableEntity {
+export class RecipeStep extends Mixin(BaseEntity, IsSoftDeletable) {
   @Column({ type: 'smallint' })
   order: number;
 

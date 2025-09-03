@@ -6,11 +6,8 @@ import {
 } from 'class-validator';
 import { EntityManager } from 'typeorm';
 import { Constructor } from '../types';
-import { BaseEntity } from '../entities';
 
-export type IsUniqueOptions =
-  | Constructor<BaseEntity>
-  | { table: string; column: string };
+export type IsUniqueOptions = Constructor | { table: string; column: string };
 
 @ValidatorConstraint({ name: 'IsUniqueContraintValidator', async: true })
 @Injectable()

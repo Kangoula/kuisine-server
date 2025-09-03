@@ -10,7 +10,7 @@ import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto
 import { Conditions, Permission } from '@/roles/entities/role.entity';
 import { RolesService } from '@/roles/roles.service';
 import { Constructor } from '@/common/types';
-import { BaseEntity } from '@/common/entities';
+import { BaseEntity } from '@/common/mixins';
 
 type Subjects = InferSubjects<typeof BaseEntity>;
 
@@ -22,9 +22,7 @@ export type AppAbility = MongoAbility<[Action, Subjects]>;
 // and since we get abilities from the database, the ability's subject is defined as a string
 // so the detectSubjectType function is not called
 // therefore we need to built our own function to get the right subject
-export const getSubjectFromClass = (
-  entity: Constructor<BaseEntity> | string,
-): string => {
+export const getSubjectFromClass = (entity: Constructor | string): string => {
   if (typeof entity === 'string') {
     return entity;
   }

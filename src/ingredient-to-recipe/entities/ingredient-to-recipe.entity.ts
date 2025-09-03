@@ -1,9 +1,11 @@
-import { SoftDeletableEntity } from '@/common/entities';
+import { BaseEntity, IsSoftDeletable } from '@/common/mixins';
 import { Ingredient } from '@/ingredients/entities/ingredient.entity';
 import { Recipe } from '@/recipes/entities/recipe.entity';
+import { Mixin } from 'ts-mixer';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+
 @Entity()
-export class IngredientToRecipe extends SoftDeletableEntity {
+export class IngredientToRecipe extends Mixin(BaseEntity, IsSoftDeletable) {
   @Column()
   ingredientId: number;
 

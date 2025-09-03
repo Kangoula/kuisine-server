@@ -1,4 +1,4 @@
-import { BaseEntityService } from '@/common/mixins/base-entity.service.mixin';
+import { BaseEntityService } from '@/common/mixins/base-entity-service.mixin';
 import { Injectable } from '@nestjs/common';
 import { Role } from './entities/role.entity';
 import { UpdateRoleDto } from './dto/update-role.dto';

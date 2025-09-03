@@ -9,7 +9,7 @@ import {
 import { ReqWithUser } from '@/common/decorators/request-user.decorator';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 import { EntityManager } from 'typeorm';
-import { BaseEntity } from '@/common/entities';
+import { BaseEntity } from '@/common/mixins';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {

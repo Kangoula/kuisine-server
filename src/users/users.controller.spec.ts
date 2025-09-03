@@ -2,6 +2,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { TestBed } from '@suites/unit';
 import { Mocked } from '@suites/doubles.jest';
+import { Role } from '@/roles/entities/role.entity';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -16,8 +17,20 @@ describe('UsersController', () => {
 
   it('should return a list of users', async () => {
     const users = [
-      { id: 1, username: 'Seaven Stegal', password: 'MielEnHautePierre' },
-      { id: 2, username: 'Nuck Chorris', password: 'TalkerRexasWanger' },
+      {
+        id: 1,
+        username: 'Seaven Stegal',
+        password: 'MielEnHautePierre',
+        roleId: 1,
+        role: new Role(),
+      },
+      {
+        id: 2,
+        username: 'Nuck Chorris',
+        password: 'TalkerRexasWanger',
+        roleId: 1,
+        role: new Role(),
+      },
     ];
 
     service.paginate.mockResolvedValue(users);
@@ -34,6 +47,8 @@ describe('UsersController', () => {
       id: userId,
       username: 'Schwold Arnarzenegger',
       password: 'MonsieurGelDansChauveSourisHomme',
+      roleId: 1,
+      role: new Role(),
     };
 
     service.findOne.mockResolvedValue(user);
@@ -95,7 +110,6 @@ describe('UsersController', () => {
     service.remove.mockResolvedValue({
       affected: 1,
       raw: [],
-      generatedMaps: [],
     });
 
     const result = await controller.remove(userId);

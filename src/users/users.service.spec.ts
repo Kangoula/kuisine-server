@@ -4,6 +4,7 @@ import { Mocked } from '@suites/doubles.jest';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { Role } from '@/roles/entities/role.entity';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -21,9 +22,15 @@ describe('UsersService', () => {
     const username = 'Lucien Marcheciel';
     const password = 'LeChictabaDansLeMilleniumCondor';
 
+    const roleId = 1;
+    const role = new Role();
+    role.id = roleId;
+
     const userToCreate = {
       username,
       password,
+      roleId,
+      role,
     };
 
     repository.save.mockResolvedValue({

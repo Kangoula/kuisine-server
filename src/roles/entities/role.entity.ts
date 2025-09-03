@@ -1,9 +1,10 @@
 import { Column, Entity, OneToMany } from 'typeorm';
-import { SoftDeletableEntity } from '@/common/entities/soft-deletable.entity';
 import { User } from '@/users/entities/user.entity';
 import { MongoQuery, RawRule } from '@casl/ability';
 import { Action } from '@/casl/action.enum';
 import { Exclude } from 'class-transformer';
+import { Mixin } from 'ts-mixer';
+import { BaseEntity, IsSoftDeletable } from '@/common/mixins';
 
 export interface Conditions extends MongoQuery {
   isOwner?: boolean;
@@ -16,7 +17,7 @@ export interface Permission extends RawRule {
 }
 
 @Entity()
-export class Role extends SoftDeletableEntity {
+export class Role extends Mixin(BaseEntity, IsSoftDeletable) {
   @Column({ type: 'varchar', precision: 255, unique: true })
   name: string;
 

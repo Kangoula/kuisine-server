@@ -3,7 +3,7 @@ import { Constructor } from './types';
 import { Type } from '@nestjs/common';
 
 export function BaseEntitySubscriber<T extends ObjectLiteral>(
-  entity: Constructor<T>,
+  entity: Constructor,
 ): Type<EntitySubscriberInterface<T>> {
   class BaseEntitySubscriberHost implements EntitySubscriberInterface<T> {
     constructor(dataSource: DataSource) {
