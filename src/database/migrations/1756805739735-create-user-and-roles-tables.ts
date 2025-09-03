@@ -41,6 +41,16 @@ export class CreateUserAndRolesTables1756805739735
             type: 'int',
           },
           {
+            name: 'created_at',
+            type: 'timestamptz',
+            isNullable: true,
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamptz',
+            isNullable: true,
+          },
+          {
             name: 'deleted_at',
             type: 'timestamptz',
             isNullable: true,
@@ -73,6 +83,16 @@ export class CreateUserAndRolesTables1756805739735
           {
             name: 'permissions',
             type: 'json',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamptz',
+            isNullable: true,
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamptz',
             isNullable: true,
           },
           {
