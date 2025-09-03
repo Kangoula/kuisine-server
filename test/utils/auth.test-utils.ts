@@ -11,3 +11,6 @@ export const loginAs = async (app: INestApplication, username: string) => {
   const { access_token } = authService.getAccessToken(user.id);
   return `Bearer ${access_token}`;
 };
+
+export const loginAsAdmin = (app: INestApplication) => loginAs(app, 'admin');
+export const loginAsUser = (app: INestApplication) => loginAs(app, 'jabba');

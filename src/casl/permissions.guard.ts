@@ -9,7 +9,6 @@ import {
 import { ReqWithUser } from '@/common/decorators/request-user.decorator';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 import { EntityManager } from 'typeorm';
-import { EntityIdRequestParam } from '@/common/decorators/route-params.decorator';
 import { BaseEntity } from '@/common/entities';
 
 @Injectable()
@@ -46,24 +45,24 @@ export class PermissionsGuard implements CanActivate {
     const userAbilities = await this.caslAbilityFactory.createForUser(user);
 
     if (Array.isArray(abilities)) {
-      return abilities.every((ability) => {
-        return userAbilities.can(
-          ability.action,
-          this.getAbilitySubject(ability, entityId),
-          ability.field,
-        );
+      const subjects = await Promise.all(
+        abilities.map((ability) => this.getAbilitySubject(ability, entityId)),
+      );
+
+      return abilities.every((ability, idx) => {
+        return userAbilities.can(ability.action, subjects[idx], ability.field);
       });
     }
 
     return userAbilities.can(
       abilities.action,
-      this.getAbilitySubject(abilities),
+      await this.getAbilitySubject(abilities, entityId),
       abilities.field,
     );
   }
 
   private retrieveRequiredParamsFromContext(context: ExecutionContext) {
-    const request: ReqWithUser & EntityIdRequestParam = context
+    const request: ReqWithUser & { params: { id: number } } = context
       .switchToHttp()
       .getRequest();
 
@@ -85,7 +84,7 @@ export class PermissionsGuard implements CanActivate {
   ): string | Promise<BaseEntity> {
     const subject = ability.subject;
 
-    if (!entityId || !ability.field) {
+    if (!entityId) {
       return getSubjectFromClass(subject);
     }
 
@@ -93,6 +92,6 @@ export class PermissionsGuard implements CanActivate {
       .getRepository(subject)
       .createQueryBuilder(getSubjectFromClass(subject))
       .where({ id: entityId })
-      .execute();
+      .getOneOrFail();
   }
 }

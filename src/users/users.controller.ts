@@ -33,7 +33,7 @@ export class UsersController {
 
   @Get(':id')
   @Permission(User, Action.Read)
-  findOne(@EntityId() id: number) {
+  findOne(@EntityId id: number) {
     return this.usersService.findOne(id);
   }
 
@@ -45,13 +45,13 @@ export class UsersController {
 
   @Patch(':id')
   @Permission(User, Action.Update)
-  update(@EntityId() id: number, @Body() updateUserDto: UpdateUserDto) {
+  update(@EntityId id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @Permission(User, Action.Delete)
-  async remove(@EntityId() id: number) {
+  async remove(@EntityId id: number) {
     await this.usersService.findOne(id);
     return this.usersService.remove(id);
   }

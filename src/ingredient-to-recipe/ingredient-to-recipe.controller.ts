@@ -18,7 +18,7 @@ export class IngredientToRecipeController {
   @Patch(':id')
   @Permission(IngredientToRecipe, Action.Update)
   async update(
-    @EntityId() id: number,
+    @EntityId id: number,
     @Body() updateIngredientToRecipeDto: UpdateIngredientToRecipeDto,
   ) {
     return this.ingredientToRecipeService.update(
@@ -29,7 +29,7 @@ export class IngredientToRecipeController {
 
   @Delete(':id')
   @Permission(IngredientToRecipe, Action.Delete)
-  async remove(@EntityId() id: number) {
+  async remove(@EntityId id: number) {
     await this.ingredientToRecipeService.findOne(id);
     return this.ingredientToRecipeService.remove(id);
   }

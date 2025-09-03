@@ -43,14 +43,14 @@ export class IngredientsController {
 
   @Get(':id')
   @Permission(Ingredient, Action.Read)
-  findOne(@EntityId() id: number) {
+  findOne(@EntityId id: number) {
     return this.ingredientsService.findOne(id);
   }
 
   @Patch(':id')
   @Permission(Ingredient, Action.Update)
   update(
-    @EntityId() id: number,
+    @EntityId id: number,
     @Body() updateIngredientDto: UpdateIngredientDto,
   ) {
     return this.ingredientsService.update(+id, updateIngredientDto);
@@ -58,7 +58,7 @@ export class IngredientsController {
 
   @Delete(':id')
   @Permission(Ingredient, Action.Delete)
-  async remove(@EntityId() id: number) {
+  async remove(@EntityId id: number) {
     await this.ingredientsService.findOne(id);
     return this.ingredientsService.remove(id);
   }
