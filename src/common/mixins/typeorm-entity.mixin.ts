@@ -23,7 +23,9 @@ export abstract class BaseEntity {
 }
 
 /**
- * Adds a deletedAt column
+ * Adds a `deletedAt?: Date` column
+ *
+ * This column uses the Exclude dedorator from class-transformer
  */
 export abstract class IsSoftDeletable {
   @decorate(DeleteDateColumn({ nullable: true }))
