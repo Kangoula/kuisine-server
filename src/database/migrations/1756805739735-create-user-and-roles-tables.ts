@@ -42,7 +42,7 @@ export class CreateUserAndRolesTables1756805739735
           },
           {
             name: 'deleted_at',
-            type: 'date',
+            type: 'timestamptz',
             isNullable: true,
           },
         ],
@@ -77,7 +77,7 @@ export class CreateUserAndRolesTables1756805739735
           },
           {
             name: 'deleted_at',
-            type: 'date',
+            type: 'timestamptz',
             isNullable: true,
           },
         ],

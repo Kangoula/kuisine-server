@@ -3,7 +3,6 @@ import {
   QueryRunner,
   Table,
   TableForeignKey,
-  TableIndex,
 } from 'typeorm';
 
 export class CreateIngredientTable1756805937316 implements MigrationInterface {
@@ -29,7 +28,7 @@ export class CreateIngredientTable1756805937316 implements MigrationInterface {
           },
           {
             name: 'deleted_at',
-            type: 'date',
+            type: 'timestamptz',
             isNullable: true,
           },
         ],
@@ -75,7 +74,7 @@ export class CreateIngredientTable1756805937316 implements MigrationInterface {
           },
           {
             name: 'deleted_at',
-            type: 'date',
+            type: 'timestamptz',
             isNullable: true,
           },
         ],
