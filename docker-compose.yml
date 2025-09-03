@@ -35,8 +35,6 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
       - db:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
 
   pgadmin:
     image: dpage/pgadmin4
