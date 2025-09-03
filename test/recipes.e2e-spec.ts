@@ -2,8 +2,6 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { AppModule } from '@/app.module';
-import { UsersService } from '@/users/users.service';
-import { User } from '@/users/entities/user.entity';
 import { loginAsAdmin, loginAsUser } from './utils/auth.test-utils';
 
 describe('Recipes', () => {
@@ -29,7 +27,25 @@ describe('Recipes', () => {
   });
 
   describe('authenticated as simple user', () => {
-    it('/DELETE should not be allowed when not owner of the recipe', async () => {
+    const payload = {
+      name: 'recipe we want to create',
+      servings: 2,
+      cookingDurationMinutes: 2,
+      preparationDurationMinutes: 2,
+    };
+
+    it('/POST should be allowed', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/recipes')
+        .set('Authorization', await loginAsAdmin(app))
+        .send(payload);
+
+      expect(response.status).toBe(HttpStatus.CREATED);
+      expect(response.body).toHaveProperty('id', expect.any(Number));
+      expect(response.body).toHaveProperty('name', payload.name);
+    });
+
+    it('/DELETE should fail when not owner', async () => {
       const recipeResponse = await request(app.getHttpServer())
         .post('/recipes')
         .set('Authorization', await loginAsAdmin(app))
@@ -50,7 +66,28 @@ describe('Recipes', () => {
       expect(response.status).toBe(HttpStatus.FORBIDDEN);
     });
 
-    it('/PATCH should not be allowed when not owner of the recipe', async () => {
+    it('/DELETE owner should be allowed', async () => {
+      const recipeResponse = await request(app.getHttpServer())
+        .post('/recipes')
+        .set('Authorization', await loginAsUser(app))
+        .send({
+          name: 'recipe to delete',
+          servings: 2,
+          cookingDurationMinutes: 2,
+          preparationDurationMinutes: 2,
+        });
+
+      const recipeId = recipeResponse?.body?.id as number;
+
+      const response = await request(app.getHttpServer())
+        .delete(`/recipes/${recipeId}`)
+        .set('Authorization', await loginAsUser(app))
+        .send();
+
+      expect(response.status).toBe(HttpStatus.OK);
+    });
+
+    it('/PATCH should fail when not owner', async () => {
       const recipeResponse = await request(app.getHttpServer())
         .post('/recipes')
         .set('Authorization', await loginAsAdmin(app))
@@ -92,7 +129,7 @@ describe('Recipes', () => {
         .send();
 
       expect(response.status).toBe(HttpStatus.OK);
-      expect(response.body.id).toBe(recipeId);
+      expect(response.body).toHaveProperty('id', recipeId);
     });
   });
 
