@@ -11,7 +11,8 @@ import { PostgresErrorCode } from '@/database/postgresErrorCodes.enum';
 import { ConfigService } from '@nestjs/config';
 import * as ms from 'ms';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from '@/roles/entities/role.entity';
+import { User } from '@/users/entities/user.entity';
+import { generateOne } from '~test-utils';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -31,45 +32,35 @@ describe('AuthService', () => {
 
   it('should return true when passwords are the same', async () => {
     const userId = 1;
-    const username = 'user';
     const password = 'LeChictabaDansLeMilleniumCondor';
-    const roleId = 1;
-    const role = { id: roleId } as Role;
 
-    usersSerivce.findByUsernameWithPassword.mockResolvedValue({
-      id: userId,
-      username,
+    const user = generateOne(User, {
       password: await bcryptHash(password),
-      roleId,
-      role,
     });
+    user.id = userId;
 
-    const result = await service.validateUser(username, password);
+    usersSerivce.findByUsernameWithPassword.mockResolvedValue(user);
+
+    const result = await service.validateUser(user.username, password);
 
     expect(usersSerivce.findByUsernameWithPassword).toHaveBeenCalled();
     expect(result).toBeTruthy();
-    expect(result?.username).toBe(username);
+    expect(result?.username).toBe(user.username);
     expect(result?.id).toBe(userId);
   });
 
   it('should return false when passwords are different', async () => {
-    const userId = 1;
-    const username = 'user';
     const wrongPassword = 'JabbaLeForestierEmbaucheZ6PO';
-    const roleId = 1;
-    const role = { id: roleId } as Role;
 
-    usersSerivce.findByUsernameWithPassword.mockResolvedValue({
-      id: userId,
-      username,
+    const user = generateOne<User>(User, {
       password: await bcryptHash('LeChictabaDansLeMilleniumCondor'),
-      roleId,
-      role,
     });
 
-    await expect(service.validateUser(username, wrongPassword)).rejects.toThrow(
-      new BadRequestException('Wrong credentials provided'),
-    );
+    usersSerivce.findByUsernameWithPassword.mockResolvedValue(user);
+
+    await expect(
+      service.validateUser(user.username, wrongPassword),
+    ).rejects.toThrow(new BadRequestException('Wrong credentials provided'));
 
     expect(usersSerivce.findByUsernameWithPassword).toHaveBeenCalled();
   });
@@ -78,15 +69,14 @@ describe('AuthService', () => {
     const expectedUserId = 1;
     const username = 'Nuck Chorris';
     const password = 'pw';
-    const roleId = 1;
-    const role = { id: roleId } as Role;
 
-    usersSerivce.create.mockResolvedValue({
-      id: expectedUserId,
+    const createdUser = generateOne(User, {
       username,
-      roleId,
-      role,
+      password,
     });
+    createdUser.id = expectedUserId;
+
+    usersSerivce.create.mockResolvedValue(createdUser);
 
     const result = await service.register({ username, password });
 
