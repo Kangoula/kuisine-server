@@ -66,6 +66,7 @@ export class AuthService {
       const createdUser = await this.usersService.create({
         username: registerDto.username,
         password: registerDto.password,
+        mustChangePassword: false,
       });
 
       return createdUser;

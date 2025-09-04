@@ -1,5 +1,11 @@
 import { IsUnique } from '@/common/decorators';
-import { IsNumber, IsOptional, IsString, Length } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 import { User } from '../entities/user.entity';
 
 export class CreateUserDto {
@@ -11,6 +17,10 @@ export class CreateUserDto {
   @IsString()
   @Length(1, 255)
   password: string;
+
+  @IsBoolean()
+  @IsOptional()
+  mustChangePassword?: boolean;
 
   @IsNumber()
   @IsOptional()

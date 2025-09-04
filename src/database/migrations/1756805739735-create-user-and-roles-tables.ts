@@ -31,6 +31,11 @@ export class CreateUserAndRolesTables1756805739735
             isNullable: true,
           },
           {
+            name: 'must_change_password',
+            type: 'boolean',
+            default: true,
+          },
+          {
             name: 'refresh_token',
             type: 'varchar',
             precision: 255,
