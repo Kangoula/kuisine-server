@@ -1,10 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  DeleteResult,
-  FindOptionsWhere,
-  ObjectLiteral,
-  Repository,
-} from 'typeorm';
+import { FindOptionsWhere, ObjectLiteral, Repository } from 'typeorm';
 import { Type } from '@nestjs/common';
 import { PaginationDto } from '../pagination';
 import { getQueryBuilderPaginationParams } from '../pagination/typeorm';
