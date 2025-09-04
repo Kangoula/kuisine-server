@@ -2,7 +2,8 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { TestBed } from '@suites/unit';
 import { Mocked } from '@suites/doubles.jest';
-import { Role } from '@/roles/entities/role.entity';
+import { User } from './entities/user.entity';
+import { generateMany, generateOne } from '~test-utils';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -16,22 +17,7 @@ describe('UsersController', () => {
   });
 
   it('should return a list of users', async () => {
-    const users = [
-      {
-        id: 1,
-        username: 'Seaven Stegal',
-        password: 'MielEnHautePierre',
-        roleId: 1,
-        role: new Role(),
-      },
-      {
-        id: 2,
-        username: 'Nuck Chorris',
-        password: 'TalkerRexasWanger',
-        roleId: 1,
-        role: new Role(),
-      },
-    ];
+    const users = generateMany(User, 2);
 
     service.paginate.mockResolvedValue(users);
 
@@ -43,14 +29,11 @@ describe('UsersController', () => {
 
   it('should return the requested user', async () => {
     const userId = 1;
-    const user = {
-      id: userId,
-      username: 'Schwold Arnarzenegger',
-      password: 'MonsieurGelDansChauveSourisHomme',
-      roleId: 1,
-      role: new Role(),
-    };
 
+    const user = generateOne(User, {
+      username: 'Schwold Arnarzenegger',
+    });
+    user.id = userId;
     service.findOne.mockResolvedValue(user);
 
     const returnedUser = await controller.findOne(userId);
@@ -72,23 +55,20 @@ describe('UsersController', () => {
   });
 
   it('should update user', async () => {
-    const user = {
-      id: 1,
-      username: 'Schwold Arnarzenegger',
-      password: 'MonsieurGelDansChauveSourisHomme',
-    };
     const updateData = { username: 'Clorge Geooney' };
 
+    const user = generateOne(User);
+    user.id = 1;
+
     service.update.mockResolvedValue({
-      affected: 1,
-      raw: [],
-      generatedMaps: [],
+      ...user,
+      ...updateData,
     });
 
     const result = await controller.update(user.id, updateData);
 
     expect(service.update).toHaveBeenCalledWith(user.id, updateData);
-    expect(result.affected).toBe(1);
+    expect(result).toHaveProperty('username', updateData.username);
   });
 
   it('should reject when the user to update does not exists', () => {
@@ -107,18 +87,13 @@ describe('UsersController', () => {
   it('should delete user', async () => {
     const userId = 1;
 
-    service.remove.mockResolvedValue({
-      affected: 1,
-      raw: [],
-    });
-
     const result = await controller.remove(userId);
 
     expect(service.remove).toHaveBeenCalledWith(userId);
-    expect(result.affected).toBe(1);
+    expect(result).toBeUndefined();
   });
 
-  it('should reject when user to delete does not exists', async () => {
+  it('should reject when user to delete does not exists', () => {
     const userId = 1;
     const err = new Error('not found');
 

@@ -4,7 +4,7 @@ import { Mocked } from '@suites/doubles.jest';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { Role } from '@/roles/entities/role.entity';
+import { generateOne } from '~test-utils';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -22,27 +22,23 @@ describe('UsersService', () => {
     const username = 'Lucien Marcheciel';
     const password = 'LeChictabaDansLeMilleniumCondor';
 
-    const roleId = 1;
-    const role = new Role();
-    role.id = roleId;
-
     const userToCreate = {
       username,
       password,
-      roleId,
-      role,
     };
 
-    repository.save.mockResolvedValue({
-      id: 1,
-      ...userToCreate,
-    });
+    const createdUser = generateOne(User, userToCreate);
+    createdUser.id = 1;
 
-    const createdUser = await service.create(userToCreate);
+    repository.save.mockResolvedValue(createdUser);
 
-    expect(repository.save).toHaveBeenCalled();
-    expect(createdUser).toBeDefined();
-    expect(createdUser.username).toBe(username);
+    const result = await service.create(userToCreate);
+
+    expect(repository.save).toHaveBeenCalledWith(
+      expect.objectContaining({ username }),
+    );
+    expect(result).toBeDefined();
+    expect(result.username).toBe(username);
   });
 
   it('should soft delete user', async () => {
