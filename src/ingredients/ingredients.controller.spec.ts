@@ -2,9 +2,9 @@ import { IngredientsService } from './ingredients.service';
 import { Mocked, TestBed } from '@suites/unit';
 import { IngredientsController } from './ingredients.controller';
 import { Ingredient } from './entities/ingredient.entity';
+import { generateOne } from '~test-utils';
 
 describe('IngredientsController', () => {
-  // let dataSource: DataSource;
   let controller: IngredientsController;
   let service: Mocked<IngredientsService>;
 
@@ -19,14 +19,10 @@ describe('IngredientsController', () => {
 
   describe('create', () => {
     it('should create a new Ingredient', async () => {
-      const ingredientName: string = 'Boux de Chruxelles';
-      const expectedIngredient: Ingredient = {
-        id: 1,
-        name: ingredientName,
-        fullTextSearch: null,
-        ingredientToRecipe: [],
-      };
-      const newIngredient = { name: ingredientName };
+      const expectedIngredient = generateOne(Ingredient);
+      expectedIngredient.id = 1;
+
+      const newIngredient = { name: 'Boux de Chruxelles' };
 
       service.create.mockResolvedValue(expectedIngredient);
 

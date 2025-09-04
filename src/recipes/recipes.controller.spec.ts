@@ -5,6 +5,7 @@ import { TestBed } from '@suites/unit';
 import { Recipe } from './entities/recipe.entity';
 import { EntityNotFoundError } from 'typeorm';
 import { User } from '@/users/entities/user.entity';
+import { generateOne } from '~test-utils';
 
 describe('RecipesController', () => {
   let controller: RecipesController;
@@ -19,7 +20,7 @@ describe('RecipesController', () => {
   });
 
   it('should create a recipe', async () => {
-    const user = new User();
+    const user = generateOne(User);
     user.id = 1;
 
     const recipeToCreate = {
@@ -30,9 +31,8 @@ describe('RecipesController', () => {
       userId: 1,
     };
 
-    const createdRecipe = new Recipe();
+    const createdRecipe = generateOne(Recipe, recipeToCreate);
     createdRecipe.id = 1;
-    Object.assign(createdRecipe, recipeToCreate);
 
     service.create.mockResolvedValue(createdRecipe);
 
@@ -43,7 +43,7 @@ describe('RecipesController', () => {
   });
 
   it("should create a recipe with the user's id when not specifiyed", async () => {
-    const user = new User();
+    const user = generateOne(User);
     user.id = 2;
 
     const recipeToCreate = {
@@ -53,10 +53,8 @@ describe('RecipesController', () => {
       preparationDurationMinutes: 2,
     };
 
-    const createdRecipe = new Recipe();
+    const createdRecipe = generateOne(Recipe, { ...recipeToCreate, user });
     createdRecipe.id = 1;
-    createdRecipe.userId = user.id;
-    Object.assign(createdRecipe, recipeToCreate);
 
     service.create.mockResolvedValue(createdRecipe);
 
@@ -70,32 +68,28 @@ describe('RecipesController', () => {
   });
 
   it('should call service.remove if recipe exists', async () => {
-    const recipeId = 1;
-
-    const recipe = new Recipe();
-    recipe.id = recipeId;
+    const recipe = generateOne(Recipe);
+    recipe.id = 1;
 
     service.findOne.mockResolvedValue(recipe);
 
-    await controller.remove(recipeId);
+    await controller.remove(recipe.id);
 
-    expect(service.findOne).toHaveBeenCalledWith(recipeId);
-    expect(service.remove).toHaveBeenCalledWith(recipeId);
+    expect(service.findOne).toHaveBeenCalledWith(recipe.id);
+    expect(service.remove).toHaveBeenCalledWith(recipe.id);
   });
 
   it('should throw when trying to remove a recipe that does not exists', async () => {
-    const recipeId = 1;
+    const recipe = generateOne(Recipe);
+    recipe.id = 1;
 
-    const recipe = new Recipe();
-    recipe.id = recipeId;
-
-    const notFoundError = new EntityNotFoundError(Recipe, { id: recipeId });
+    const notFoundError = new EntityNotFoundError(Recipe, { id: recipe.id });
 
     service.findOne.mockRejectedValue(notFoundError);
 
-    await expect(controller.remove(recipeId)).rejects.toThrow(notFoundError);
+    await expect(controller.remove(recipe.id)).rejects.toThrow(notFoundError);
 
-    expect(service.findOne).toHaveBeenCalledWith(recipeId);
+    expect(service.findOne).toHaveBeenCalledWith(recipe.id);
     expect(service.remove).not.toHaveBeenCalled();
   });
 });

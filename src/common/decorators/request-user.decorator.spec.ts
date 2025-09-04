@@ -2,6 +2,8 @@ import { ExecutionContext } from '@nestjs/common';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 import { requestUserFactory } from './request-user.decorator';
 import { Role } from '@/roles/entities/role.entity';
+import { generateOne } from '~test-utils';
+import { User } from '@/users/entities/user.entity';
 
 describe('Request User Param Decorators', () => {
   const makeContext = (user: UserWithoutCredentials | undefined) => {
@@ -15,12 +17,12 @@ describe('Request User Param Decorators', () => {
   };
 
   it('should return the request user', () => {
-    const expectedUser = {
-      id: 2,
-      username: 'Lucien Marcheciel',
-      roleId: 1,
-      role: { id: 1 } as Role,
-    };
+    const role = generateOne(Role);
+    role.id = 1;
+
+    const expectedUser = generateOne(User, {
+      role,
+    });
     const result = requestUserFactory(null, makeContext(expectedUser));
     expect(result).toEqual(expect.objectContaining(expectedUser));
   });

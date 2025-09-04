@@ -3,6 +3,7 @@ import { IngredientToRecipe } from '@/ingredient-to-recipe/entities/ingredient-t
 import { Exclude } from 'class-transformer';
 import { BaseEntity, IsSoftDeletable, IsTimestampable } from '@/common/mixins';
 import { Mixin } from 'ts-mixer';
+import { Factory } from 'nestjs-seeder';
 
 @Entity()
 export class Ingredient extends Mixin(
@@ -10,6 +11,11 @@ export class Ingredient extends Mixin(
   IsSoftDeletable,
   IsTimestampable,
 ) {
+  // TODO handle IsUnique
+  @Factory(
+    (faker, ctx: Partial<Ingredient>) =>
+      ctx.name ?? faker?.lorem.words({ min: 1, max: 3 }),
+  )
   @Column({ type: 'varchar', precision: 255, unique: true })
   name: string;
 
