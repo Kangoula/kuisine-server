@@ -25,6 +25,11 @@ export class User extends Mixin(BaseEntity, IsSoftDeletable, IsTimestampable) {
   @Column({ type: 'varchar', precision: 255, nullable: true, select: false })
   password?: string;
 
+  @Factory((faker, ctx: Partial<User>) => ctx.mustChangePassword || true)
+  @Exclude()
+  @Column({ type: 'boolean' })
+  mustChangePassword: boolean;
+
   @Exclude()
   @Column({ type: 'varchar', precision: 255, nullable: true, select: false })
   refreshToken?: string;

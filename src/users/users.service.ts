@@ -18,6 +18,7 @@ export class UsersService extends BaseEntityService(User) {
     user.username = createUserDto.username;
     user.password = await bcryptHash(createUserDto.password);
     user.role = await this.getRoleForUserCreation(createUserDto.roleId);
+    user.mustChangePassword = createUserDto.mustChangePassword ?? true;
 
     return this.repository.save(user);
   }
@@ -37,7 +38,7 @@ export class UsersService extends BaseEntityService(User) {
     return this.repository.findOneOrFail({
       where: findByCondition,
       // the password column default behavior makes it not selectable, we have to add an explicit selection to retrieve it
-      select: ['id', 'username', credentialsColumn],
+      select: ['id', 'username', 'mustChangePassword', credentialsColumn],
     });
   }
 

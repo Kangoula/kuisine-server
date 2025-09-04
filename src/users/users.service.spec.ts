@@ -48,4 +48,26 @@ describe('UsersService', () => {
 
     expect(repository.softDelete).toHaveBeenCalledWith(userId);
   });
+
+  it('should create a user with mustChangePassword to true as default value', async () => {
+    const username = 'Lucien Marcheciel';
+    const password = 'LeChictabaDansLeMilleniumCondor';
+
+    const userToCreate = {
+      username,
+      password,
+    };
+
+    const createdUser = generateOne(User, userToCreate);
+    createdUser.id = 1;
+
+    repository.save.mockResolvedValue(createdUser);
+
+    const result = await service.create(userToCreate);
+
+    expect(repository.save).toHaveBeenCalledWith(
+      expect.objectContaining({ mustChangePassword: true }),
+    );
+    expect(result).toHaveProperty('mustChangePassword', true);
+  });
 });
