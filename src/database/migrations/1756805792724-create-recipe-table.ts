@@ -41,7 +41,7 @@ export class CreateRecipeTable1756805792724 implements MigrationInterface {
           {
             name: 'created_at',
             type: 'timestamptz',
-            isNullable: true,
+            default: 'NOW()',
           },
           {
             name: 'updated_at',

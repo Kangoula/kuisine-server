@@ -29,7 +29,7 @@ export class CreateIngredientTable1756805937316 implements MigrationInterface {
           {
             name: 'created_at',
             type: 'timestamptz',
-            isNullable: true,
+            default: 'NOW()',
           },
           {
             name: 'updated_at',
@@ -85,7 +85,7 @@ export class CreateIngredientTable1756805937316 implements MigrationInterface {
           {
             name: 'created_at',
             type: 'timestamptz',
-            isNullable: true,
+            default: 'NOW()',
           },
           {
             name: 'updated_at',

@@ -43,7 +43,7 @@ export class CreateUserAndRolesTables1756805739735
           {
             name: 'created_at',
             type: 'timestamptz',
-            isNullable: true,
+            default: 'NOW()',
           },
           {
             name: 'updated_at',
@@ -88,7 +88,7 @@ export class CreateUserAndRolesTables1756805739735
           {
             name: 'created_at',
             type: 'timestamptz',
-            isNullable: true,
+            default: 'NOW()',
           },
           {
             name: 'updated_at',
