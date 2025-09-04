@@ -26,7 +26,6 @@ export class User extends Mixin(BaseEntity, IsSoftDeletable, IsTimestampable) {
   password?: string;
 
   @Factory((faker, ctx: Partial<User>) => ctx.mustChangePassword || true)
-  @Exclude()
   @Column({ type: 'boolean' })
   mustChangePassword: boolean;
 
