@@ -60,12 +60,12 @@ export class AuthController {
     return user;
   }
 
-  @Public()
-  @Post('register')
-  @ApiCreatedResponse({ type: UserWithoutCredentials })
-  async register(@Body() registrationData: RegisterDto) {
-    return this.authService.register(registrationData);
-  }
+  // @Public()
+  // @Post('register')
+  // @ApiCreatedResponse({ type: UserWithoutCredentials })
+  // async register(@Body() registrationData: RegisterDto) {
+  //   return this.authService.register(registrationData);
+  // }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
