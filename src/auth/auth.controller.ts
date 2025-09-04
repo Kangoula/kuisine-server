@@ -18,7 +18,7 @@ import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { ApiBody, ApiCookieAuth, ApiCreatedResponse } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
-import { RequestUser } from '@/common/decorators/request-user.decorator';
+import { RequestUser } from '@/common/decorators';
 
 @Controller('auth')
 export class AuthController {

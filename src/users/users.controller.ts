@@ -10,7 +10,7 @@ import {
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '@/common/pagination';
 import { UsersService } from './users.service';
-import { EntityId } from '@/common/decorators/route-params.decorator';
+import { EntityId } from '@/common/decorators';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiCookieAuth, ApiOkResponse } from '@nestjs/swagger';
 import { UserWithoutCredentials } from './dto/user-without-credentials.dto';

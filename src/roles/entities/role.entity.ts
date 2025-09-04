@@ -4,7 +4,7 @@ import { MongoQuery, RawRule } from '@casl/ability';
 import { Action } from '@/casl/action.enum';
 import { Exclude } from 'class-transformer';
 import { Mixin } from 'ts-mixer';
-import { BaseEntity, IsSoftDeletable } from '@/common/mixins';
+import { BaseEntity, IsSoftDeletable, IsTimestampable } from '@/common/mixins';
 
 export interface Conditions extends MongoQuery {
   isOwner?: boolean;
@@ -17,7 +17,7 @@ export interface Permission extends RawRule {
 }
 
 @Entity()
-export class Role extends Mixin(BaseEntity, IsSoftDeletable) {
+export class Role extends Mixin(BaseEntity, IsSoftDeletable, IsTimestampable) {
   @Column({ type: 'varchar', precision: 255, unique: true })
   name: string;
 

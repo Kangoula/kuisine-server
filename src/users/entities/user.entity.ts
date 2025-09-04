@@ -1,4 +1,4 @@
-import { BaseEntity, IsSoftDeletable } from '@/common/mixins';
+import { BaseEntity, IsSoftDeletable, IsTimestampable } from '@/common/mixins';
 import { Role } from '@/roles/entities/role.entity';
 import { Exclude } from 'class-transformer';
 import { Mixin } from 'ts-mixer';
@@ -8,7 +8,7 @@ export const CredentialsColumn = ['password', 'refreshToken'] as const;
 export type UserCredentialsColumn = (typeof CredentialsColumn)[number];
 
 @Entity()
-export class User extends Mixin(BaseEntity, IsSoftDeletable) {
+export class User extends Mixin(BaseEntity, IsSoftDeletable, IsTimestampable) {
   @Column({ type: 'varchar', precision: 255, unique: true })
   username: string;
 

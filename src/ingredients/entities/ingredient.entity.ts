@@ -1,11 +1,15 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { IngredientToRecipe } from '@/ingredient-to-recipe/entities/ingredient-to-recipe.entity';
 import { Exclude } from 'class-transformer';
-import { BaseEntity, IsSoftDeletable } from '@/common/mixins';
+import { BaseEntity, IsSoftDeletable, IsTimestampable } from '@/common/mixins';
 import { Mixin } from 'ts-mixer';
 
 @Entity()
-export class Ingredient extends Mixin(BaseEntity, IsSoftDeletable) {
+export class Ingredient extends Mixin(
+  BaseEntity,
+  IsSoftDeletable,
+  IsTimestampable,
+) {
   @Column({ type: 'varchar', precision: 255, unique: true })
   name: string;
 

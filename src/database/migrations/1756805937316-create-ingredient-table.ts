@@ -27,6 +27,16 @@ export class CreateIngredientTable1756805937316 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'created_at',
+            type: 'timestamptz',
+            default: 'NOW()',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamptz',
+            isNullable: true,
+          },
+          {
             name: 'deleted_at',
             type: 'timestamptz',
             isNullable: true,
@@ -71,6 +81,16 @@ export class CreateIngredientTable1756805937316 implements MigrationInterface {
             type: 'varchar',
             isNullable: true,
             precision: 255,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamptz',
+            default: 'NOW()',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamptz',
+            isNullable: true,
           },
           {
             name: 'deleted_at',

@@ -11,13 +11,12 @@ import { RecipesService } from './recipes.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { PaginationDto } from '@/common/pagination/dto/pagination.dto';
-import { EntityId } from '@/common/decorators/route-params.decorator';
+import { EntityId, RequestUser } from '@/common/decorators';
 import { Permission } from '@/casl/permission.decorator';
 import { Recipe } from './entities/recipe.entity';
 import { Action } from '@/casl/action.enum';
 import { ApiCookieAuth } from '@nestjs/swagger';
 import { CookieTypeNames } from '@/auth/auth.service';
-import { RequestUser } from '@/common/decorators/request-user.decorator';
 import { User } from '@/users/entities/user.entity';
 
 @ApiCookieAuth(CookieTypeNames.Access)

@@ -6,7 +6,7 @@ import {
   CaslAbilityFactory,
   getSubjectFromClass,
 } from './casl-ability.factory';
-import { ReqWithUser } from '@/common/decorators/request-user.decorator';
+import { ReqWithUser } from '@/common/decorators';
 import { UserWithoutCredentials } from '@/users/dto/user-without-credentials.dto';
 import { EntityManager } from 'typeorm';
 import { BaseEntity } from '@/common/mixins';
