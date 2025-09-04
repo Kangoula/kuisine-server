@@ -1,4 +1,4 @@
-import { IsUnique } from '@/common/decorators/is-unique.decorator';
+import { IsUnique } from '@/common/decorators';
 import { IsString, Length } from 'class-validator';
 import { Role } from '../entities/role.entity';
 

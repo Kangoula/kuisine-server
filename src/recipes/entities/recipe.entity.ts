@@ -1,4 +1,4 @@
-import { BaseEntity, IsSoftDeletable } from '@/common/mixins';
+import { BaseEntity, IsSoftDeletable, IsTimestampable } from '@/common/mixins';
 import { IngredientToRecipe } from '@/ingredient-to-recipe/entities/ingredient-to-recipe.entity';
 import { RecipeStep } from '@/recipe-steps/entities/recipe-step.entity';
 import { User } from '@/users/entities/user.entity';
@@ -6,7 +6,11 @@ import { Mixin } from 'ts-mixer';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
-export class Recipe extends Mixin(BaseEntity, IsSoftDeletable) {
+export class Recipe extends Mixin(
+  BaseEntity,
+  IsSoftDeletable,
+  IsTimestampable,
+) {
   @Column({ type: 'varchar', precision: 255 })
   name: string;
 

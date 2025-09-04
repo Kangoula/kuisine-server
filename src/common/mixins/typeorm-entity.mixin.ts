@@ -40,6 +40,6 @@ export abstract class IsTimestampable {
   @decorate(CreateDateColumn())
   createdAt: Date;
 
-  @decorate(UpdateDateColumn())
+  @decorate(UpdateDateColumn({ nullable: true }))
   updatedAt: Date;
 }

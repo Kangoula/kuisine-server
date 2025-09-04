@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Patch } from '@nestjs/common';
 import { UpdateIngredientToRecipeDto } from './dto/update-ingredient-to-recipe.dto';
 import { IngredientToRecipeService } from './ingredient-to-recipe.service';
-import { EntityId } from '@/common/decorators/route-params.decorator';
+import { EntityId } from '@/common/decorators';
 import { Permission } from '@/casl/permission.decorator';
 import { IngredientToRecipe } from './entities/ingredient-to-recipe.entity';
 import { Action } from '@/casl/action.enum';
