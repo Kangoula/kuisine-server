@@ -6,6 +6,7 @@ import { Mocked } from '@suites/doubles.jest';
 import { Repository } from 'typeorm';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
+import { generateOne } from '~test-utils';
 
 describe('RecipesService', () => {
   let service: RecipesService;
@@ -27,12 +28,7 @@ describe('RecipesService', () => {
       preparationDurationMinutes: 10,
     };
 
-    repository.save.mockResolvedValue({
-      id: 1,
-      steps: [],
-      ingredientToRecipe: [],
-      ...recipeToCreate,
-    });
+    repository.save.mockResolvedValue(generateOne(Recipe, recipeToCreate));
 
     const result = await service.create(recipeToCreate);
 
@@ -48,16 +44,16 @@ describe('RecipesService', () => {
 
     const recipeId = 66;
 
-    repository.update.mockResolvedValue({
-      affected: 1,
-      raw: [],
-      generatedMaps: [],
-    });
+    const updatedRecipe = generateOne(Recipe, updateData);
+    updatedRecipe.id = recipeId;
+
+    repository.findOneByOrFail.mockResolvedValue(updatedRecipe);
 
     const result = await service.update(recipeId, updateData);
 
     expect(repository.update).toHaveBeenCalledWith(recipeId, updateData);
-    expect(result.affected).toBe(1);
+    expect(repository.findOneByOrFail).toHaveBeenCalledWith({ id: recipeId });
+    expect(result).toEqual(expect.objectContaining(updateData));
   });
 
   it('should soft delete recipe', async () => {

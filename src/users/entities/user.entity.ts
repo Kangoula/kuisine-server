@@ -29,9 +29,11 @@ export class User extends Mixin(BaseEntity, IsSoftDeletable, IsTimestampable) {
   @Column({ type: 'varchar', precision: 255, nullable: true, select: false })
   refreshToken?: string;
 
+  @Factory((faker, ctx: Partial<User>) => ctx.roleId || ctx.role?.id)
   @Column({ type: 'int' })
   roleId: number;
 
+  @Factory((faker, ctx: Partial<User>) => ctx.role)
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn({ name: 'role_id' })
   role: Role;

@@ -4,6 +4,7 @@ import { RolesService } from './roles.service';
 import { Mocked } from '@suites/doubles.jest';
 import { TestBed } from '@suites/unit';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { generateOne } from '~test-utils';
 
 describe('RolesService', () => {
   let service: RolesService;
@@ -18,9 +19,8 @@ describe('RolesService', () => {
   });
 
   it('should find a role by name', async () => {
-    const role = new Role();
+    const role = generateOne(Role);
     role.id = 1;
-    role.name = 'test';
 
     repository.findOneByOrFail.mockResolvedValue(role);
 
@@ -34,35 +34,27 @@ describe('RolesService', () => {
   });
 
   it('should update a role', async () => {
-    repository.update.mockResolvedValue({
-      affected: 1,
-      raw: [],
-      generatedMaps: [],
-    });
-
     const roleId = 1;
-    const payload = {
+    const updateData = {
       name: 'updated name',
     };
 
-    const result = await service.update(roleId, payload);
+    const updatedRole = generateOne(Role, updateData);
 
-    expect(repository.update).toHaveBeenCalledWith(roleId, payload);
-    expect(result).toHaveProperty('affected', 1);
+    repository.findOneByOrFail.mockResolvedValue(updatedRole);
+
+    const result = await service.update(roleId, updateData);
+
+    expect(repository.findOneByOrFail).toHaveBeenCalledWith({ id: roleId });
+    expect(repository.update).toHaveBeenCalledWith(roleId, updateData);
+    expect(result).toHaveProperty('name', updateData.name);
   });
 
   it('should soft delete a role', async () => {
     const roleId = 1;
 
-    repository.softDelete.mockResolvedValue({
-      affected: 1,
-      raw: [],
-      generatedMaps: [],
-    });
-
-    const result = await service.remove(roleId);
+    await service.remove(roleId);
 
     expect(repository.softDelete).toHaveBeenCalledWith(roleId);
-    expect(result).toHaveProperty('affected', 1);
   });
 });
