@@ -4,7 +4,6 @@ import {
   FindOptionsWhere,
   ObjectLiteral,
   Repository,
-  UpdateResult,
 } from 'typeorm';
 import { Type } from '@nestjs/common';
 import { PaginationDto } from '../pagination';
@@ -18,8 +17,8 @@ export interface IBaseService<T extends ObjectLiteral> {
   paginate(paginationDto: PaginationDto): Promise<T[]>;
   findAll(): Promise<T[]>;
   findOne(id: number): Promise<T>;
-  update(id: number, partialEntity: any): Promise<UpdateResult>;
-  remove(id: number): Promise<DeleteResult>;
+  update(id: number, partialEntity: any): Promise<T>;
+  remove(id: number): Promise<void>;
 }
 
 export function BaseEntityService<T extends ObjectLiteral>(
@@ -45,12 +44,14 @@ export function BaseEntityService<T extends ObjectLiteral>(
       return this.repository.findOneByOrFail(whereId);
     }
 
-    public update(id: number, partialEntity: Partial<T>) {
-      return this.repository.update(id, partialEntity);
+    public async update(id: number, partialEntity: Partial<T>) {
+      await this.repository.update(id, partialEntity);
+      return this.findOne(id);
     }
 
-    public remove(id: number) {
-      return this.repository.delete(id);
+    public async remove(id: number) {
+      await this.findOne(id);
+      await this.repository.delete(id);
     }
   }
 
@@ -61,8 +62,9 @@ export function BaseEntityService<T extends ObjectLiteral>(
 
   // service with soft delete
   return class extends BaseServiceHost {
-    public remove(id: number) {
-      return this.repository.softDelete(id);
+    public async remove(id: number) {
+      await this.findOne(id);
+      await this.repository.softDelete(id);
     }
   };
 }
