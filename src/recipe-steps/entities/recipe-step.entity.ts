@@ -10,6 +10,10 @@ export class RecipeStep extends Mixin(
   IsSoftDeletable,
   IsTimestampable,
 ) {
+  @Factory(
+    (faker, ctx: Partial<RecipeStep>) =>
+      ctx.order ?? faker?.number.int({ min: 1 }),
+  )
   @Column({ type: 'smallint' })
   order: number;
 
