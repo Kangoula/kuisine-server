@@ -24,5 +24,7 @@ export class IngredientsSeeder implements Seeder {
     );
   }
 
-  async drop(): Promise<any> {}
+  async drop(): Promise<any> {
+    return this.ingredientsService.repository.deleteAll();
+  }
 }

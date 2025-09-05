@@ -14,5 +14,7 @@ export class RecipesSeeder implements Seeder {
     return Promise.all(recipes.map((d) => this.recipesService.create(d)));
   }
 
-  async drop(): Promise<any> {}
+  async drop(): Promise<any> {
+    return this.recipesService.repository.deleteAll();
+  }
 }

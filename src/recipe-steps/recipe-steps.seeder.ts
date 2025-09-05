@@ -28,5 +28,7 @@ export class RecipeStepsSeeder implements Seeder {
     return Promise.all(steps.map((step) => this.service.create(step)));
   }
 
-  async drop(): Promise<any> {}
+  async drop(): Promise<any> {
+    return this.service.repository.deleteAll();
+  }
 }
