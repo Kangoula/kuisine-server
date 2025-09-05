@@ -15,7 +15,7 @@ seeder({
     DatabaseModule,
     UsersModule,
     RolesModule,
-    RecipesModule,
     IngredientsModule,
+    RecipesModule,
   ],
-}).run([UsersSeeder, RecipesSeeder, IngredientsSeeder]);
+}).run([UsersSeeder, IngredientsSeeder, RecipesSeeder]);
