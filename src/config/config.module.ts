@@ -11,6 +11,7 @@ import * as Joi from 'joi';
       load: [authConfig, databaseConfig],
       // ensure all env variables are present before starting
       validationSchema: Joi.object({
+        NODE_ENV: Joi.string().required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
         DB_NAME: Joi.string().required(),
@@ -20,6 +21,10 @@ import * as Joi from 'joi';
         JWT_ACCESS_EXPIRATION_TIME: Joi.string().required(),
         JWT_REFRESH_SECRET: Joi.string().required(),
         JWT_REFRESH_EXPIRATION_TIME: Joi.string().required(),
+        TEST_USER_PASSWORD:
+          process.env.NODE_ENV === 'production'
+            ? Joi.any().forbidden()
+            : Joi.string().required(),
       }),
     }),
   ],
