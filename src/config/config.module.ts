@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import authConfig from './auth.config';
 import databaseConfig from './database.config';
-import * as Joi from '@hapi/joi';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
