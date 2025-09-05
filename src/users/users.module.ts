@@ -4,7 +4,7 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { RolesModule } from '@/roles/roles.module';
-import { UsersSeeder } from './entities/user.seeder';
+import { UsersSeeder } from './user.seeder';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), RolesModule],
