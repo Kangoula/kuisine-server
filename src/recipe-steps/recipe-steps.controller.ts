@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
 import { RecipeStepsService } from './recipe-steps.service';
-import { CreateRecipeStepDto } from './dto/create-recipe_step.dto';
-import { UpdateRecipeStepDto } from './dto/update-recipe_step.dto';
+import { CreateRecipeStepDto } from './dto/create-recipe-step.dto';
+import { UpdateRecipeStepDto } from './dto/update-recipe-step.dto';
 import { EntityId } from '@/common/decorators';
 import { Permission } from '@/casl/permission.decorator';
 import { RecipeStep } from './entities/recipe-step.entity';

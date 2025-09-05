@@ -2,7 +2,7 @@ import { AuthService, CookieTypeNames } from './auth.service';
 import { TestBed } from '@suites/unit';
 import { UsersService } from '@/users/users.service';
 import { Mocked } from '@suites/doubles.jest';
-import { bcryptHash } from '@/common/helpers/bcryptHash';
+import { bcryptHash } from '@/common/helpers';
 import {
   BadRequestException,
   InternalServerErrorException,

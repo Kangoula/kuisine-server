@@ -4,11 +4,12 @@ import { IngredientsController } from './ingredients.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Ingredient } from './entities/ingredient.entity';
 import { IngredientSubscriber } from './subscribers/ingredient.subscriber';
+import { IngredientsSeeder } from './ingredient.seeder';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Ingredient])],
   controllers: [IngredientsController],
-  providers: [IngredientsService, IngredientSubscriber],
-  exports: [IngredientsService],
+  providers: [IngredientsService, IngredientSubscriber, IngredientsSeeder],
+  exports: [IngredientsService, IngredientsSeeder],
 })
 export class IngredientsModule {}

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BaseEntityService } from '@/common/mixins/base-entity-service.mixin';
 import { User, UserCredentialsColumn } from './entities/user.entity';
-import { bcryptHash } from '@/common/helpers/bcryptHash';
+import { bcryptHash } from '@/common/helpers';
 import { compare } from 'bcrypt';
 import { UserWithoutCredentials } from './dto/user-without-credentials.dto';
 import { RolesService } from '@/roles/roles.service';
