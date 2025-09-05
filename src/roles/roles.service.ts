@@ -11,6 +11,12 @@ export class RolesService extends BaseEntityService(Role) {
     });
   }
 
+  getAdminRole() {
+    return this.repository.findOneByOrFail({
+      isAdmin: true,
+    });
+  }
+
   update(id: number, updateRoleDto: UpdateRoleDto) {
     return super.update(id, updateRoleDto);
   }
