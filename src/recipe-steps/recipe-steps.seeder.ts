@@ -15,23 +15,17 @@ export class RecipeStepsSeeder implements Seeder {
   async seed(): Promise<any> {
     const recipes = await this.recipesService.findAll();
 
-    const steps: RecipeStep[] = [];
-    recipes.forEach((recipe) => {
-      steps.push(
-        ...EntityFactory.createMany(RecipeStep, randomInt(1, 10), {
-          recipe,
-        }),
-      );
+    const steps = recipes.flatMap((recipe) => {
+      return EntityFactory.createMany(RecipeStep, randomInt(1, 10), {
+        recipe,
+      }).map((step, idx) => ({
+        ...step,
+        order: idx + 1,
+        recipeId: recipe.id,
+      }));
     });
 
-    return Promise.all(
-      steps.map(({ recipe, ...step }) =>
-        this.service.create({
-          ...step,
-          recipeId: recipe.id,
-        }),
-      ),
-    );
+    return Promise.all(steps.map((step) => this.service.create(step)));
   }
 
   async drop(): Promise<any> {}
