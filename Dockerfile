@@ -1,26 +1,29 @@
+FROM node:22.17.0-alpine3.22 AS base
+
+WORKDIR /usr/src/app
+
+RUN apk add postgresql17-client=17.6-r0
+
+COPY --chown=node:node package*.json ./
+
 #############
 # LOCAL DEV
 #############
 
-FROM node:22.17.0-alpine3.22  AS development
+FROM base AS development
 
-WORKDIR /usr/src/app
-
-COPY --chown=node:node package*.json ./
 RUN npm ci
 
 COPY  --chown=node:node . .
+
 USER node
 
 #############
 # BUILD PROD
 #############
 
-FROM node:22.17.0-alpine3.22  AS build
+FROM base AS build
 
-WORKDIR /usr/src/app
-
-COPY --chown=node:node package*.json ./
 COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node . .
 
@@ -36,9 +39,8 @@ USER node
 # RUN PROD
 #############
 
-FROM node:22.17.0-alpine3.22  AS production
+FROM base AS production
 
-COPY --chown=node:node package*.json ./
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
