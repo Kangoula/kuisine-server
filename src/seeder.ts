@@ -10,6 +10,8 @@ import { IngredientsModule } from './ingredients/ingredients.module';
 import { IngredientsSeeder } from './ingredients/ingredient.seeder';
 import { RecipeStepsSeeder } from './recipe-steps/recipe-steps.seeder';
 import { RecipeStepsModule } from './recipe-steps/recipe-steps.module';
+import { IngredientToRecipeSeeder } from './ingredient-to-recipe/ingredient-to-recipe.seeder';
+import { IngredientToRecipeModule } from './ingredient-to-recipe/ingredient-to-recipe.module';
 
 seeder({
   imports: [
@@ -20,5 +22,12 @@ seeder({
     IngredientsModule,
     RecipesModule,
     RecipeStepsModule,
+    IngredientToRecipeModule,
   ],
-}).run([UsersSeeder, IngredientsSeeder, RecipesSeeder, RecipeStepsSeeder]);
+}).run([
+  UsersSeeder,
+  IngredientsSeeder,
+  RecipesSeeder,
+  RecipeStepsSeeder,
+  IngredientToRecipeSeeder,
+]);
