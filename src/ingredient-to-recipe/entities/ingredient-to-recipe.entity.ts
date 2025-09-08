@@ -21,12 +21,23 @@ export class IngredientToRecipe extends Mixin(
   IsSoftDeletable,
   IsTimestampable,
 ) {
+  @Factory(
+    (faker, ctx: Partial<IngredientToRecipe>) =>
+      ctx.ingredientId ?? ctx.ingredient?.id,
+  )
   @Column()
   ingredientId: number;
 
+  @Factory(
+    (faker, ctx: Partial<IngredientToRecipe>) => ctx.recipeId ?? ctx.recipe?.id,
+  )
   @Column()
   recipeId: number;
 
+  @Factory(
+    (faker, ctx: Partial<IngredientToRecipe>) =>
+      ctx.order ?? faker?.number.int({ min: 1 }),
+  )
   @Column({ type: 'smallint' })
   order: number;
 
@@ -39,16 +50,19 @@ export class IngredientToRecipe extends Mixin(
 
   @Factory(
     (faker, ctx: Partial<IngredientToRecipe>) =>
-      ctx.quantityUnit ?? faker?.helpers.objectValue(QuantityUnits),
+      ctx.quantityUnit ??
+      faker?.helpers.objectValue({ ...QuantityUnits, None: null }),
   )
   @Column({ type: 'varchar', precision: 255, nullable: true })
-  quantityUnit?: QuantityUnits | undefined;
+  quantityUnit?: QuantityUnits | null;
 
-  @ManyToOne(() => Ingredient, (ingredient) => ingredient.ingredientToRecipe)
+  @Factory((faker, ctx: Partial<IngredientToRecipe>) => ctx.ingredient)
+  @ManyToOne(() => Ingredient, (ingredient) => ingredient.ingredientToRecipes)
   @JoinColumn({ name: 'ingredient_id' })
   ingredient: Ingredient;
 
-  @ManyToOne(() => Recipe, (recipe) => recipe.ingredientToRecipe)
+  @Factory((faker, ctx: Partial<IngredientToRecipe>) => ctx.recipe)
+  @ManyToOne(() => Recipe, (recipe) => recipe.ingredientToRecipes)
   @JoinColumn({ name: 'recipe_id' })
   recipe: Recipe;
 }

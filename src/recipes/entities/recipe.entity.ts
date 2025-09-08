@@ -57,5 +57,5 @@ export class Recipe extends Mixin(
     () => IngredientToRecipe,
     (ingredientToRecipe) => ingredientToRecipe.recipe,
   )
-  ingredientToRecipe: IngredientToRecipe[];
+  ingredientToRecipes: IngredientToRecipe[];
 }
