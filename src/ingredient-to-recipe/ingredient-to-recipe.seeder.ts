@@ -23,7 +23,6 @@ export class IngredientToRecipeSeeder implements Seeder {
       const ingredientsSample = sample(ingredients, randomInt(1, 10));
 
       return ingredientsSample.map((ingredient, idx) => {
-        console.log({ ingredientId: ingredient.id, recipeId: recipe.id });
         const ingredientToRecipe = EntityFactory.createOne(IngredientToRecipe, {
           recipe: recipe,
           ingredient: ingredient,
