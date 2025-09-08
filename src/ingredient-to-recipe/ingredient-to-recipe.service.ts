@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { IngredientToRecipe } from './entities/ingredient-to-recipe.entity';
 import { CreateIngredientToRecipeDto } from './dto/create-ingredient-to-recipe.dto';
 import { RecipesService } from '@/recipes/recipes.service';
@@ -10,9 +10,8 @@ export class IngredientToRecipeService extends BaseEntityService(
   IngredientToRecipe,
 ) {
   constructor(
-    @Inject(forwardRef(() => RecipesService))
-    private recipesService: RecipesService,
-    private ingredientsService: IngredientsService,
+    private readonly recipesService: RecipesService,
+    private readonly ingredientsService: IngredientsService,
   ) {
     super();
   }
@@ -33,30 +32,5 @@ export class IngredientToRecipeService extends BaseEntityService(
     ingredientToRecipe.quantityUnit = createIngredientToRecipeDto.quantityUnit;
 
     return this.repository.save(ingredientToRecipe);
-  }
-
-  findByRecipeId(recipeId: number) {
-    return this.repository.find({
-      relations: {
-        ingredient: true,
-      },
-      select: {
-        id: true,
-        order: true,
-        quantity: true,
-        quantityUnit: true,
-
-        ingredient: {
-          id: true,
-          name: true,
-        },
-      },
-      where: {
-        recipeId: recipeId,
-      },
-      order: {
-        order: 'ASC',
-      },
-    });
   }
 }
