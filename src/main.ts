@@ -9,6 +9,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { CookieTypeNames } from './auth/auth.service';
+import { CommandFactory } from 'nest-commander';
 
 const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
@@ -45,5 +46,7 @@ async function bootstrap() {
   }
 
   await app.listen(process.env.PORT ?? 3000);
+
+  await CommandFactory.run(AppModule);
 }
 bootstrap();
