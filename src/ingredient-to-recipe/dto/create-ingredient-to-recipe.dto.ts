@@ -1,4 +1,5 @@
 import {
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -6,14 +7,13 @@ import {
   Max,
   Min,
 } from 'class-validator';
+import { QuantityUnits } from '../entities/ingredient-to-recipe.entity';
 
 export class CreateIngredientToRecipeDto {
-  // TODO decorator to check if exists in DB
   @IsInt()
   @IsNotEmpty()
   ingredientId: number;
 
-  // TODO decorator to check if exists in DB
   @IsInt()
   @IsNotEmpty()
   recipeId: number;
@@ -30,5 +30,6 @@ export class CreateIngredientToRecipeDto {
 
   @IsOptional()
   @IsString()
-  quantityUnit?: string;
+  @IsEnum(QuantityUnits)
+  quantityUnit?: QuantityUnits | null;
 }

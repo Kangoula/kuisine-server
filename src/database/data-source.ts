@@ -1,5 +1,4 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { SeederOptions } from 'typeorm-extension';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 // datasource used for the migrations & seeders
@@ -14,9 +13,7 @@ const dataSource = new DataSource({
   namingStrategy: new SnakeNamingStrategy(),
   migrations: ['dist/database/migrations/*{.ts,.js}'],
   entities: ['dist/**/*.entity{.ts,.js}'],
-  seeds: ['dist/database/seeding/**/*.seeder{.ts,.js}'],
-  factories: ['dist/database/seeding/factories/**/*.factory{.ts,.js}'],
-} as DataSourceOptions & SeederOptions);
+} as DataSourceOptions);
 
 dataSource.initialize();
 

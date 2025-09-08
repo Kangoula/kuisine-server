@@ -23,7 +23,7 @@ export class Ingredient extends Mixin(
     () => IngredientToRecipe,
     (ingredientToRecipe) => ingredientToRecipe.ingredient,
   )
-  ingredientToRecipe: IngredientToRecipe[];
+  ingredientToRecipes: IngredientToRecipe[];
 
   @Exclude()
   @Column({
