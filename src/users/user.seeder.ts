@@ -3,6 +3,7 @@ import { Seeder } from 'nestjs-seeder';
 import { UsersService } from './users.service';
 import { RolesService } from '@/roles/roles.service';
 import { ConfigService } from '@nestjs/config';
+import { In } from 'typeorm';
 
 @Injectable()
 export class UsersSeeder implements Seeder {
@@ -43,8 +44,12 @@ export class UsersSeeder implements Seeder {
   }
 
   async drop(): Promise<any> {
-    const admin = await this.usersService.findByUsername('admin');
-    const user = await this.usersService.findByUsername('jabba');
-    return this.usersService.repository.remove([admin, user]);
+    const users = await this.usersService.repository.find({
+      where: {
+        username: In(['admin', 'jabba']),
+      },
+    });
+
+    return this.usersService.repository.remove(users);
   }
 }
