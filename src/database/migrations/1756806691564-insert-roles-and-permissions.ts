@@ -51,7 +51,7 @@ export class InsertRolesAndPermissions1756806691564
             subject: 'Ingredient',
             action: ['update', 'delete'],
             conditions: {
-              ingredientToRecipe: { $size: 0 },
+              ingredientToRecipes: { $size: 0 },
             },
           },
           //
