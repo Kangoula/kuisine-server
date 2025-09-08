@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateRecipeStepDto } from './dto/create-recipe-step.dto';
 import { RecipeStep } from './entities/recipe-step.entity';
 import { RecipesService } from '@/recipes/recipes.service';
@@ -6,10 +6,7 @@ import { BaseEntityService } from '@/common/mixins/base-entity-service.mixin';
 
 @Injectable()
 export class RecipeStepsService extends BaseEntityService(RecipeStep) {
-  constructor(
-    @Inject(forwardRef(() => RecipesService))
-    private recipeService: RecipesService,
-  ) {
+  constructor(private recipeService: RecipesService) {
     super();
   }
 
