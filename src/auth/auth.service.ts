@@ -136,7 +136,7 @@ export class AuthService {
     };
   }
 
-  public getLogoutCookieParametersForRefreshToken() {
+  public getLogoutCookieParametersForRefreshToken(): JwtCookieParams {
     return {
       name: CookieTypeNames.Refresh,
       token: '',
