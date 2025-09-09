@@ -28,9 +28,11 @@ services:
     entrypoint: 'npm run start:dev'
 
   db:
-    image: postgres:17.5-alpine3.22
+    image: postgres:17.6-alpine3.22
     restart: always
     environment:
+      - LANG=fr_FR.utf8
+      - POSTGRES_INITDB_ARGS=--locale-provider=icu --icu-locale=fr-FR
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
