@@ -14,9 +14,6 @@ export class DatabaseBackupCommand extends CommandRunner {
   }
 
   async run(): Promise<void> {
-    console.log('Database backup started');
-    console.time('Database backup');
-
     const { host, port, user, password, name } = this.configService.get(
       'database',
     ) as {
@@ -41,9 +38,6 @@ export class DatabaseBackupCommand extends CommandRunner {
     execSync(
       `PGPASSFILE='${pgPassFilePath}' && pg_dump -d ${name} -h ${host} -U ${user} -w > ${dumpPath}`,
     );
-
-    console.timeEnd('Database backup');
-    console.log('Database backup done');
   }
 
   private async createPgPassFile(
