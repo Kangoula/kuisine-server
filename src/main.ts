@@ -6,7 +6,7 @@ import * as compression from 'compression';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { INestApplication } from '@nestjs/common';
+import { ConsoleLogger, INestApplication } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { CookieTypeNames } from './auth/auth.service';
 
@@ -28,7 +28,15 @@ const setupSwagger = (app: INestApplication) => {
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: new ConsoleLogger({
+      prefix: 'API',
+      logLevels:
+        process.env.NODE_ENV === 'development'
+          ? undefined
+          : ['log', 'error', 'warn'],
+    }),
+  });
 
   app.set('query parser', 'extended');
 
