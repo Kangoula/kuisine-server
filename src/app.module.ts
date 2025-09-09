@@ -17,6 +17,7 @@ import { PermissionsGuard } from './casl/permissions.guard';
 import { RolesModule } from './roles/roles.module';
 import { IsUniqueContraintValidator } from './common/validators/is-unique-contstraint.validator';
 import { ConfigModule } from './config/config.module';
+import { SchedulingModule } from './scheduling/scheduling.module';
 
 @Module({
   providers: [
@@ -46,6 +47,7 @@ import { ConfigModule } from './config/config.module';
   imports: [
     ConfigModule,
     DatabaseModule,
+    SchedulingModule,
     RecipesModule,
     IngredientsModule,
     RecipeStepsModule,
