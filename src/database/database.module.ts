@@ -19,6 +19,8 @@ import { DatabaseBackupCommand } from './commands/database-backup.command';
           synchronize: false,
           namingStrategy: new SnakeNamingStrategy(),
           entities: ['dist/**/*.entity{.ts,.js}'],
+          migrations: ['dist/database/migrations/*{.ts,.js}'],
+          migrationsRun: true,
           autoLoadEntities: true,
         };
       },
