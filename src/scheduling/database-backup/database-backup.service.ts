@@ -10,7 +10,7 @@ export class DatabaseBackupService {
 
   constructor(private readonly databaseBackupCommand: DatabaseBackupCommand) {}
 
-  @Cron(CronExpression.EVERY_MINUTE, { waitForCompletion: true })
+  @Cron(CronExpression.EVERY_DAY_AT_6AM, { waitForCompletion: true })
   async runDatabaseBackup() {
     try {
       this.logger.log('Database backup started');
