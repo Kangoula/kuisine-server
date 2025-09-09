@@ -29,7 +29,8 @@
     "migration:create": "npm run typeorm -- migration:create ./src/database/migrations/$npm_config_name",
     "migration:revert": "npm run typeorm -- -d ./dist/database/data-source.js migration:revert",
     "seed": "node dist/seeder",
-    "seed:refresh": "node dist/seeder --refresh"
+    "seed:refresh": "node dist/seeder --refresh",
+    "cli": "node dist/cli"
   },
   "dependencies": {
     "@casl/ability": "^6.7.3",
