@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BaseEntityService } from '@/common/mixins/base-entity-service.mixin';
 import { User, UserCredentialsColumn } from './entities/user.entity';
@@ -6,11 +6,52 @@ import { bcryptHash } from '@/common/helpers';
 import { compare } from 'bcrypt';
 import { UserWithoutCredentials } from './dto/user-without-credentials.dto';
 import { RolesService } from '@/roles/roles.service';
+import { ConfigService } from '@nestjs/config';
+import { EntityNotFoundError } from 'typeorm';
 
 @Injectable()
-export class UsersService extends BaseEntityService(User) {
-  constructor(private rolesService: RolesService) {
+export class UsersService
+  extends BaseEntityService(User)
+  implements OnApplicationBootstrap
+{
+  constructor(
+    private rolesService: RolesService,
+    private readonly configService: ConfigService,
+  ) {
     super();
+  }
+
+  async onApplicationBootstrap() {
+    await this.createAdminUserIfNotExists();
+  }
+
+  private async createAdminUserIfNotExists(): Promise<boolean> {
+    const username = this.configService.get<string>('ADMIN_USERNAME') as string;
+
+    try {
+      await this.findByUsername(username);
+
+      return true;
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
+        const password = this.configService.get<string>(
+          'ADMIN_PASSWORD',
+        ) as string;
+
+        const adminRole = await this.rolesService.getAdminRole();
+
+        await this.create({
+          username,
+          password,
+          roleId: adminRole.id,
+          mustChangePassword: false,
+        });
+
+        return true;
+      }
+
+      return false;
+    }
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserWithoutCredentials> {
